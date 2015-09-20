@@ -1,0 +1,38 @@
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\bin\Debug\Mapediter.exe.config
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\bin\Debug\Mapediter.exe
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\bin\Debug\Mapediter.pdb
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\Mapediter.csprojResolveAssemblyReference.cache
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\MainWindow.baml
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\MainWindow.g.cs
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\App.g.cs
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\Mapediter_MarkupCompile.cache
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\Mapediter.g.resources
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\Mapediter.Properties.Resources.resources
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\Mapediter.csproj.GenerateResource.Cache
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\Mapediter.exe
+c:\users\tai\documents\visual studio 2013\Projects\Mapediter\Mapediter\obj\Debug\Mapediter.pdb
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\bin\Debug\Mapediter.exe.config
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.exe
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.pdb
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\bin\Debug\Mapediter.exe
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\bin\Debug\Mapediter.pdb
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.csprojResolveAssemblyReference.cache
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\MainWindow.baml
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\MainWindow.g.cs
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\App.g.cs
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter_MarkupCompile.cache
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.g.resources
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.Properties.Resources.resources
+C:\Users\Tai_W8\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.csproj.GenerateResource.Cache
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\MainWindow.baml
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\MainWindow.g.cs
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\App.g.cs
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter_MarkupCompile.cache
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.g.resources
+C:\Users\Tai\Desktop\Mapediter\Mapediter\bin\Debug\Mapediter.exe.config
+C:\Users\Tai\Desktop\Mapediter\Mapediter\bin\Debug\Mapediter.exe
+C:\Users\Tai\Desktop\Mapediter\Mapediter\bin\Debug\Mapediter.pdb
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.Properties.Resources.resources
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.csproj.GenerateResource.Cache
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.exe
+C:\Users\Tai\Desktop\Mapediter\Mapediter\obj\Debug\Mapediter.pdb

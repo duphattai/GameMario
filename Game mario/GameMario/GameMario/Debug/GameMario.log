@@ -1,0 +1,34 @@
+﻿Build started 20-Sep-15 5:08:44 PM.
+     1>Project "c:\Users\Tai\documents\visual studio 2013\Projects\GameMario\GameMario\GameMario.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp GameTime.cpp KeyBoard.cpp main.cpp Source.cpp Sprite.cpp
+         Sprite.cpp
+         c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+     1>c:\users\tai\documents\visual studio 2013\projects\gamemario\gamemario\sprite.cpp(94): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\tai\documents\visual studio 2013\projects\gamemario\gamemario\sprite.cpp(95): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\tai\documents\visual studio 2013\projects\gamemario\gamemario\sprite.cpp(101): warning C4244: 'argument' : conversion from 'int' to 'FLOAT', possible loss of data
+         Source.cpp
+         c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         main.cpp
+         c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+     1>c:\users\tai\documents\visual studio 2013\projects\gamemario\gamemario\main.cpp(6): warning C4007: 'WinMain' : must be '__stdcall'
+         KeyBoard.cpp
+         c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         GameTime.cpp
+         Game.cpp
+         c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+         Generating Code...
+     1>c:\users\tai\documents\visual studio 2013\projects\gamemario\gamemario\keyboard.cpp(101): warning C4715: 'CKeyBoard::isPressed' : not all control paths return a value
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\users\tai\documents\visual studio 2013\Projects\GameMario\Debug\GameMario.exe" /INCREMENTAL /NOLOGO d3d9.lib d3dx9.lib dinput8.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"c:\users\tai\documents\visual studio 2013\Projects\GameMario\Debug\GameMario.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"c:\users\tai\documents\visual studio 2013\Projects\GameMario\Debug\GameMario.lib" /MACHINE:X86 Debug\Game.obj
+         Debug\GameTime.obj
+         Debug\KeyBoard.obj
+         Debug\main.obj
+         Debug\Source.obj
+         Debug\Sprite.obj
+         GameMario.vcxproj -> c:\users\tai\documents\visual studio 2013\Projects\GameMario\Debug\GameMario.exe
+     1>Done Building Project "c:\Users\Tai\documents\visual studio 2013\Projects\GameMario\GameMario\GameMario.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:05.86

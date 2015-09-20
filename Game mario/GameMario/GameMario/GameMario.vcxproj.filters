@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Enviroment">
+      <UniqueIdentifier>{f11647fb-2a2d-4118-9cef-ec345204fb0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Enviroment">
+      <UniqueIdentifier>{198de44e-5b7f-40c9-aa8c-73d18668dc4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FrameWork">
+      <UniqueIdentifier>{eacc4eb6-abac-4eea-9f11-32485e3e1324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FrameWork\Resources">
+      <UniqueIdentifier>{495d565c-c2b8-4ef8-95f8-b2f9fb2beb81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FrameWork\Keyboard">
+      <UniqueIdentifier>{510c662f-59d9-4db3-86ea-7c725a5b58dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork">
+      <UniqueIdentifier>{cc881e87-b23c-41fb-b688-a36221a77a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork\Keyboard">
+      <UniqueIdentifier>{e29a0d75-022c-48d9-9121-8eae460e14b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork\Resources">
+      <UniqueIdentifier>{26875bd4-dd21-4e33-9608-0bf283913c10}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Enviroment</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\Enviroment</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTime.cpp">
+      <Filter>Source Files\FrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyBoard.cpp">
+      <Filter>Source Files\FrameWork\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files\FrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files\FrameWork\Resources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Enviroment</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files\FrameWork\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Header Files\FrameWork\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyBoard.h">
+      <Filter>Header Files\FrameWork\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Header Files\FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files\FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Source.h">
+      <Filter>Header Files\FrameWork\Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
