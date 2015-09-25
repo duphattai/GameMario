@@ -20,7 +20,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -85,15 +85,28 @@
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="KeyBoard.h" />
+    <ClInclude Include="Map1.h" />
+    <ClInclude Include="MapObject.h" />
+    <ClInclude Include="Mario.h" />
+    <ClInclude Include="MarioOwnedState.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SwapAABB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="KeyBoard.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map1.cpp" />
+    <ClCompile Include="MapObject.cpp" />
+    <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="MarioOwnedState.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sprite.cpp" />
   </ItemGroup>

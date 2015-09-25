@@ -17,8 +17,10 @@ protected:
 public:
 	Sprite();
 	Sprite(const Sprite &copy);
-	void loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, char *Path, int spriteperrow, int count, D3DXCOLOR color);
+	void loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, LPCWSTR Path, int spriteperrow, int count, D3DXCOLOR color);
+	void loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, LPCWSTR Path, D3DXCOLOR color);
 	void next();
+	void setRect(RECT rect);
 	void reset();
 	virtual void draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy);
 	int getCount();

@@ -2,8 +2,13 @@
 
 #include "KeyBoard.h"
 #include "Source.h"
+#include "Map1.h"
+#include "Mario.h"
 
 CKeyBoard *keyboard = NULL;
+Map1 *m_state;
+Mario *m_mario = NULL;
+
 Game::Game(HINSTANCE hInstance)
 {
 	this->hInstance = hInstance;
@@ -37,16 +42,16 @@ int Game::intiWindow(HINSTANCE hInstance)
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
-	wc.lpszClassName = "Game";
+	wc.lpszClassName = L"Game";
 	wc.hIconSm = NULL;
-
+	
 	RegisterClassEx(&wc);
 
 	hWnd = CreateWindow(
-		"Game",
+		L"Game",
 		MAIN_WINDOW_TITLE,
 		WS_OVERLAPPEDWINDOW,
-		//			WS_EX_TOPMOST | WS_VISIBLE | WS_POPUP,
+					//WS_EX_TOPMOST | WS_VISIBLE | WS_POPUP,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		SCREEN_WIDTH,
@@ -69,14 +74,16 @@ int Game::intiWindow(HINSTANCE hInstance)
 
 void Game::initGame()//khởi tạo 
 {
-	//Source::getInstance()->Init(d3ddv);
+	Source::getInstance()->init(d3ddv);
 
-	//keyboard = new CKeyBoard();//process event of keyboard
-	//keyboard->InitInput();
-	//keyboard->InitKeyBoard(hWnd);
+	keyboard = new CKeyBoard();//process event of keyboard
+	keyboard->initInput();
+	keyboard->initKeyBoard(hWnd);
 
-	//m_state = new Map1();
-	//m_state->Init(keyboard);
+	m_mario = new Mario();
+	m_mario->setPosition(50, 32);
+	m_state = new Map1();
+	m_state->init(keyboard);
 }
 
 void Game::initDirec3D()//initialize Dir3D
@@ -105,7 +112,7 @@ void Game::initDirec3D()//initialize Dir3D
 
 	if (result != D3D_OK)
 	{
-		MessageBox(0, "Cannot create device", "Error", MB_OK);
+		MessageBox(0, L"Cannot create device", L"Error", MB_OK);
 		return;
 	}
 
@@ -119,7 +126,11 @@ void Game::render()
 	d3ddv->BeginScene();
 	m_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);//begin of the draw sprite
 
-	//m_state->Draw(m_SpriteHandler);
+	// map 1.1
+	m_state->draw(m_SpriteHandler);
+	m_mario->draw(m_SpriteHandler);
+
+
 
 	m_SpriteHandler->End();//end action draw sprite
 	d3ddv->EndScene();
@@ -129,7 +140,10 @@ void Game::render()
 
 void Game::update()
 {
-	//m_state->Update();
+	m_mario->updateVelocity();
+	//m_state->update();
+
+	m_mario->update();
 }
 
 void Game::gameRun()

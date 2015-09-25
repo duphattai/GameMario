@@ -2,26 +2,8 @@
 
 enum IDImage
 {
-	//IMG_UP = 0,  // 0
-	//IMG_45_DEGREE, // 1
-	//IMG_RIGHT_LEFT, // 2
-	//IMG_315_DEGREE, //3
-	//IMG_DOWN,// 4
-	//IMG_STAND,// 5
-	//IMG_JUMP,// 6
-	//IMG_RUN_SHOOT,
-	//IMG_RUN_WATER_RIGHT,
-	//IMG_RUN_WATER_UP,
-	//IMG_RUN_WATER_45,
-	//IMG_RUN_WATER_DROP,
-	//IMG_RUN_WATER_SHOOT_0,
-	//IMG_PlasmaGun,
-	//IMG_SpreadGun,
-	//IMG_Laser,
-	//IMG_MachineGun,
-	//IMG_EnemyGun,
-	//IMG_FireBall,
-	//IMG_MAP1,
+	IMG_MARIOSHEET = 0,
+	IMG_MAP1,
 	//IMG_MAP2,
 	//IMG_HumandExplode,
 	//IMG_MachineExplode,
@@ -45,6 +27,25 @@ enum SpriteEffect
 	Flip,
 };
 
+
+enum MarioSheet
+{
+	BIG_MARIO_STAND = 0,
+	BIG_MARIO_RUN = 1,
+	BIG_MARIO_CHANGE_DIR = 4,
+	BIG_MARIO_JUMP = 5,
+	BIG_MARIO_SIT = 6,
+	MARIO_STAND = 7,
+	MARIO_RUN = 8,
+	MARIO_CHANGE_DIR = 11,
+	MARIO_JUMP = 12,
+	MARIO_DIE = 13,
+	SUPER_MARIO_STAND = 14,
+	SUPER_MARIO_RUN = 15,
+	SUPER_MARIO_CHANGE_DIR = 18,
+	SUPER_MARIO_JUMP = 19,
+	SUPER_MARIO_SIT = 20,
+};
 
 struct Box
 {
@@ -77,6 +78,28 @@ enum DIR
 	BOTTOM
 };
 
+struct Frame
+{
+	int id;
+	RECT rect;
+public:
+	Frame(int id, RECT rect)
+	{
+		this->id = id;
+		this->rect = rect;
+	}
+};
+
+struct Vector2
+{
+	int x;
+	int y;
+	Vector2(int x = 0, int y = 0)
+	{
+		this->x = x;
+		this->y = y;
+	}
+};
 
 struct ObjectTittle
 {

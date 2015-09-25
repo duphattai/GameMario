@@ -37,6 +37,45 @@
     <Filter Include="Source Files\FrameWork\Resources">
       <UniqueIdentifier>{26875bd4-dd21-4e33-9608-0bf283913c10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject">
+      <UniqueIdentifier>{d867b6ef-605d-4b1a-acd8-a22ebffa2fe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Object">
+      <UniqueIdentifier>{50f209fc-1a29-4443-89e4-b66a969c3206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject">
+      <UniqueIdentifier>{d3f5a2ed-3c70-4b65-ba61-ce916cb5c84b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object">
+      <UniqueIdentifier>{9ace6c32-f397-4fbc-ab24-b1ca254df56c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Map">
+      <UniqueIdentifier>{d7beb693-b7e4-4e02-8674-8bfb7a670bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Map">
+      <UniqueIdentifier>{e22e580b-9eb8-4ca6-902b-27e5301fdf1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FrameWork\Coliision">
+      <UniqueIdentifier>{c4bd913d-d3a1-4e49-9681-e91c23bad19f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork\Coliision">
+      <UniqueIdentifier>{2ce0a7be-5063-4378-92ed-beaa4e090734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Entity">
+      <UniqueIdentifier>{aa8bff67-8a2c-4039-a172-4100fe7c1e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Entity">
+      <UniqueIdentifier>{2cb56b5a-f675-43c8-8a8a-b0b284e2eb86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\StateMachine">
+      <UniqueIdentifier>{3adf8a67-d0bd-4a60-af08-4b3b9b076adb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\StateMachine">
+      <UniqueIdentifier>{cd5aa031-3757-4dd2-9b60-3a47eb3947e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\StateMachine\MarioOwnedState">
+      <UniqueIdentifier>{99be3ac5-5598-44e6-8078-1571244161dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -56,6 +95,21 @@
     </ClCompile>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files\FrameWork\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source Files\GameObject\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>Source Files\GameObject\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Map1.cpp">
+      <Filter>Source Files\GameObject\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Mario.cpp">
+      <Filter>Source Files\GameObject\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="MarioOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +133,30 @@
     </ClInclude>
     <ClInclude Include="Source.h">
       <Filter>Header Files\FrameWork\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\GameObject\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>Header Files\GameObject\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Map1.h">
+      <Filter>Header Files\GameObject\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapAABB.h">
+      <Filter>Header Files\FrameWork\Coliision</Filter>
+    </ClInclude>
+    <ClInclude Include="Mario.h">
+      <Filter>Header Files\GameObject\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\GameObject\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Header Files\GameObject\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="MarioOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\MarioOwnedState</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

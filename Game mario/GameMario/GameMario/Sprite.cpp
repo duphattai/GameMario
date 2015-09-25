@@ -27,13 +27,14 @@ int Sprite::getWidth()
 	return m_Width;
 }
 
-void Sprite::loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, char *Path, int spriteperrow, int count, D3DXCOLOR color)
+void Sprite::loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, LPCWSTR Path, int spriteperrow, int count, D3DXCOLOR color)
 {
 	HRESULT result;
 	D3DXIMAGE_INFO info;
 	result = D3DXGetImageInfoFromFile(Path, &info);
 	if (result != D3D_OK)
 	{
+		exit(0);
 		return;
 	}
 
@@ -55,7 +56,7 @@ void Sprite::loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, char *Path, int spritepe
 
 	if (result != D3D_OK)
 	{
-		MessageBox(0, "Cannot load image", "Error", MB_OK);
+		MessageBox(0, L"Cannot load image", L"Error", MB_OK);
 		return;
 	}
 
@@ -64,6 +65,40 @@ void Sprite::loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, char *Path, int spritepe
 	m_Width = info.Width / m_SpritePerRow;
 	m_Height = info.Height / (m_Count / m_SpritePerRow);
 	m_Index = 0;
+}
+
+void Sprite::loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, LPCWSTR Path, D3DXCOLOR color)
+{
+	HRESULT result;
+	D3DXIMAGE_INFO info;
+	result = D3DXGetImageInfoFromFile(Path, &info);
+	if (result != D3D_OK)
+	{
+		exit(0);
+		return;
+	}
+
+	result = D3DXCreateTextureFromFileEx(
+		d3ddv,
+		Path,
+		info.Width,
+		info.Height,
+		1,
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		color,
+		&info,
+		NULL,
+		&m_Image);
+
+	if (result != D3D_OK)
+	{
+		MessageBox(0, L"Cannot load image", L"Error", MB_OK);
+		return;
+	}
 }
 
 void Sprite::next()
@@ -76,14 +111,21 @@ void Sprite::next()
 void Sprite::setIndex(int value)
 {
 	m_Index = value;
-}
-
-void Sprite::draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy)
-{
 	m_Rect.left = (m_Index % m_SpritePerRow) * m_Width;
 	m_Rect.right = m_Rect.left + m_Width;
 	m_Rect.top = (m_Index / m_SpritePerRow) * m_Height;
 	m_Rect.bottom = m_Rect.top + m_Height;
+}
+
+void Sprite::setRect(RECT rect)
+{
+	m_Rect = rect;
+	m_Width = abs(rect.right - rect.left);
+	m_Height = abs(rect.top - rect.bottom);
+}
+
+void Sprite::draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy)
+{
 	//
 	// WORLD TO VIEWPORT TRANSFORM USING MATRIX
 	//

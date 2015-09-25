@@ -19,7 +19,7 @@ void CKeyBoard::initInput()
 
 	if (result != D3D_OK)
 	{
-		MessageBox(0, "Cannot create device input.", "Error", MB_OK);
+		MessageBox(0, L"Cannot create device input.", L"Error", MB_OK);
 		return;
 	}
 
@@ -29,7 +29,7 @@ void CKeyBoard::initInput()
 
 	if (result != D3D_OK)
 	{
-		MessageBox(0, "Cannot create device keyboard.", "Error", MB_OK);
+		MessageBox(0, L"Cannot create device keyboard.", L"Error", MB_OK);
 		return;
 	}
 }

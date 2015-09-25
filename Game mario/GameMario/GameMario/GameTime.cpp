@@ -4,13 +4,13 @@
 GameTime::GameTime()
 {
 	m_CurrenTime = 0;
-	m_PrevTime = (float)GetTickCount() / 1000;
+	m_PrevTime = GetTickCount();
 	m_ElapsedTimeSecond = 0;
 }
 
 void GameTime::setTime()
 {
-	m_CurrenTime = (float)GetTickCount() / 1000;
+	m_CurrenTime = GetTickCount();
 }
 
 void GameTime::update()

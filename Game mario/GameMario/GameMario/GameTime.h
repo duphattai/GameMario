@@ -2,15 +2,15 @@
 #include <Windows.h>
 class GameTime
 {
-	float m_PrevTime;
-	float m_CurrenTime;
+	DWORD m_PrevTime;
+	DWORD m_CurrenTime;
 
-	float m_ElapsedTimeSecond;
+	DWORD m_ElapsedTimeSecond;
 public:
 	GameTime();
 	void update();
 	void setTime();
-	float getElapsedTimePerSecond()
+	DWORD getElapsedTimePerSecond()
 	{
 		return (m_CurrenTime - m_PrevTime);
 	}

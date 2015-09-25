@@ -149,9 +149,12 @@ namespace Mapediter
                 try
                 {
                     for (int i = 0; i < m_ArrayNode.Count; i++)
+                    {
+                        m_ArrayNode[i].m_Y += m_ArrayNode[i].m_Height;
                         m_Temp.Add(m_ArrayNode[i]);
+                    }
+                        
 
-                    //using (StreamWriter file = new StreamWriter(@"C:\Users\Tai\Desktop\TileNode.txt"))
                     using (StreamWriter file = new StreamWriter(path +"\\TileNode.txt"))
                     {
                         file.Write(m_infor);
@@ -178,7 +181,6 @@ namespace Mapediter
                         }
                     }
 
-                    //bitmap.Save(@"C:\Users\Tai\Desktop\TileMap.png");
                     bitmap.Save(path + "\\TileMap.png");
                     MessageBox.Show("Xuat file thanh cong.");
                 }
