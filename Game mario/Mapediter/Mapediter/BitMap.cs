@@ -148,6 +148,10 @@ namespace Mapediter
                 path = direc.Parent.FullName;
                 try
                 {
+                    // make real world left = x, right = x + width, top = y + height, bottom = y
+                    foreach (var item in m_Temp)
+                        item.m_Y += item.m_Height;
+
                     for (int i = 0; i < m_ArrayNode.Count; i++)
                     {
                         m_ArrayNode[i].m_Y += m_ArrayNode[i].m_Height;
@@ -159,7 +163,7 @@ namespace Mapediter
                     {
                         file.Write(m_infor);
                         string temp;
-                        for (int i = 0; i < m_ArrayNode.Count; i++)
+                        for (int i = 0; i < m_Temp.Count; i++)
                         {
                             temp = null;
                             temp = m_Temp[i].m_Id + "\t" + m_Temp[i].m_Index + "\t" + m_Temp[i].m_X + "\t" + Convert.ToString(m_Bitmap.Height - m_Temp[i].m_Y) + "\t" + m_Temp[i].m_Width + "\t" + m_Temp[i].m_Height;

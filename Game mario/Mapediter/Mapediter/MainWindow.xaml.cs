@@ -22,7 +22,8 @@ namespace Mapediter
     /// 
     public partial class MainWindow : Window
     {
-        int ScaleBackGround = 2;
+        int ScaleBackGround;
+        int tileWidth, tileHeight;
         string m_TextImage;
         TileMap m_TileMap = null;
 
@@ -45,25 +46,23 @@ namespace Mapediter
         Point endPoint;
 
         bool isMouseMove_Pressed = false;
-
         public MainWindow()
         {
             InitializeComponent();
+            mycanvas.Focus();
+            Keyboard.Focus(mycanvas);
         }
   
         private void open_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog openfile = new Microsoft.Win32.OpenFileDialog();
+            OpenFile form = new OpenFile();
+            form.ShowDialog();
 
-            openfile.Filter = "All File | *.png; *.jpg; *.jpeg; *.gif";
+            ScaleBackGround = (int)form.scale;
+            m_TextImage = form.fileImagePath;
+            tileHeight = form.tileHeight;
+            tileWidth = form.tileWidth;
 
-            Nullable<bool> result = openfile.ShowDialog();
-
-            if (result == true)
-            {
-                m_TextImage = openfile.FileName;
-            }
-            else return;
 
             ImageBrush img = new ImageBrush();
             img.ImageSource = new BitmapImage(new Uri(m_TextImage));
@@ -71,21 +70,16 @@ namespace Mapediter
             mycanvas.Width = img.ImageSource.Width * ScaleBackGround;
             mycanvas.Height = img.ImageSource.Height * ScaleBackGround;
             mycanvas.Background = img;
-            
-           
-            gridView.Width = mycanvas.Width;
-            gridView.Height = mycanvas.Height;
         }
 
         private void createTiledMap_Click(object sender, RoutedEventArgs e)
         {
-            int x = Convert.ToInt16(TextX.Text.ToString());
-            int y = Convert.ToInt16(TextY.Text.ToString());
-
             foreach(var item in m_ListNode)
             {
                 item.m_X /= ScaleBackGround;
                 item.m_Y /= ScaleBackGround;
+                item.m_Width /= ScaleBackGround;
+                item.m_Height /= ScaleBackGround;
             }
 
             foreach(var item in m_ListInfor)
@@ -95,7 +89,7 @@ namespace Mapediter
             m_Information += "ID\tIndex\tX\tY\tWidth\tHeight" + Environment.NewLine;
 
             m_ListNode.AddRange(m_ListNodeImage);
-            m_TileMap = new TileMap(m_TextImage, m_ListNode, m_Information, x, y);
+            m_TileMap = new TileMap(m_TextImage, m_ListNode, m_Information, tileWidth, tileHeight);
             m_TileMap.CreateRectBit();
             m_TileMap.CreateTileMap();
 
@@ -107,16 +101,44 @@ namespace Mapediter
             // if Rectangle checkbox is checked
             if(drawRectangle.IsChecked.Value)
             {
-                startPoint = e.GetPosition(mycanvas);
-
                 m_Rect = new Rectangle();
-                m_Rect.Width = 0;
-                m_Rect.Height = 0;
-                m_Rect.Stroke = Brushes.Black;
-                Canvas.SetLeft(m_Rect, startPoint.X);
-                Canvas.SetTop(m_Rect, startPoint.Y);
+                if(Keyboard.IsKeyDown(Key.LeftCtrl)) // draw rect with Ctrl pressed
+                {
+                    Point position = e.GetPosition(mycanvas);
+                    position.X -= position.X % (tileWidth * ScaleBackGround);
+                    position.Y -= position.Y % (tileHeight * ScaleBackGround);
 
-                mycanvas.Children.Add(m_Rect);
+                    double width = Convert.ToDouble(RectWidth.Text.ToString()) * ScaleBackGround;
+                    double height = Convert.ToDouble(RectHeight.Text.ToString()) * ScaleBackGround;
+
+                    if (m_ListInfor.FindIndex(t => t == string.Format("ID={0}: {1}", InputID.Text, InputInfor.Text)) == -1)
+                        m_ListInfor.Add(string.Format("ID={0}: {1}", InputID.Text, InputInfor.Text));
+
+                    m_Rect.Width = width;
+                    m_Rect.Height = height;
+                    m_Rect.Stroke = Brushes.Black;
+                    Canvas.SetLeft(m_Rect, (int)position.X);
+                    Canvas.SetTop(m_Rect, (int)position.Y);
+
+                    m_ListRectangle.Add(m_Rect);
+
+                    Node node = new Node(Convert.ToInt16(InputID.Text.ToString()), 0, (int)position.X, (int)position.Y, (int)width, (int)height);
+                    m_ListNode.Add(node);
+
+                    mycanvas.Children.Add(m_Rect); // draw new rectangle
+                }
+                else
+                {
+                    startPoint = e.GetPosition(mycanvas);
+                   
+                    m_Rect.Width = 0;
+                    m_Rect.Height = 0;
+                    m_Rect.Stroke = Brushes.Black;
+                    Canvas.SetLeft(m_Rect, startPoint.X);
+                    Canvas.SetTop(m_Rect, startPoint.Y);
+
+                    mycanvas.Children.Add(m_Rect);
+                }    
             }
             else // action for draw image icon
             {
@@ -130,8 +152,8 @@ namespace Mapediter
                 
                
                 Point position = e.GetPosition(mycanvas);
-                position.X -= position.X % (16 * ScaleBackGround);
-                position.Y -= position.Y % (16 * ScaleBackGround);
+                position.X -= position.X % (tileWidth * ScaleBackGround);
+                position.Y -= position.Y % (tileHeight * ScaleBackGround);
 
                 mycanvas.Children.Add(img);
                 Canvas.SetLeft(img, position.X);
@@ -140,7 +162,7 @@ namespace Mapediter
                 // make not draw icons at the same position
                 Node temp = m_ListNodeImage.Find(t => t.m_X == position.X && t.m_Y == position.Y);
                 if(temp == null)
-                    m_ListNodeImage.Add(new Node(Convert.ToInt16(InputID.Text.ToString()), 0, (int)(position.X), (int)(position.Y), Convert.ToInt16(TextX.Text.ToString()) * ScaleBackGround, Convert.ToInt16(TextY.Text.ToString()) * ScaleBackGround));
+                    m_ListNodeImage.Add(new Node(Convert.ToInt16(InputID.Text.ToString()), 0, (int)(position.X), (int)(position.Y), tileWidth * ScaleBackGround, tileHeight * ScaleBackGround));
                 else
                     temp.m_Id = Convert.ToInt16(InputID.Text.ToString());
 
@@ -246,8 +268,8 @@ namespace Mapediter
         //draw grid 
         private void checkBoxDrawGrid_Checked(object sender, RoutedEventArgs e)
         {
-            double x = Convert.ToDouble(TextX.Text.ToString()) * ScaleBackGround;
-            double y = Convert.ToDouble(TextY.Text.ToString()) * ScaleBackGround;
+            double x = tileWidth * ScaleBackGround;
+            double y = tileHeight * ScaleBackGround;
             
             if(checkGrid.IsChecked.Value) // if checked
             { 
@@ -439,7 +461,16 @@ namespace Mapediter
                 image_Selected.Source = new BitmapImage(new Uri(@"\Items\rectangle.png", UriKind.Relative));
                 InputID.Text = "1";
                 InputInfor.Text = "where mario can stand";
+
+                RectWidth.IsEnabled = true;
+                RectHeight.IsEnabled = true;
+            }
+            else
+            {
+                RectWidth.IsEnabled = false;
+                RectHeight.IsEnabled = false;
             }
         }
+
     }
 }

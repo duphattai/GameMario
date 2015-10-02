@@ -138,24 +138,14 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label Content="X" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.376,-0.53" Background="{x:Null}" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="TextX" HorizontalAlignment="Left" Margin="40,122,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label Content="Y" HorizontalAlignment="Left" Margin="90,120,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="TextY" HorizontalAlignment="Left" Margin="123,122,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label Content="ID" HorizontalAlignment="Left" Margin="311,120,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.591,0.577" Grid.ColumnSpan="2"/>
-        <TextBox IsReadOnly="True" x:Name="InputID" HorizontalAlignment="Left" Margin="341,122,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label Content="Description" HorizontalAlignment="Left" Margin="413,120,0,0" VerticalAlignment="Top" Width="90" Height="26" Grid.ColumnSpan="2"/>
-        <TextBox IsReadOnly="True" x:Name="InputInfor" HorizontalAlignment="Left" Height="23" Margin="493,122,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="151" Grid.ColumnSpan="2"/>
-        <CheckBox x:Name="checkGrid" Content="Grid" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" Height="16" Width="49" Checked="checkBoxDrawGrid_Checked" Unchecked="checkBoxDrawGrid_Checked"/>
+        <Label Content="ID" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.591,0.577"/>
+        <TextBox IsReadOnly="True" x:Name="InputID" HorizontalAlignment="Left" Margin="37,123,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top"/>
+        <Label Content="Description" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Width="90" Height="26" Grid.Column="1"/>
+        <TextBox IsReadOnly="True" x:Name="InputInfor" HorizontalAlignment="Left" Height="23" Margin="90,123,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="151" Grid.Column="1"/>
+        <CheckBox x:Name="checkGrid" Content="Grid" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Height="16" Width="49" Checked="checkBoxDrawGrid_Checked" Unchecked="checkBoxDrawGrid_Checked"/>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFD6D6D6" Margin="10,169,10,0" Grid.Column="1">
-            <Canvas x:Name="mycanvas" Background="AliceBlue" Height="336" VerticalAlignment="Center" Grid.Row="10" Grid.Column="10" ScrollViewer.HorizontalScrollBarVisibility="Visible"  MouseLeftButtonDown="mycanvas_MouseLeftButtonDown" HorizontalAlignment="Center" MouseMove="mycanvas_MouseMove" MouseLeftButtonUp="mycanvas_MouseLeftButtonUp" MouseRightButtonDown="mycanvas_MouseRightButtonDown" >
-                <Grid x:Name="gridView" Width="728" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="89*"/>
-                        <ColumnDefinition Width="93*"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFD6D6D6" Margin="10,186,10,0" Grid.Column="1">
+            <Canvas x:Name="mycanvas" Background="AliceBlue" Focusable="True" Height="336" VerticalAlignment="Center" Grid.Row="10" Grid.Column="10" ScrollViewer.HorizontalScrollBarVisibility="Visible"  MouseLeftButtonDown="mycanvas_MouseLeftButtonDown" HorizontalAlignment="Center" MouseMove="mycanvas_MouseMove" MouseLeftButtonUp="mycanvas_MouseLeftButtonUp" MouseRightButtonDown="mycanvas_MouseRightButtonDown">
             </Canvas>
         </ScrollViewer>
 
@@ -164,9 +154,13 @@
                 <Label Content="Label" x:Name="position"/>
             </StatusBarItem>
         </StatusBar>
-        <Border BorderBrush="Black" BorderThickness="1" MinHeight="309" Margin="10,169,0,0" Grid.Column="0" Background="#FFD6D6D6" Width="89">
+        <Border BorderBrush="Black" BorderThickness="1" MinHeight="309" Margin="10,186,0,0" Grid.Column="0" Background="#FFD6D6D6" Width="89">
             <Image Height="32" Margin="12,121,11,122" Width="32" x:Name="image_Selected"/>
         </Border>
-        <CheckBox Content="Rectangle" Grid.Column="1" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" x:Name="drawRectangle" Checked="checkBoxDrawRectangle_Checked"/>
+        <CheckBox Content="Rectangle" Grid.Column="1" HorizontalAlignment="Left" Margin="10,158,0,0" VerticalAlignment="Top" x:Name="drawRectangle" Checked="checkBoxDrawRectangle_Checked"/>
+        <TextBox x:Name="RectWidth" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="136,153,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="56"/>
+        <TextBox x:Name="RectHeight" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="252,153,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="59" RenderTransformOrigin="2.739,0.435"/>
+        <Label Content="width" Grid.Column="1" HorizontalAlignment="Left" Margin="90,152,0,0" VerticalAlignment="Top" Height="25"/>
+        <Label Content="height" Grid.Column="1" HorizontalAlignment="Left" Margin="197,151,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

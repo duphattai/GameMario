@@ -81,8 +81,8 @@ void Game::initGame()//khởi tạo
 	keyboard->initKeyBoard(hWnd);
 
 	m_mario = new Mario();
-	m_mario->setPosition(50, 32);
-	m_state = new Map1();
+	m_mario->setPosition(50, 50);
+	m_state = new Map1(m_mario);
 	m_state->init(keyboard);
 }
 
@@ -131,7 +131,6 @@ void Game::render()
 	m_mario->draw(m_SpriteHandler);
 
 
-
 	m_SpriteHandler->End();//end action draw sprite
 	d3ddv->EndScene();
 
@@ -141,9 +140,10 @@ void Game::render()
 void Game::update()
 {
 	m_mario->updateVelocity();
-	//m_state->update();
-
+	m_state->updateCollision();
+	
 	m_mario->update();
+	m_state->setWorldPosition(m_mario->getWorldPosition());
 }
 
 void Game::gameRun()

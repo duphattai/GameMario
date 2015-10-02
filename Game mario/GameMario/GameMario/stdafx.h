@@ -6,17 +6,16 @@
 #include "Global.h"
 
 // -----------------------windowed
-#define SCREEN_WIDTH 256
-#define SCREEN_HEIGHT 240
+#define SCALE 1
+#define SCREEN_WIDTH 256 * SCALE
+#define SCREEN_HEIGHT 240 * SCALE
 #define MAIN_WINDOW_TITLE L"Sample"
 #define FPS 30
 
 // -------------------character
-#define SPEED 4.5f
-#define VECLOCITY_VY 12.5f
-#define FALLDOWN_VELOCITY_DECREASE 15.0f
-#define GROUND_Y 100
-#define VIEW_PORT_Y 240
+#define GROUND_Y 200
+#define VIEW_PORT_Y 240* SCALE
+#define GRAVITATION	-1
 
 // xet id phu thuoc vao file text quy dinh
 // 0.* = di chuyen tren mat dat  

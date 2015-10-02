@@ -4,11 +4,7 @@
 #include "StateMachine.h"
 #include "Object.h"
 #include <vector>
-enum Location
-{
-	LOC_ON_GROUND,
-	LOC_IN_AIR
-};
+
 
 class Mario : public Object
 {
@@ -23,13 +19,13 @@ private:
 
 	bool		m_isBoost;
 
-	Location	m_location;
-
 	int			m_currentFrame;
 	std::vector<Frame> frameList;
 
 	Vector2		m_MaxVelocity;
 	Vector2		m_MinVelocity;
+
+	FSM_Mario	m_FSM_Mario;
 	//Gun*		m_gun;
 public:
 	Mario();
@@ -53,13 +49,12 @@ public:
 	void		jump(bool ability = false){ m_canJump = ability; }
 	bool		canJump(){ return m_canJump; }
 
-	int			getAccel(){ return m_accel; }
 	bool		isBoost(){ return m_isBoost; }
 
-	Location	getLocation(){ return m_location; }
-	void		setLocation(Location location){ m_location = location; }
-
 	void		setVelocity(Vector2);
+
+	void		setFSM(FSM_Mario state){ m_FSM_Mario = state; }
+	FSM_Mario	getFSM(){ return m_FSM_Mario; }
 
 	void		setCurrentFrame(int frame){ m_currentFrame = frame; }
 	int			getCurrentFrame(){ return m_currentFrame; }

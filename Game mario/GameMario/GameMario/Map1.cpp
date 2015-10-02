@@ -1,12 +1,14 @@
-#include "Map1.h"
+﻿#include "Map1.h"
 #include "Source.h"
 #include "SwapAABB.h"
-Map1::Map1()
+Map1::Map1(Mario *mario)
 {
 	m_Sprite = Source::getInstance()->getSprite(IDImage::IMG_MAP1);
 	m_WorldPosition.y = VIEW_PORT_Y;
 
-	Line = 2;
+	Line = 3;
+	m_Mario = mario;
+	m_CheckCollision = new Collision();
 }
 
 void Map1::init(CKeyBoard *keyboard)
@@ -14,14 +16,34 @@ void Map1::init(CKeyBoard *keyboard)
 	MapObject::init(keyboard, NodeTileMap_1);
 }
 
+
+void Map1::updateCollision()
+{
+	// collision with map
+	// mario
+	m_Mario->setDirCollision(DIR::NONE);
+	m_Mario->setLocation(Location::LOC_IN_AIR);
+	Box marioBound = GetSweptBroadPhaseBox(m_Mario->getBouding()); // tao vung khong gian cho mario
+	for each (Box item in getTileNodeOnScreen())
+	{
+ 		// kiem tra item co nam trong vung khong gian cua mario
+		if (CheckAABB(marioBound, item))
+		{
+			DIR dir = m_CheckCollision->isCollision(m_Mario, item);
+			if (dir != DIR::NONE)
+			{
+				if (m_Mario->getFSM() != FSM_Mario::JUMP && dir == DIR::TOP) // fall gặp vật cản
+					m_Mario->setLocation(Location::LOC_ON_GROUND);
+			}
+
+			if (m_Mario->getDirCollision() == DIR::NONE)
+				m_Mario->setDirCollision(dir);
+		}
+	}
+}
 void Map1::update()
 {
-	m_keyboard->getState();
-	if (m_keyboard->isKeyDown(DIK_RIGHT))
-		m_WorldPosition.x += 5;
-	else if (m_keyboard->isKeyDown(DIK_LEFT))
-		m_WorldPosition.x -= 5;
-	
+
 }
 
 vector<ObjectTittle> getNodeOnCamera(vector<ObjectTittle> listNode, Box camera)
@@ -46,8 +68,8 @@ void Map1::draw(LPD3DXSPRITE SpriteHandler)
 		if (item.m_Id == 0)
 		{
 			m_Sprite->setIndex(item.m_Index);
-			m_Position.x = item.m_X;
-			m_Position.y = item.m_Y;
+			m_Position.x = (float)item.m_X;
+			m_Position.y = (float)item.m_Y;
 			Object::draw(SpriteHandler);
 		}
 	}

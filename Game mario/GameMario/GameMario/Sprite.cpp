@@ -133,23 +133,21 @@ void Sprite::draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 
 	D3DXMATRIX mt;
 	D3DXMatrixIdentity(&mt);
 	mt._22 = -1.0f;
-	mt._41 = -vpx;
-	mt._42 = vpy;
+	mt._41 = (float)-vpx;
+	mt._42 = (float)vpy;
 
 	D3DXVECTOR4 vp_pos;
 	D3DXVec3Transform(&vp_pos, &D3DXVECTOR3(position.x, position.y, 0), &mt);
 
 	D3DXVECTOR3 p(vp_pos.x, vp_pos.y, 0);
-	D3DXVECTOR3 center(m_Width / 2, m_Height / 2, 0);
+	D3DXVECTOR3 center((float)m_Width/ 2, (float)m_Height/ 2, 0); // tâm của sprite trong textture
 
 
 	D3DXMATRIX m_OldMatrix;
-
 	SpriteHandler->GetTransform(&m_OldMatrix);
 
 	D3DXMATRIX m_NewMatrix;
-
-	D3DXMatrixTransformation2D(&m_NewMatrix, &D3DXVECTOR2(vp_pos.x, vp_pos.y), 0, &scale, NULL, 0, NULL);
+	D3DXMatrixTransformation2D(&m_NewMatrix, &D3DXVECTOR2(vp_pos.x, vp_pos.y), NULL, &scale, NULL, NULL, NULL);
 
 	D3DXMATRIX m_FinalMatrix;
 	m_FinalMatrix = m_OldMatrix * m_NewMatrix;

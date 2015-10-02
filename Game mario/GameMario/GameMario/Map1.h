@@ -3,11 +3,11 @@
 class Map1 : public MapObject
 {
 public:
-	Map1();
+	Map1(Mario *mario);
 	void init(CKeyBoard *keyboard);
 	void draw(LPD3DXSPRITE SpriteHandler);
 	void update();
-	void updateCollision(){}
+	void updateCollision();
 	~Map1();
 };
 

@@ -1,6 +1,5 @@
 #include "MapObject.h"
-
-
+#include "SwapAABB.h"
 MapObject::MapObject()
 {
 	m_Flip = SpriteEffect::None;
@@ -31,13 +30,16 @@ void MapObject::init(CKeyBoard *keyboard, char *FileMap)
 
 		file >> Id >> index >> x >> y >> width >> height;
 
-		ObjectTittle temp(Id, index, x, y, width, height);
+		ObjectTittle temp(Id, index, x * SCALE, y * SCALE, width * SCALE, height * SCALE);
 
 		if (Id == 0) // for maptile
 		{
 			m_tileMapNode.push_back(temp);
 		}
-		
+		else if (Id == 1) // stand position on map
+		{
+			m_StandPositionOnMap.push_back(Box(--x * SCALE, --y * SCALE, --width *SCALE, --height * SCALE));
+		}
 	}
 	file.close();
 
@@ -47,4 +49,18 @@ void MapObject::init(CKeyBoard *keyboard, char *FileMap)
 MapObject::~MapObject()
 {
 	m_keyboard = NULL;
+}
+
+
+vector<Box> MapObject::getTileNodeOnScreen()
+{
+	vector<Box> list;
+	Box camera(m_WorldPosition.x, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	for each (Box item in m_StandPositionOnMap)
+	{
+		if (CheckAABB(item, camera))
+			list.push_back(Box(item));
+	}
+
+	return list;
 }

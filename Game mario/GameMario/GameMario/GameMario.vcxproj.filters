@@ -111,6 +111,9 @@
     <ClCompile Include="MarioOwnedState.cpp">
       <Filter>Source Files\GameObject\StateMachine</Filter>
     </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files\FrameWork\Coliision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="MarioOwnedState.h">
       <Filter>Header Files\GameObject\StateMachine\MarioOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\FrameWork\Coliision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

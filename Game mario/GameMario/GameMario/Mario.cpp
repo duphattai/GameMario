@@ -41,8 +41,8 @@ Mario::Mario()
 
 
 	m_Sprite = Source::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
-	m_MaxVelocity = Vector2(5, 16);
-	m_MinVelocity = Vector2(-5, -16);
+	m_MaxVelocity = Vector2(3.0f, 10.0f);
+	m_MinVelocity = Vector2(-3.0f, -10.0f);
 
 	m_Gametime = new GameTime();
 	m_Gametime->setTime();
@@ -53,7 +53,7 @@ Mario::Mario()
 	m_canShoot = false;
 
 	m_stateMachine = new StateMachine<Mario>(this);
-	m_stateMachine->changeState(Standing::getInstance());
+	m_stateMachine->changeState(Falling::getInstance());
 }
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
@@ -64,10 +64,19 @@ void Mario::draw(LPD3DXSPRITE SpriteHandler)
 
 void Mario::update()
 {
-	if (m_Gametime->getElapsedTimePerSecond() <= 1000 / 23) return;
-
+	if (m_Gametime->getElapsedTime() < 1000 / 23) return;
+	
+	
 	m_Position.x += m_Velocity.x;
 	m_Position.y += m_Velocity.y;
+	
+	// make mario not move off camera
+	if (m_Position.x < m_WorldPosition.x)
+		m_Position.x = m_WorldPosition.x;
+
+	// update camera just move right
+	if (m_WorldPosition.x < m_Position.x - SCREEN_WIDTH / 2)
+		m_WorldPosition.x = m_Position.x - SCREEN_WIDTH / 2;
 
 	m_Gametime->update();
 }
@@ -75,7 +84,8 @@ void Mario::update()
 void Mario::updateVelocity()
 {
 	m_Gametime->setTime();
-	if (m_Gametime->getElapsedTimePerSecond() <= 1000 / 25) return;
+	if (m_Gametime->getElapsedTime() < 1000 / 23)
+		return;
 
 	m_stateMachine->update();
 }
@@ -97,4 +107,5 @@ void Mario::setVelocity(Vector2 velocity)
 
 Mario::~Mario()
 {
+	delete m_Gametime;
 }

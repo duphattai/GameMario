@@ -2,6 +2,9 @@
 #include "Sprite.h"
 #include "Global.h"
 #include "GameTime.h"
+#include "Collision.h"
+
+class Collision;
 
 class Object
 {
@@ -21,39 +24,47 @@ protected:
 
 	Vector2 m_WorldPosition;
 
+	Location	m_location;
+
 	Vector2 m_Velocity;
+
+	Collision	*m_CheckCollision;
+
+	DIR			m_DirCollision;
 public:
 	Object();
 
+	// set camera
 	void		setWorldPosition(Vector2);
 	Vector2		getWorldPosition();
 
 	void		setVelocity(Vector2);
 	Vector2		getVelocity();
 
-	void		setPosition(int x, int y);
+	// set position on real world
+	void		setPosition(float, float);
 	Vector2		getPosition();
 
 	virtual void update() = 0;
 	virtual void draw(LPD3DXSPRITE);
 
-	int getHeight()
-	{
-		return m_Sprite->getHeight();
-	}
+	int getHeight();
+	int getWidth();
 
-	int getWidth()
-	{
-		return m_Sprite->getWidth();
-	}
+	Location getLocation();
+	void setLocation(int);
 
 	bool isCollision(Object *object);
 
-	void setFliping(SpriteEffect efect){ m_Flip = efect; }
+	void setDirCollision(DIR);
+	DIR getDirCollision();
+
+	void setFliping(SpriteEffect);
+	SpriteEffect getFliping();
 
 	Box getBouding()
 	{
-		return Box(m_Position.x, m_Position.y, m_Sprite->getWidth(), m_Sprite->getHeight(), m_Velocity.x, m_Velocity.y);
+		return Box(m_Position.x, m_Position.y, m_Sprite->getWidth() - 2, m_Sprite->getHeight(), m_Velocity.x, m_Velocity.y);
 	}
 
 	virtual void updateVelocity(){};

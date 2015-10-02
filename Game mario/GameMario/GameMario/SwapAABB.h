@@ -16,7 +16,7 @@ static Box GetSweptBroadPhaseBox(Box b)
 	broadphasebox.y = b.vy > 0 ? b.y : b.y + (float)b.vy;
 	broadphasebox.width = b.vx > 0 ? b.vx + b.width : b.width - b.vx;
 	broadphasebox.height = b.vy > 0 ? b.vy + b.height : b.height - b.vy;
-
+	
 	return broadphasebox;
 }
 
@@ -24,10 +24,7 @@ static Box GetSweptBroadPhaseBox(Box b)
 // box1 nằm trong box2 return true
 static bool CheckAABB(Box box1, Box box2)
 {
-	if (box1.x + box1.width < box2.x || box1.x > box2.x + box2.width || box1.y + box1.height < box2.y || box1.y > box2.y + box2.height)
-		return false;
-
-	return true;
+	return !(box1.x + box1.width < box2.x || box1.x > box2.x + box2.width || box1.y + box1.height < box2.y || box1.y > box2.y + box2.height);
 }
 
 // kiểm tra vật có nằm ngoài vùng
@@ -50,10 +47,10 @@ static DIR AABB(Box &box1, Box &box2)
 	box2.vx = box2.vy = 0.0f;
 
 	// co va cham khong can biet va cham ben nao
-	if (t < 0) return DIR::TOP;
-	if (l < 0) return DIR::LEFT;
-	if (r < 0) return DIR::RIGHT;
-	if (b < 0) return DIR::BOTTOM;
+	if (t <= 0) return DIR::TOP;
+	if (l <= 0) return DIR::LEFT;
+	if (r <= 0) return DIR::RIGHT;
+	if (b <= 0) return DIR::BOTTOM;
 }
 
 // thuat toan xet va cham

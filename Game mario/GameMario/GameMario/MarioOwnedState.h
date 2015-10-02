@@ -30,7 +30,6 @@ class Running : public State < Mario >
 {
 private:
 	static Running*	m_instance;
-	int	m_accel;
 public:
 	Running(){}
 	virtual ~Running(){}
@@ -51,7 +50,6 @@ class Sitting : public State < Mario >
 {
 private:
 	static Sitting*	m_instance;
-	int m_accel;
 public:
 	Sitting(){}
 	virtual ~Sitting(){}
@@ -72,6 +70,7 @@ class Jumping : public State < Mario >
 {
 private:
 	static Jumping*	m_instance;
+	int				m_timeJump;
 public:
 	Jumping(){}
 	virtual ~Jumping(){}

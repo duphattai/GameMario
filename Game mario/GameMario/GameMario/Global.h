@@ -27,6 +27,11 @@ enum SpriteEffect
 	Flip,
 };
 
+enum Location
+{
+	LOC_ON_GROUND,
+	LOC_IN_AIR
+};
 
 enum MarioSheet
 {
@@ -78,6 +83,15 @@ enum DIR
 	BOTTOM
 };
 
+enum FSM_Mario
+{
+	STAND = 0,
+	RUN,
+	JUMP,
+	FALL,
+	SIT
+};
+
 struct Frame
 {
 	int id;
@@ -92,9 +106,9 @@ public:
 
 struct Vector2
 {
-	int x;
-	int y;
-	Vector2(int x = 0, int y = 0)
+	float x;
+	float y;
+	Vector2(float x = 0, float y = 0)
 	{
 		this->x = x;
 		this->y = y;

@@ -1,0 +1,19 @@
+﻿<Window x:Class="Mapediter.OpenFile"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OpenFile" Height="200" Width="300">
+    <Grid>
+        <Label Content="Path Image" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="PathImage" HorizontalAlignment="Left" Height="23" Margin="85,13,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Open" HorizontalAlignment="Left" Margin="217,12,0,0" VerticalAlignment="Top" Width="65" Click="Button_Click"/>
+        <Label Content="Tile width" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.376,-0.53" Background="{x:Null}"/>
+        <TextBox x:Name="TileWidth" HorizontalAlignment="Left" Margin="85,60,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top"/>
+        <Label Content="Tile height" HorizontalAlignment="Left" Margin="144,58,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="TileHeight" HorizontalAlignment="Left" Margin="217,60,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top"/>
+        <Label Content="Scale" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.376,-0.53" Background="{x:Null}"/>
+        <TextBox x:Name="Scale" HorizontalAlignment="Left" Margin="85,97,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top"/>
+        <Button Content="Ok" Margin="186,138,73,0" VerticalAlignment="Top" x:Name="Ok" Click="Ok_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="233,138,0,0" VerticalAlignment="Top" Width="49" Click="Button_Click_1"/>
+
+    </Grid>
+</Window>

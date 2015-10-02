@@ -10,7 +10,7 @@ public:
 	GameTime();
 	void update();
 	void setTime();
-	DWORD getElapsedTimePerSecond()
+	DWORD getElapsedTime()
 	{
 		return (m_CurrenTime - m_PrevTime);
 	}
