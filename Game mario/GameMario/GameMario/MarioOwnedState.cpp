@@ -127,9 +127,7 @@ void Running::execute(Mario* mario)
 		// make accel
 		mario->setCurrentFrame(index);
 		if (mario->getFliping() == SpriteEffect::Flip) // move left
-		{
 			velocity.x = (velocity.x + 0.5f) >= 0 ? 0 : (velocity.x + 0.5f);
-		}
 		else // move right;
 			velocity.x = (velocity.x - 0.5f) <= 0 ? 0 : (velocity.x - 0.5f);	
 
@@ -178,18 +176,11 @@ void Sitting::execute(Mario* mario)
 {
 	// make accel
 	Vector2 velocity = mario->getVelocity();
-	if (mario->getFliping() == Flip) // left
-	{
-		if (velocity.x < 0)
-			velocity.x++;
-	}
-	else
-	{
-		if (velocity.x > 0)
-			velocity.x--;
-	}
+	if (mario->getFliping() == Flip && velocity.x < 0) // left
+		velocity.x++;
+	else if (mario->getFliping() == SpriteEffect::None && velocity.x > 0)
+		velocity.x--;
 	mario->setVelocity(velocity);
-
 
 
 	keyboard->getState();
@@ -233,7 +224,7 @@ void Jumping::enter(Mario* mario)
 		mario->setCurrentFrame(MarioSheet::MARIO_STAND);
 
 	mario->setLocation(Location::LOC_IN_AIR);
-	mario->setVelocity(Vector2(mario->getVelocity().x, 6.0f));
+	mario->setVelocity(Vector2(mario->getVelocity().x, 6.00f));
 	m_timeJump = 4;
 	mario->setFSM(FSM_Mario::JUMP);
 }
@@ -248,7 +239,6 @@ void Jumping::execute(Mario* mario)
 	else
 		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
 
-
 	Vector2 velocity = mario->getVelocity();
 	
 
@@ -257,13 +247,9 @@ void Jumping::execute(Mario* mario)
 	if (dir != DIR::NONE) // iscollision
 	{
 		if (dir != DIR::TOP) // left or right
-		{
 			mario->getStateMachine()->changeState(Falling::getInstance());
-		}
 		else if (velocity.y <= 0 || dir == DIR::TOP)
-		{
 			mario->getStateMachine()->changeState(Standing::getInstance());
-		}
 		return;
 	}
 
@@ -271,7 +257,7 @@ void Jumping::execute(Mario* mario)
 	velocity.y += GRAVITATION;
 	// update velocity
 	keyboard->getState();
-	if (keyboard->isKeyDown(DIK_UP) && m_timeJump-- > 0)
+	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0)
 		velocity.y += m_timeJump;
 
 	if (keyboard->isKeyDown(DIK_RIGHT))
@@ -359,7 +345,13 @@ void Falling::execute(Mario* mario)
 
 	//// nếu xảy ra va chạm
 	if (mario->getLocation() == Location::LOC_ON_GROUND)
-		mario->getStateMachine()->changeState(Standing::getInstance());
+	{
+		if (keyboard->isKeyDown(DIK_LEFT) || keyboard->isKeyDown(DIK_RIGHT))
+			mario->getStateMachine()->changeState(Running::getInstance());
+		else
+			mario->getStateMachine()->changeState(Standing::getInstance());
+	}
+		
 }
 
 void Falling::exit(Mario* mario)

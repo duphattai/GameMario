@@ -65,11 +65,11 @@ void Mario::draw(LPD3DXSPRITE SpriteHandler)
 void Mario::update()
 {
 	if (m_Gametime->getElapsedTime() < 1000 / 23) return;
-	
+	m_Gametime->update();
 	
 	m_Position.x += m_Velocity.x;
 	m_Position.y += m_Velocity.y;
-	
+
 	// make mario not move off camera
 	if (m_Position.x < m_WorldPosition.x)
 		m_Position.x = m_WorldPosition.x;
@@ -77,8 +77,6 @@ void Mario::update()
 	// update camera just move right
 	if (m_WorldPosition.x < m_Position.x - SCREEN_WIDTH / 2)
 		m_WorldPosition.x = m_Position.x - SCREEN_WIDTH / 2;
-
-	m_Gametime->update();
 }
 
 void Mario::updateVelocity()

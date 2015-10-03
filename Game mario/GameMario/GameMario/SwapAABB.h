@@ -47,10 +47,10 @@ static DIR AABB(Box &box1, Box &box2)
 	box2.vx = box2.vy = 0.0f;
 
 	// co va cham khong can biet va cham ben nao
-	if (t <= 0) return DIR::TOP;
-	if (l <= 0) return DIR::LEFT;
-	if (r <= 0) return DIR::RIGHT;
-	if (b <= 0) return DIR::BOTTOM;
+	if (t <= 0 && box1.y + box1.height > box2.y + box2.height) return DIR::TOP;
+	if (l <= 0 && box1.x < box2.x) return DIR::LEFT;
+	if (r <= 0 && box1.x + box1.width > box2.x + box2.width) return DIR::RIGHT;
+	if (b <= 0 && box1.y < box2.y) return DIR::BOTTOM;
 }
 
 // thuat toan xet va cham
