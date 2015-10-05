@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 ////////////////////////////////////////////////////////////
 #include "StateMachine.h"
@@ -10,14 +10,18 @@ class Mario : public Object
 {
 private:
 	StateMachine<Mario>*	m_stateMachine;
+	StateMachine<Mario>*	m_statusStateMachine;
 
-	int			m_lives;
 
-	bool		m_isBig;
-	bool		m_canShoot;
+	int			m_lives; // mạng của mario
+
+	bool		m_isBig; // trạng thái Big
+	bool		m_canShoot; // Trạng thái fire
 	bool		m_canJump;
 
 	bool		m_isBoost;
+
+	bool		m_isDead;
 
 	int			m_currentFrame;
 	std::vector<Frame> frameList;
@@ -36,9 +40,11 @@ public:
 	void		draw(LPD3DXSPRITE SpriteHandler);
 
 	StateMachine<Mario>*	getStateMachine(){ return m_stateMachine; }
+	StateMachine<Mario>*	getStatusStateMachine(){ return m_statusStateMachine; }
+
 
 	bool		isBig(){ return m_isBig; }
-	void		setIsBig(bool x);
+	void		setIsBig(bool x){ m_isBig = x; }
 
 	Vector2		getMaxVelocity(){ return m_MaxVelocity; }
 	Vector2		getMinVelocity(){ return m_MinVelocity; }
@@ -50,6 +56,12 @@ public:
 	bool		canJump(){ return m_canJump; }
 
 	bool		isBoost(){ return m_isBoost; }
+
+	void		setDead(bool x){ m_isDead = x; }
+	bool		isDead(){ return m_isDead; }
+
+	int			getLives(){ return m_lives; }
+	void		setLives(int x){ m_lives = x; }
 
 	void		setVelocity(Vector2);
 

@@ -12,7 +12,7 @@ Mario::Mario()
 	file.open("Resources//mario.txt");
 
 	char s[1000];
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		file.getline(s, 1000, '\n');
 	}
@@ -41,8 +41,8 @@ Mario::Mario()
 
 
 	m_Sprite = Source::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
-	m_MaxVelocity = Vector2(3.0f, 10.0f);
-	m_MinVelocity = Vector2(-3.0f, -10.0f);
+	m_MaxVelocity = Vector2(3.00f, 10.0f);
+	m_MinVelocity = Vector2(-3.00f, -10.0f);
 
 	m_Gametime = new GameTime();
 	m_Gametime->setTime();
@@ -54,6 +54,9 @@ Mario::Mario()
 
 	m_stateMachine = new StateMachine<Mario>(this);
 	m_stateMachine->changeState(Falling::getInstance());
+
+	m_statusStateMachine = new StateMachine<Mario>(this);
+	m_statusStateMachine->changeState(Small::getInstance());
 }
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
@@ -64,11 +67,15 @@ void Mario::draw(LPD3DXSPRITE SpriteHandler)
 
 void Mario::update()
 {
-	if (m_Gametime->getElapsedTime() < 1000 / 23) return;
+	if (m_Gametime->getElapsedTime() < 1000 / 22) return;
 	m_Gametime->update();
 	
-	m_Position.x += m_Velocity.x;
-	m_Position.y += m_Velocity.y;
+	if (m_FSM_Mario != FSM_Mario::EFFECT_BIG && m_FSM_Mario != FSM_Mario::EFFECT_FIRE && m_FSM_Mario != FSM_Mario::EFFECT_SMALL)
+	{
+		m_Position.x += m_Velocity.x;
+		m_Position.y += m_Velocity.y;
+	}
+	
 
 	// make mario not move off camera
 	if (m_Position.x < m_WorldPosition.x)
@@ -82,25 +89,38 @@ void Mario::update()
 void Mario::updateVelocity()
 {
 	m_Gametime->setTime();
-	if (m_Gametime->getElapsedTime() < 1000 / 23)
+	if (m_Gametime->getElapsedTime() < 1000 / 22)
 		return;
 
 	m_stateMachine->update();
+	m_statusStateMachine->update();
 }
+
 
 void Mario::setVelocity(Vector2 velocity)
 {
 	m_Velocity = velocity;
+	Vector2 maxVelocity = m_MaxVelocity;
+	Vector2 minVelocity = m_MinVelocity;
 
-	if (m_Velocity.x >= m_MaxVelocity.x)
-		m_Velocity.x = m_MaxVelocity.x;
-	else if (m_Velocity.x <= m_MinVelocity.x)
-		m_Velocity.x = m_MinVelocity.x;
+	//if (!m_isBig && !m_canShoot) // update velocity for small
+	//{
+	//	maxVelocity.x--;
+	//	maxVelocity.y--;
+	//	minVelocity.x++;
+	//	minVelocity.y++;
+	//}
 
-	if (m_Velocity.y >= m_MaxVelocity.y)
-		m_Velocity.y = m_MaxVelocity.y;
-	else if (m_Velocity.y <= m_MinVelocity.y)
-		m_Velocity.y = m_MinVelocity.y;
+	if (m_Velocity.x >= maxVelocity.x)
+		m_Velocity.x = maxVelocity.x;
+	else if (m_Velocity.x <= minVelocity.x)
+		m_Velocity.x = minVelocity.x;
+
+	if (m_Velocity.y >= maxVelocity.y)
+		m_Velocity.y = maxVelocity.y;
+	else if (m_Velocity.y <= minVelocity.y)
+		m_Velocity.y = minVelocity.y;
+	
 }
 
 Mario::~Mario()

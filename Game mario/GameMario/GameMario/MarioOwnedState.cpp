@@ -2,6 +2,8 @@
 #include "MarioOwnedState.h"
 #include "KeyBoard.h"
 
+// action of mario
+#pragma region
 /////////////////////////////////////////////////////////////////////////////////
 //STANDING
 Standing* Standing::m_instance = 0;
@@ -30,14 +32,6 @@ void Standing::enter(Mario* mario)
 
 void Standing::execute(Mario* mario)
 {
-	if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_STAND);
-	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_STAND);
-	else
-		mario->setCurrentFrame(MarioSheet::MARIO_STAND);
-
-
 	mario->setVelocity(Vector2(0, GRAVITATION));
 
 	keyboard->getState();
@@ -112,12 +106,34 @@ void Running::execute(Mario* mario)
 	}
 	else if(keyboard->isKeyDown(DIK_RIGHT))
 	{
-		mario->setFliping(SpriteEffect::None);
+		//make change direction move
+		if (mario->getFliping() == SpriteEffect::Flip)
+		{
+			if (mario->isBig())
+				index = MarioSheet::BIG_MARIO_CHANGE_DIR;// cap nhật lại index big mario
+			else if (mario->canShoot())
+				index = MarioSheet::SUPER_MARIO_CHANGE_DIR; // cap nhật lại index fire mario
+			else
+				index = MarioSheet::MARIO_CHANGE_DIR; // cap nhật lại index small mario
+		}
+			
 		mario->setCurrentFrame(index);
+		mario->setFliping(SpriteEffect::None);
 		velocity.x += 0.50f;
 	}
 	else if(keyboard->isKeyDown(DIK_LEFT))
 	{
+		//make change direction move
+		if (mario->getFliping() == SpriteEffect::None)
+		{
+			if (mario->isBig())
+				index = MarioSheet::BIG_MARIO_CHANGE_DIR;// cap nhật lại index big mario
+			else if (mario->canShoot())
+				index = MarioSheet::SUPER_MARIO_CHANGE_DIR; // cap nhật lại index fire mario
+			else
+				index = MarioSheet::MARIO_CHANGE_DIR; // cap nhật lại index small mario
+		}
+
 		mario->setFliping(SpriteEffect::Flip);
 		mario->setCurrentFrame(index);
 		velocity.x -= 0.50f;
@@ -217,11 +233,11 @@ void Jumping::enter(Mario* mario)
 {
 	// mặc định load sprite jump
 	if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_STAND);
+		mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
 	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_STAND);
+		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_JUMP);
 	else
-		mario->setCurrentFrame(MarioSheet::MARIO_STAND);
+		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
 
 	mario->setLocation(Location::LOC_IN_AIR);
 	mario->setVelocity(Vector2(mario->getVelocity().x, 6.00f));
@@ -231,16 +247,7 @@ void Jumping::enter(Mario* mario)
 
 void Jumping::execute(Mario* mario)
 {
-	// mặc định load sprite jump
-	if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
-	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_JUMP);
-	else
-		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
-
-	Vector2 velocity = mario->getVelocity();
-	
+	Vector2 velocity = mario->getVelocity();	
 
 	// solve if has coliision
 	DIR dir = mario->getDirCollision();
@@ -264,13 +271,13 @@ void Jumping::execute(Mario* mario)
 	{
 		mario->setFliping(SpriteEffect::None);
 		// không cho nhảy xa quá
-		velocity.x += 0.50f;
+		velocity.x += 1.0f;
 	}
 	else if (keyboard->isKeyDown(DIK_LEFT))
 	{
 		mario->setFliping(SpriteEffect::Flip);
 		// không cho nhảy xa quá
-		velocity.x -= 0.50f;
+		velocity.x -= 1.00f;
 	}
 	else if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
 	{
@@ -306,17 +313,25 @@ void Falling::enter(Mario* mario)
 {
 	mario->setLocation(Location::LOC_IN_AIR);
 	mario->setFSM(FSM_Mario::FALL);
+
+	// mặc định load sprite jump
+	if (mario->isBig())
+	mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
+	else if (mario->canShoot())
+	mario->setCurrentFrame(MarioSheet::SUPER_MARIO_JUMP);
+	else
+	mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
 }
 
 void Falling::execute(Mario* mario)
 {
 	// mặc định load sprite jump
-	if (mario->isBig())
+	/*if (mario->isBig())
 		mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
 	else if (mario->canShoot())
 		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_JUMP);
 	else
-		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
+		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);*/
 
 	Vector2 velocity = mario->getVelocity();
 	velocity.y += GRAVITATION;
@@ -327,12 +342,12 @@ void Falling::execute(Mario* mario)
 	if (keyboard->isKeyDown(DIK_RIGHT))
 	{
 		mario->setFliping(SpriteEffect::None);
-		velocity.x += 0.50f;
+		velocity.x += 1.00f;
 	}
 	else if (keyboard->isKeyDown(DIK_LEFT))
 	{
 		mario->setFliping(SpriteEffect::Flip);
-		velocity.x -= 0.50f;
+		velocity.x -= 1.00f;
 	}
 	else if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
 	{
@@ -359,3 +374,314 @@ void Falling::exit(Mario* mario)
 }
 /////////////////////////////////////////////////////////////////////////////////
 
+#pragma endregion
+
+
+// status of mario
+#pragma region
+/////////////////////////////////////////////////////////////////////////////////
+// small
+Small* Small::m_instance = 0;
+
+Small::Small()
+{
+}
+
+Small* Small::getInstance()
+{
+	if (!m_instance)
+		m_instance = new Small();
+
+	return m_instance;
+}
+
+void Small::enter(Mario* mario)
+{
+	mario->setIsBig(false);
+	mario->setCanShoot(false);
+}
+
+void Small::execute(Mario* mario)
+{
+	if (mario->isBig() && mario->getFSM() != FSM_Mario::EFFECT_BIG)
+	{
+		mario->getStateMachine()->changeState(EffectBig::getInstance());
+		//mario->getStatusStateMachine()->changeState(Big::getInstance());
+	}
+	else if (mario->isDead() && mario->getFSM() != FSM_Mario::DEAD) // không gọi lại
+	{
+		mario->getStateMachine()->changeState(Dead::getInstance());
+		mario->setLives(mario->getLives() - 1);
+	}
+}
+
+void Small::exit(Mario* mario)
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////
+//effect bigger
+EffectBig* EffectBig::m_instance = 0;
+
+EffectBig::EffectBig()
+{
+	m_frameAnimation.push_back(MarioSheet::MARIO_STAND);
+	m_frameAnimation.push_back(MarioSheet::SMALL_BIG_STAND);
+	m_frameAnimation.push_back(MarioSheet::MARIO_STAND);
+	m_frameAnimation.push_back(MarioSheet::BIG_MARIO_STAND);
+	m_frameAnimation.push_back(MarioSheet::SMALL_BIG_STAND);
+	m_frameAnimation.push_back(MarioSheet::BIG_MARIO_STAND);
+}
+
+EffectBig* EffectBig::getInstance()
+{
+	if (!m_instance)
+		m_instance = new EffectBig();
+
+	return m_instance;
+}
+
+void EffectBig::enter(Mario* mario)
+{
+	m_currentIndex = 0;
+	mario->setIsBig(true);
+	mario->setFSM(FSM_Mario::EFFECT_BIG);
+}
+
+void EffectBig::execute(Mario* mario)
+{
+	if (m_currentIndex == m_frameAnimation.size())
+	{
+		mario->getStateMachine()->changeState(mario->getStateMachine()->GetPreviousState());
+		mario->getStatusStateMachine()->changeState(Big::getInstance());
+	}
+	else
+		mario->setCurrentFrame(m_frameAnimation[m_currentIndex++]);
+}
+
+void EffectBig::exit(Mario* mario)
+{
+}
+/////////////////////////////////////////////////////////////////////////////////
+//Big
+Big* Big::m_instance = 0;
+
+Big::Big()
+{
+}
+
+Big* Big::getInstance()
+{
+	if (!m_instance)
+		m_instance = new Big();
+
+	return m_instance;
+}
+
+void Big::enter(Mario* mario)
+{
+	mario->setIsBig(true);
+	mario->setCanShoot(false);
+}
+
+void Big::execute(Mario* mario)
+{
+	if (mario->canShoot() && mario->getFSM() != FSM_Mario::EFFECT_FIRE)
+	{
+		mario->getStateMachine()->changeState(EffectFire::getInstance());
+		/*mario->getStatusStateMachine()->changeState(Fire::getInstance());*/
+	}
+	else if (mario->isDead())
+	{
+		mario->getStateMachine()->changeState(EffectSmall::getInstance());
+		mario->getStatusStateMachine()->changeState(Small::getInstance());
+	}
+}
+
+void Big::exit(Mario* mario)
+{
+	mario->setDead(false);
+}
+
+// Dead
+Dead* Dead::m_instance = 0;
+
+Dead::Dead()
+{
+}
+
+Dead* Dead::getInstance()
+{
+	if (!m_instance)
+		m_instance = new Dead();
+
+	return m_instance;
+}
+
+void Dead::enter(Mario* mario)
+{
+	mario->setIsBig(false);
+	mario->setCanShoot(false);
+
+	mario->setVelocity(Vector2(0, 5));
+	mario->setCurrentFrame(MarioSheet::MARIO_DIE);
+	mario->setFSM(FSM_Mario::DEAD);
+}
+
+void Dead::execute(Mario* mario)
+{
+	Vector2 velocity = mario->getVelocity();
+	velocity.y--;
+	mario->setVelocity(velocity);
+
+
+	if (mario->getLives() > 0 && mario->getPosition().y < -10)
+	{
+		Vector2 position = mario->getWorldPosition();
+		mario->setPosition(position.x, 50);
+
+		mario->getStateMachine()->changeState(Falling::getInstance());
+	}
+}
+
+void Dead::exit(Mario* mario)
+{
+	mario->setFSM(FSM_Mario::FALL);
+	mario->setDead(false);
+}
+
+//////////////////////// Effect Fire
+EffectFire* EffectFire::m_instance = 0;
+
+EffectFire::EffectFire()
+{
+}
+
+EffectFire* EffectFire::getInstance()
+{
+	if (!m_instance)
+		m_instance = new EffectFire();
+
+	return m_instance;
+}
+
+void EffectFire::enter(Mario* mario)
+{
+	m_currentIndex = 0;
+	mario->setIsBig(false);
+	mario->setCanShoot(true);
+	mario->setFSM(FSM_Mario::EFFECT_FIRE);
+
+	int bigIndex = mario->getCurrentFrame();
+	m_frameAnimation.push_back(bigIndex); // big mario
+	m_frameAnimation.push_back(bigIndex + 15); // fire mario
+	m_frameAnimation.push_back(bigIndex + 25); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + 32); // invinbility color 2
+	m_frameAnimation.push_back(bigIndex + 25); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + 15); // fire mario
+}
+
+void EffectFire::execute(Mario* mario)
+{
+	if (m_currentIndex == m_frameAnimation.size())
+	{
+		mario->getStateMachine()->changeState(mario->getStateMachine()->GetPreviousState());
+		mario->getStatusStateMachine()->changeState(Fire::getInstance());
+	}
+	else
+		mario->setCurrentFrame(m_frameAnimation[m_currentIndex++]);
+}
+
+void EffectFire::exit(Mario* mario)
+{
+	m_frameAnimation.clear();
+	m_currentIndex = 0;
+}
+
+/////////////////////////////////////Fire
+Fire* Fire::m_instance = 0;
+
+Fire::Fire()
+{
+}
+
+Fire* Fire::getInstance()
+{
+	if (!m_instance)
+		m_instance = new Fire();
+
+	return m_instance;
+}
+
+void Fire::enter(Mario* mario)
+{
+	mario->setIsBig(false);
+	mario->setCanShoot(true);
+}
+
+void Fire::execute(Mario* mario)
+{
+	if (mario->isDead() && mario->getFSM() != FSM_Mario::EFFECT_SMALL)
+	{
+		mario->getStateMachine()->changeState(EffectSmall::getInstance());
+		mario->getStatusStateMachine()->changeState(Small::getInstance());
+	}
+}
+
+void Fire::exit(Mario* mario)
+{
+	mario->setDead(false);
+	mario->setCanShoot(false);
+}
+
+//////EFFECT SMALL
+EffectSmall* EffectSmall::m_instance = 0;
+
+EffectSmall::EffectSmall()
+{
+}
+
+EffectSmall* EffectSmall::getInstance()
+{
+	if (!m_instance)
+		m_instance = new EffectSmall();
+
+	return m_instance;
+}
+
+void EffectSmall::enter(Mario* mario)
+{
+	m_currentIndex = 0;
+	mario->setIsBig(false);
+	mario->setCanShoot(false);
+	mario->setFSM(FSM_Mario::EFFECT_SMALL);
+
+	int bigIndex = mario->getCurrentFrame();
+	bigIndex = bigIndex > MarioSheet::BIG_MARIO_CHANGE_DIR ? bigIndex - 15 : bigIndex; // nếu index > index cua big mario thi chuyen index ve big mario
+
+	m_frameAnimation.push_back(bigIndex); // big mario
+	m_frameAnimation.push_back(bigIndex + 7); // fire mario
+	m_frameAnimation.push_back(bigIndex); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + 7); // invinbility color 2
+	m_frameAnimation.push_back(bigIndex); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + 7); // fire mario
+}
+
+void EffectSmall::execute(Mario* mario)
+{
+	if (m_currentIndex == m_frameAnimation.size())
+	{
+		mario->getStateMachine()->changeState(mario->getStateMachine()->GetPreviousState());
+		/*mario->getStatusStateMachine()->changeState(Small::getInstance());*/
+	}
+	else
+		mario->setCurrentFrame(m_frameAnimation[m_currentIndex++]);
+}
+
+void EffectSmall::exit(Mario* mario)
+{
+	m_frameAnimation.clear();
+}
+
+#pragma endregion

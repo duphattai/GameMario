@@ -21,29 +21,38 @@ void Map1::updateCollision()
 {
 	// collision with map
 	// mario
-	m_Mario->setDirCollision(DIR::NONE);
-	m_Mario->setLocation(Location::LOC_IN_AIR);
-	Box marioBound = GetSweptBroadPhaseBox(m_Mario->getBouding()); // tao vung khong gian cho mario
-	for each (Box item in getTileNodeOnScreen())
+	if (m_Mario->getFSM() != FSM_Mario::DEAD)
 	{
- 		// kiem tra item co nam trong vung khong gian cua mario
-		if (CheckAABB(marioBound, item))
+		m_Mario->setDirCollision(DIR::NONE);
+		m_Mario->setLocation(Location::LOC_IN_AIR);
+		Box marioBound = GetSweptBroadPhaseBox(m_Mario->getBouding()); // tao vung khong gian cho mario
+		for each (Box item in getTileNodeOnScreen())
 		{
-			DIR dir = m_CheckCollision->isCollision(m_Mario, item);
-			if (dir != DIR::NONE)
+			// kiem tra item co nam trong vung khong gian cua mario
+			if (CheckAABB(marioBound, item))
 			{
-				if (m_Mario->getFSM() != FSM_Mario::JUMP && dir == DIR::TOP) // fall gặp vật cản
-					m_Mario->setLocation(Location::LOC_ON_GROUND);
-			}
+				DIR dir = m_CheckCollision->isCollision(m_Mario, item);
+				if (dir != DIR::NONE)
+				{
+					if (m_Mario->getFSM() != FSM_Mario::JUMP && dir == DIR::TOP) // fall gặp vật cản
+						m_Mario->setLocation(Location::LOC_ON_GROUND);
+				}
 
-			if (m_Mario->getDirCollision() == DIR::NONE)
-				m_Mario->setDirCollision(dir);
+				if (m_Mario->getDirCollision() == DIR::NONE)
+					m_Mario->setDirCollision(dir);
+			}
 		}
 	}
 }
 void Map1::update()
 {
-
+	m_keyboard->getState();
+	if (m_keyboard->isPressed(DIK_SPACE))
+		m_Mario->setIsBig(true);
+	else if (m_keyboard->isPressed(DIK_C))
+		m_Mario->setCanShoot(true);
+	else if (m_keyboard->isPressed(DIK_K))
+		m_Mario->setDead(true);
 }
 
 vector<ObjectTittle> getNodeOnCamera(vector<ObjectTittle> listNode, Box camera)

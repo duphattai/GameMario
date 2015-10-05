@@ -4,6 +4,7 @@
 
 class Mario;
 
+#pragma region action mario
 ////////////////////////////////////////////////////////////////////
 //STANDING
 class Standing : public State < Mario >
@@ -103,21 +104,128 @@ public:
 };
 ////////////////////////////////////////////////////////////////////
 
+#pragma endregion
 
-//////////////////////////////////////////////////////////////////////
-////RUNJUMPING
-//class RunJumping : public State < Mario >
-//{
-//private:
-//	static RunJumping*	m_instance;
-//public:
-//	RunJumping(){}
-//	virtual ~RunJumping(){}
-//
-//	static RunJumping*	getInstance();
-//
-//	virtual void		enter(Mario* mario);
-//	virtual void		execute(Mario* mario);
-//	virtual void		exit(Mario* mario);
-//};
-//////////////////////////////////////////////////////////////////////
+
+#pragma region status of mario
+////////////////////////////////////////////////////////////////////// STATUS OF MARIO /////////////////////////////////////////
+////Small
+class Small : public State < Mario >
+{
+private:
+	static Small*	m_instance;
+public:
+	Small();
+	virtual ~Small(){}
+
+	static Small*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
+
+// BIG
+class Big : public State < Mario >
+{
+private:
+	static Big*	m_instance;
+public:
+	Big();
+	virtual ~Big(){}
+
+	static Big*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
+// Fire
+class Fire : public State < Mario >
+{
+private:
+	static Fire*	m_instance;
+public:
+	Fire();
+	virtual ~Fire(){}
+
+	static Fire*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
+
+// Dead
+class Dead : public State < Mario >
+{
+private:
+	static Dead*	m_instance;
+public:
+	Dead();
+	virtual ~Dead(){}
+
+	static Dead*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
+
+////EFFECT BIG
+class EffectBig : public State < Mario >
+{
+private:
+	static EffectBig*	m_instance;
+	vector<int>				m_frameAnimation;
+	int						m_currentIndex;
+public:
+	EffectBig();
+	virtual ~EffectBig(){}
+
+	static EffectBig*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
+
+
+////EFFECT SMALL
+class EffectSmall : public State < Mario >
+{
+private:
+	static EffectSmall*	m_instance;
+	vector<int>				m_frameAnimation;
+	int						m_currentIndex;
+public:
+	EffectSmall();
+	virtual ~EffectSmall(){}
+
+	static EffectSmall*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
+
+/////////////////////////////////////////
+/////EFFECT FIRE
+class EffectFire : public State < Mario >
+{
+private:
+	static EffectFire*	m_instance;
+	vector<int>				m_frameAnimation;
+	int						m_currentIndex;
+public:
+	EffectFire();
+	virtual ~EffectFire(){}
+
+	static EffectFire*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
+
+#pragma endregion

@@ -141,7 +141,8 @@ void Game::update()
 {
 	m_mario->updateVelocity();
 	m_state->updateCollision();
-	
+	m_state->update();
+
 	m_mario->update();
 	m_state->setWorldPosition(m_mario->getWorldPosition());
 }
