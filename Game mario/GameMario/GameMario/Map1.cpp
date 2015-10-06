@@ -53,6 +53,8 @@ void Map1::update()
 		m_Mario->setCanShoot(true);
 	else if (m_keyboard->isPressed(DIK_K))
 		m_Mario->setDead(true);
+	else if (m_keyboard->isPressed(DIK_V))
+		m_Mario->setStar(true);
 }
 
 vector<ObjectTittle> getNodeOnCamera(vector<ObjectTittle> listNode, Box camera)

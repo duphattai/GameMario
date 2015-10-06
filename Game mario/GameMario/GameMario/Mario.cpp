@@ -12,7 +12,7 @@ Mario::Mario()
 	file.open("Resources//mario.txt");
 
 	char s[1000];
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		file.getline(s, 1000, '\n');
 	}
@@ -51,6 +51,7 @@ Mario::Mario()
 	m_lives = 3;
 	m_isBig = false;
 	m_canShoot = false;
+	m_isStar = false;
 
 	m_stateMachine = new StateMachine<Mario>(this);
 	m_stateMachine->changeState(Falling::getInstance());
@@ -126,4 +127,22 @@ void Mario::setVelocity(Vector2 velocity)
 Mario::~Mario()
 {
 	delete m_Gametime;
+	delete Falling::getInstance();
+	delete Running::getInstance();
+	delete Standing::getInstance();
+	delete Jumping::getInstance();
+	delete Sitting::getInstance();
+
+	delete EffectBig::getInstance();
+	delete EffectFire::getInstance();
+	delete EffectSmall::getInstance();
+
+	delete Star::getInstance();
+	delete Small::getInstance();
+	delete Dead::getInstance();
+	delete Big::getInstance();
+	delete Fire::getInstance();
+
+	delete m_stateMachine;
+	delete m_statusStateMachine;
 }

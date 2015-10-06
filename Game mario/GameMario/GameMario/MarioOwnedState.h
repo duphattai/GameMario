@@ -140,6 +140,7 @@ public:
 	virtual void		execute(Mario* mario);
 	virtual void		exit(Mario* mario);
 };
+
 // Fire
 class Fire : public State < Mario >
 {
@@ -190,6 +191,29 @@ public:
 	virtual void		exit(Mario* mario);
 };
 
+
+/// Star
+class Star : public State < Mario >
+{
+private:
+	static Star*	m_instance;
+	
+	vector<int>		*m_frameAnimationBig;
+	vector<int>		*m_frameAnimationSmall;
+	vector<int>		*m_frameAnimation;
+
+	int				m_currentIndex;
+	int				m_timeCount;
+public:
+	Star();
+	virtual ~Star();
+
+	static Star*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
 
 ////EFFECT SMALL
 class EffectSmall : public State < Mario >

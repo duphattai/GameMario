@@ -17,7 +17,7 @@ private:
 
 	bool		m_isBig; // trạng thái Big
 	bool		m_canShoot; // Trạng thái fire
-	bool		m_canJump;
+	bool		m_isStar;
 
 	bool		m_isBoost;
 
@@ -52,8 +52,8 @@ public:
 	bool		canShoot(){ return m_canShoot; }
 	void		setCanShoot(bool x){ m_canShoot = x; }
 
-	void		jump(bool ability = false){ m_canJump = ability; }
-	bool		canJump(){ return m_canJump; }
+	void		setStar(bool ability = false){ m_isStar = ability; }
+	bool		isStar(){ return m_isStar; }
 
 	bool		isBoost(){ return m_isBoost; }
 

@@ -2,12 +2,15 @@
 #include "MarioOwnedState.h"
 #include "KeyBoard.h"
 
+extern CKeyBoard *keyboard; // ý nghĩa là keyboard đã được đinh nghĩa ở đâu đó
+
+
 // action of mario
 #pragma region
 /////////////////////////////////////////////////////////////////////////////////
 //STANDING
 Standing* Standing::m_instance = 0;
-extern CKeyBoard *keyboard; // ý nghĩa là keyboard đã được đinh nghĩa ở đâu đó
+
 Standing* Standing::getInstance()
 {
 	if (!m_instance)
@@ -18,13 +21,6 @@ Standing* Standing::getInstance()
 
 void Standing::enter(Mario* mario)
 {
-	if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_STAND);
-	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_STAND);
-	else
-		mario->setCurrentFrame(MarioSheet::MARIO_STAND);
-
 	mario->setLocation(Location::LOC_ON_GROUND);
 	mario->setFSM(FSM_Mario::STAND);
 	mario->setVelocity(Vector2(0, 0));
@@ -72,14 +68,6 @@ Running* Running::getInstance()
 void Running::enter(Mario* mario)
 {
 	mario->setLocation(Location::LOC_ON_GROUND);
-
-	if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_RUN);
-	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_RUN);
-	else
-		mario->setCurrentFrame(MarioSheet::MARIO_RUN);
-
 	mario->setFSM(FSM_Mario::RUN);
 }
 
@@ -88,60 +76,26 @@ void Running::execute(Mario* mario)
 	Vector2 velocity = mario->getVelocity();
 	velocity.y = GRAVITATION; // gravity
 
-
-	// update animation of mario
-	int index = mario->getCurrentFrame() + 1;
-	if (mario->isBig())
-		index = index >= MarioSheet::BIG_MARIO_CHANGE_DIR ? (MarioSheet::BIG_MARIO_RUN) : index; // cap nhật lại index big mario
-	else if (mario->canShoot())
-		index = index >= MarioSheet::SUPER_MARIO_CHANGE_DIR ? (MarioSheet::SUPER_MARIO_RUN) : index; // cap nhật lại index fire mario
-	else
-		index = index >= MarioSheet::MARIO_CHANGE_DIR ? (MarioSheet::MARIO_RUN) : index; // cap nhật lại index small mario
-
 	// update velocity
 	keyboard->getState();
 	if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
 	{
 		mario->getStateMachine()->changeState(Sitting::getInstance());
+		return;
 	}
 	else if(keyboard->isKeyDown(DIK_RIGHT))
-	{
-		//make change direction move
-		if (mario->getFliping() == SpriteEffect::Flip)
-		{
-			if (mario->isBig())
-				index = MarioSheet::BIG_MARIO_CHANGE_DIR;// cap nhật lại index big mario
-			else if (mario->canShoot())
-				index = MarioSheet::SUPER_MARIO_CHANGE_DIR; // cap nhật lại index fire mario
-			else
-				index = MarioSheet::MARIO_CHANGE_DIR; // cap nhật lại index small mario
-		}
-			
-		mario->setCurrentFrame(index);
+	{		
 		mario->setFliping(SpriteEffect::None);
 		velocity.x += 0.50f;
 	}
 	else if(keyboard->isKeyDown(DIK_LEFT))
 	{
-		//make change direction move
-		if (mario->getFliping() == SpriteEffect::None)
-		{
-			if (mario->isBig())
-				index = MarioSheet::BIG_MARIO_CHANGE_DIR;// cap nhật lại index big mario
-			else if (mario->canShoot())
-				index = MarioSheet::SUPER_MARIO_CHANGE_DIR; // cap nhật lại index fire mario
-			else
-				index = MarioSheet::MARIO_CHANGE_DIR; // cap nhật lại index small mario
-		}
-
 		mario->setFliping(SpriteEffect::Flip);
-		mario->setCurrentFrame(index);
 		velocity.x -= 0.50f;
 	}
 	else // không ấn phím, trả về standing
 	{
 		// make accel
-		mario->setCurrentFrame(index);
 		if (mario->getFliping() == SpriteEffect::Flip) // move left
 			velocity.x = (velocity.x + 0.5f) >= 0 ? 0 : (velocity.x + 0.5f);
 		else // move right;
@@ -180,11 +134,6 @@ Sitting* Sitting::getInstance()
 
 void Sitting::enter(Mario* mario)
 {
-	if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_SIT);
-	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_SIT);
-
 	mario->setFSM(FSM_Mario::SIT);
 }
 
@@ -231,14 +180,6 @@ Jumping* Jumping::getInstance()
 
 void Jumping::enter(Mario* mario)
 {
-	// mặc định load sprite jump
-	if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
-	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_JUMP);
-	else
-		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
-
 	mario->setLocation(Location::LOC_IN_AIR);
 	mario->setVelocity(Vector2(mario->getVelocity().x, 6.00f));
 	m_timeJump = 4;
@@ -284,7 +225,7 @@ void Jumping::execute(Mario* mario)
 		if (mario->isBig())
 			mario->setCurrentFrame(MarioSheet::BIG_MARIO_SIT);
 		else
-			mario->setCurrentFrame(MarioSheet::SUPER_MARIO_SIT);
+			mario->setCurrentFrame(MarioSheet::BIG_SUPER_SIT);
 	}
 	mario->setVelocity(velocity);
 }
@@ -313,26 +254,10 @@ void Falling::enter(Mario* mario)
 {
 	mario->setLocation(Location::LOC_IN_AIR);
 	mario->setFSM(FSM_Mario::FALL);
-
-	// mặc định load sprite jump
-	if (mario->isBig())
-	mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
-	else if (mario->canShoot())
-	mario->setCurrentFrame(MarioSheet::SUPER_MARIO_JUMP);
-	else
-	mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
 }
 
 void Falling::execute(Mario* mario)
 {
-	// mặc định load sprite jump
-	/*if (mario->isBig())
-		mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
-	else if (mario->canShoot())
-		mario->setCurrentFrame(MarioSheet::SUPER_MARIO_JUMP);
-	else
-		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);*/
-
 	Vector2 velocity = mario->getVelocity();
 	velocity.y += GRAVITATION;
 
@@ -354,7 +279,7 @@ void Falling::execute(Mario* mario)
 		if (mario->isBig())
 			mario->setCurrentFrame(MarioSheet::BIG_MARIO_SIT);
 		else
-			mario->setCurrentFrame(MarioSheet::SUPER_MARIO_SIT);
+			mario->setCurrentFrame(MarioSheet::BIG_SUPER_SIT);
 	}
 	mario->setVelocity(velocity);
 
@@ -397,22 +322,38 @@ Small* Small::getInstance()
 
 void Small::enter(Mario* mario)
 {
-	mario->setIsBig(false);
-	mario->setCanShoot(false);
 }
 
 void Small::execute(Mario* mario)
 {
+	// update animation of mario
+	if (mario->getFSM() == FSM_Mario::RUN)
+	{
+		int index = mario->getCurrentFrame() + 1;
+		// cap nhật lại index small mario
+		if (index >= MarioSheet::MARIO_CHANGE_DIR || index < MarioSheet::MARIO_RUN)
+			index = MarioSheet::MARIO_RUN;
+
+		mario->setCurrentFrame(index);
+	}
+	else if (mario->getFSM() == FSM_Mario::STAND)
+		mario->setCurrentFrame(MarioSheet::MARIO_STAND);
+	else if (mario->getFSM() == FSM_Mario::JUMP || mario->getFSM() == FSM_Mario::FALL)
+		mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
+
+
+
 	if (mario->isBig() && mario->getFSM() != FSM_Mario::EFFECT_BIG)
 	{
 		mario->getStateMachine()->changeState(EffectBig::getInstance());
-		//mario->getStatusStateMachine()->changeState(Big::getInstance());
 	}
 	else if (mario->isDead() && mario->getFSM() != FSM_Mario::DEAD) // không gọi lại
 	{
 		mario->getStateMachine()->changeState(Dead::getInstance());
 		mario->setLives(mario->getLives() - 1);
 	}
+	else if (mario->isStar())
+		mario->getStatusStateMachine()->changeState(Star::getInstance());
 }
 
 void Small::exit(Mario* mario)
@@ -427,10 +368,10 @@ EffectBig* EffectBig::m_instance = 0;
 EffectBig::EffectBig()
 {
 	m_frameAnimation.push_back(MarioSheet::MARIO_STAND);
-	m_frameAnimation.push_back(MarioSheet::SMALL_BIG_STAND);
+	m_frameAnimation.push_back(MarioSheet::BIG_SMALL_STAND);
 	m_frameAnimation.push_back(MarioSheet::MARIO_STAND);
 	m_frameAnimation.push_back(MarioSheet::BIG_MARIO_STAND);
-	m_frameAnimation.push_back(MarioSheet::SMALL_BIG_STAND);
+	m_frameAnimation.push_back(MarioSheet::BIG_SMALL_STAND);
 	m_frameAnimation.push_back(MarioSheet::BIG_MARIO_STAND);
 }
 
@@ -487,21 +428,49 @@ void Big::enter(Mario* mario)
 
 void Big::execute(Mario* mario)
 {
+	// update animation of mario
+	if (mario->getFSM() == FSM_Mario::RUN)
+	{
+		int index = mario->getCurrentFrame() + 1;
+		// cap nhật lại index big mario
+		if (index >= MarioSheet::BIG_MARIO_CHANGE_DIR || index < MarioSheet::BIG_MARIO_RUN)
+			index = BIG_MARIO_RUN;
+
+		mario->setCurrentFrame(index);
+	}
+	else if (mario->getFSM() == FSM_Mario::STAND)
+		mario->setCurrentFrame(MarioSheet::BIG_MARIO_STAND);
+	else if (mario->getFSM() == FSM_Mario::SIT)
+		mario->setCurrentFrame(MarioSheet::BIG_MARIO_SIT);
+	else if (mario->getFSM() == FSM_Mario::FALL || mario->getFSM() == FSM_Mario::JUMP)
+	{
+		if (keyboard->getKeyCode() == DIK_DOWN)
+			mario->setCurrentFrame(MarioSheet::BIG_MARIO_SIT);
+		else
+			mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
+	}
+
+
+
+
 	if (mario->canShoot() && mario->getFSM() != FSM_Mario::EFFECT_FIRE)
 	{
 		mario->getStateMachine()->changeState(EffectFire::getInstance());
-		/*mario->getStatusStateMachine()->changeState(Fire::getInstance());*/
 	}
-	else if (mario->isDead())
+	else if (mario->isDead() && mario->getFSM() != FSM_Mario::EFFECT_SMALL)
 	{
 		mario->getStateMachine()->changeState(EffectSmall::getInstance());
-		mario->getStatusStateMachine()->changeState(Small::getInstance());
+	}
+	else if (mario->isStar())
+	{
+		mario->getStatusStateMachine()->changeState(Star::getInstance());
 	}
 }
 
 void Big::exit(Mario* mario)
 {
 	mario->setDead(false);
+	mario->setIsBig(false);
 }
 
 // Dead
@@ -521,9 +490,6 @@ Dead* Dead::getInstance()
 
 void Dead::enter(Mario* mario)
 {
-	mario->setIsBig(false);
-	mario->setCanShoot(false);
-
 	mario->setVelocity(Vector2(0, 5));
 	mario->setCurrentFrame(MarioSheet::MARIO_DIE);
 	mario->setFSM(FSM_Mario::DEAD);
@@ -549,6 +515,8 @@ void Dead::exit(Mario* mario)
 {
 	mario->setFSM(FSM_Mario::FALL);
 	mario->setDead(false);
+	mario->setIsBig(false);
+	mario->setCanShoot(false);
 }
 
 //////////////////////// Effect Fire
@@ -569,16 +537,15 @@ EffectFire* EffectFire::getInstance()
 void EffectFire::enter(Mario* mario)
 {
 	m_currentIndex = 0;
-	mario->setIsBig(false);
-	mario->setCanShoot(true);
+
 	mario->setFSM(FSM_Mario::EFFECT_FIRE);
 
 	int bigIndex = mario->getCurrentFrame();
 	m_frameAnimation.push_back(bigIndex); // big mario
 	m_frameAnimation.push_back(bigIndex + 15); // fire mario
-	m_frameAnimation.push_back(bigIndex + 25); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 32); // invinbility color 2
-	m_frameAnimation.push_back(bigIndex + 25); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + 32); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + 45); // invinbility color 2
+	m_frameAnimation.push_back(bigIndex + 32); // invinbility color 1
 	m_frameAnimation.push_back(bigIndex + 15); // fire mario
 }
 
@@ -596,7 +563,7 @@ void EffectFire::execute(Mario* mario)
 void EffectFire::exit(Mario* mario)
 {
 	m_frameAnimation.clear();
-	m_currentIndex = 0;
+	mario->setIsBig(false);
 }
 
 /////////////////////////////////////Fire
@@ -622,11 +589,29 @@ void Fire::enter(Mario* mario)
 
 void Fire::execute(Mario* mario)
 {
-	if (mario->isDead() && mario->getFSM() != FSM_Mario::EFFECT_SMALL)
+	if (mario->getFSM() == FSM_Mario::RUN)
 	{
-		mario->getStateMachine()->changeState(EffectSmall::getInstance());
-		mario->getStatusStateMachine()->changeState(Small::getInstance());
+		int index = mario->getCurrentFrame() + 1;
+		// cap nhật lại index fire mario
+		if (index >= MarioSheet::BIG_SUPER_CHANGE_DIR || index < MarioSheet::BIG_SUPER_RUN)
+			index = MarioSheet::BIG_SUPER_RUN;
+		mario->setCurrentFrame(index);
 	}
+	else if (mario->getFSM() == FSM_Mario::STAND)
+		mario->setCurrentFrame(MarioSheet::BIG_SUPER_STAND);
+	else if (mario->getFSM() == FSM_Mario::SIT)
+		mario->setCurrentFrame(MarioSheet::BIG_SUPER_SIT);
+	else if (mario->getFSM() == FSM_Mario::FALL || mario->getFSM() == FSM_Mario::JUMP)
+	{
+		if (keyboard->getKeyCode() == DIK_DOWN)
+			mario->setCurrentFrame(MarioSheet::BIG_SUPER_SIT);
+		else
+			mario->setCurrentFrame(MarioSheet::BIG_SUPER_JUMP);
+	}
+
+
+	if (mario->isDead() && mario->getFSM() != FSM_Mario::EFFECT_SMALL)
+		mario->getStateMachine()->changeState(EffectSmall::getInstance());
 }
 
 void Fire::exit(Mario* mario)
@@ -653,19 +638,17 @@ EffectSmall* EffectSmall::getInstance()
 void EffectSmall::enter(Mario* mario)
 {
 	m_currentIndex = 0;
-	mario->setIsBig(false);
-	mario->setCanShoot(false);
 	mario->setFSM(FSM_Mario::EFFECT_SMALL);
 
 	int bigIndex = mario->getCurrentFrame();
-	bigIndex = bigIndex > MarioSheet::BIG_MARIO_CHANGE_DIR ? bigIndex - 15 : bigIndex; // nếu index > index cua big mario thi chuyen index ve big mario
+	bigIndex = bigIndex > MarioSheet::BIG_MARIO_SIT ? bigIndex - 15 : bigIndex; // nếu index > index cua big mario thi chuyen index ve big mario
 
 	m_frameAnimation.push_back(bigIndex); // big mario
-	m_frameAnimation.push_back(bigIndex + 7); // fire mario
+	m_frameAnimation.push_back(bigIndex + 8); // fire mario
 	m_frameAnimation.push_back(bigIndex); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 7); // invinbility color 2
+	m_frameAnimation.push_back(bigIndex + 22); // invinbility color 2
 	m_frameAnimation.push_back(bigIndex); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 7); // fire mario
+	m_frameAnimation.push_back(bigIndex + 8); // fire mario
 }
 
 void EffectSmall::execute(Mario* mario)
@@ -673,7 +656,7 @@ void EffectSmall::execute(Mario* mario)
 	if (m_currentIndex == m_frameAnimation.size())
 	{
 		mario->getStateMachine()->changeState(mario->getStateMachine()->GetPreviousState());
-		/*mario->getStatusStateMachine()->changeState(Small::getInstance());*/
+		mario->getStatusStateMachine()->changeState(Small::getInstance());
 	}
 	else
 		mario->setCurrentFrame(m_frameAnimation[m_currentIndex++]);
@@ -682,6 +665,146 @@ void EffectSmall::execute(Mario* mario)
 void EffectSmall::exit(Mario* mario)
 {
 	m_frameAnimation.clear();
+	mario->setIsBig(false);
+	mario->setCanShoot(false);
 }
 
+
+///////////  efect start
+Star* Star::m_instance = 0;
+
+Star::Star()
+{
+	m_frameAnimationBig = new vector<int>();
+	m_frameAnimationBig->push_back(0); // big mario
+	m_frameAnimationBig->push_back(15); // fire mario
+	m_frameAnimationBig->push_back(32); // invinbility color 1
+	
+	m_frameAnimationSmall = new vector<int>();
+	m_frameAnimationSmall->push_back(0); // mario
+	m_frameAnimationSmall->push_back(26 - 8); // fire mario
+	m_frameAnimationSmall->push_back(39 - 8); // invinbility color 1
+}
+
+Star* Star::getInstance()
+{
+	if (!m_instance)
+		m_instance = new Star();
+
+	return m_instance;
+}
+
+void Star::enter(Mario* mario)
+{
+	m_currentIndex = 0;
+	m_timeCount = 100;
+}
+
+void Star::execute(Mario* mario)
+{
+	// lấy lại index khi chưa thay đổi hình
+	int index;
+	if (m_currentIndex > 0)
+		index = mario->getCurrentFrame() + 1 - m_frameAnimation->at(m_currentIndex - 1);
+	else
+		index = mario->getCurrentFrame() + 1;
+
+	// update status of mario
+	mario->setIsBig(mario->isBig());
+	mario->setCanShoot(mario->canShoot());
+	if (mario->isBig() || mario->canShoot())
+		m_frameAnimation = m_frameAnimationBig;
+	else // for small
+		m_frameAnimation = m_frameAnimationSmall;
+
+
+	// update animation for mario
+	if (mario->isBig())
+	{
+		if (mario->getFSM() == FSM_Mario::RUN)
+		{
+			// cap nhật lại index big mario
+			if (index >= MarioSheet::BIG_MARIO_CHANGE_DIR || index < MarioSheet::BIG_MARIO_RUN)
+				index = BIG_MARIO_RUN;
+			mario->setCurrentFrame(index);
+		}
+		else if (mario->getFSM() == FSM_Mario::STAND)
+			mario->setCurrentFrame(MarioSheet::BIG_MARIO_STAND);
+		else if (mario->getFSM() == FSM_Mario::SIT)
+			mario->setCurrentFrame(MarioSheet::BIG_MARIO_SIT);
+		else if (mario->getFSM() == FSM_Mario::FALL || mario->getFSM() == FSM_Mario::JUMP)
+		{
+			if (keyboard->getKeyCode() == DIK_DOWN)
+				mario->setCurrentFrame(MarioSheet::BIG_MARIO_SIT);
+			else
+				mario->setCurrentFrame(MarioSheet::BIG_MARIO_JUMP);
+		}
+	}
+	else if (mario->canShoot())
+	{
+		if (mario->getFSM() == FSM_Mario::RUN)
+		{
+			// cap nhật lại index fire mario
+			if (index >= MarioSheet::BIG_SUPER_CHANGE_DIR || index < MarioSheet::BIG_SUPER_RUN)
+				index = MarioSheet::BIG_SUPER_RUN;
+			mario->setCurrentFrame(index);
+		}
+		else if (mario->getFSM() == FSM_Mario::STAND)
+			mario->setCurrentFrame(MarioSheet::BIG_SUPER_STAND);
+		else if (mario->getFSM() == FSM_Mario::SIT)
+			mario->setCurrentFrame(MarioSheet::BIG_SUPER_SIT);
+		else if (mario->getFSM() == FSM_Mario::FALL || mario->getFSM() == FSM_Mario::JUMP)
+		{
+			if (keyboard->getKeyCode() == DIK_DOWN)
+				mario->setCurrentFrame(MarioSheet::BIG_SUPER_SIT);
+			else
+				mario->setCurrentFrame(MarioSheet::BIG_SUPER_JUMP);
+		}
+	}
+	else
+	{
+		if (mario->getFSM() == FSM_Mario::RUN)
+		{
+			// cap nhật lại index small mario
+			if (index >= MarioSheet::MARIO_CHANGE_DIR || index < MarioSheet::MARIO_RUN)
+				index = MarioSheet::MARIO_RUN;
+			mario->setCurrentFrame(index);
+		}
+		else if (mario->getFSM() == FSM_Mario::STAND)
+			mario->setCurrentFrame(MarioSheet::MARIO_STAND);
+		else if (mario->getFSM() == FSM_Mario::JUMP || mario->getFSM() == FSM_Mario::FALL)
+			mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
+	}
+
+	if (m_timeCount == 0)
+	{
+		if (mario->isBig())
+			mario->getStatusStateMachine()->changeState(Big::getInstance());
+		else if (mario->canShoot())
+			mario->getStatusStateMachine()->changeState(Fire::getInstance());
+		else
+			mario->getStatusStateMachine()->changeState(mario->getStatusStateMachine()->GetPreviousState());
+	}
+	else
+	{
+		mario->setCurrentFrame(m_frameAnimation->at(m_currentIndex) + mario->getCurrentFrame());
+		m_timeCount--;
+		m_currentIndex = ++m_currentIndex >= m_frameAnimation->size() ? 0 : m_currentIndex;
+	}	
+}
+
+void Star::exit(Mario* mario)
+{
+	m_frameAnimation = nullptr;
+	mario->setStar(false);
+}
+
+Star::~Star()
+{
+	m_frameAnimationBig->clear();
+	m_frameAnimationSmall->clear();
+
+	delete m_frameAnimationBig;
+	delete m_frameAnimationSmall;
+}
 #pragma endregion

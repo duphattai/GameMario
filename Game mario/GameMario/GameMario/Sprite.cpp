@@ -107,7 +107,7 @@ void Sprite::next()
 	if (m_Index > m_Count - 1) m_Index = 0;
 }
 
-
+// dùng để xét kích thước sprite cụ thể
 void Sprite::setIndex(int value)
 {
 	m_Index = value;
@@ -117,6 +117,7 @@ void Sprite::setIndex(int value)
 	m_Rect.bottom = m_Rect.top + m_Height;
 }
 
+// xét tọa độ cụ thể của sprite trong image sheet
 void Sprite::setRect(RECT rect)
 {
 	m_Rect = rect;
@@ -124,6 +125,9 @@ void Sprite::setRect(RECT rect)
 	m_Height = abs(rect.top - rect.bottom);
 }
 
+// position: tọa độ vật trong thế giới thực
+// scale: dùng để lật ảnh (-1.0f, 1.0f): lật ảnh, (1.0f, 1.0f) không lật
+// vpx, vpy view port hay camera
 void Sprite::draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy)
 {
 	//
