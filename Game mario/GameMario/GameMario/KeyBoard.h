@@ -15,12 +15,11 @@ public:
 	CKeyBoard();
 	void initInput();
 	void initKeyBoard(HWND);
-	void getState();
 	bool isKeyDown(int);
 	int  getKeyCode();
 	void clearKeyCode();
 	bool isPressed(int);
-
+	void getState();
 	~CKeyBoard();
 };
 

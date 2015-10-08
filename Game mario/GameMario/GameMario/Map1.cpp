@@ -46,7 +46,6 @@ void Map1::updateCollision()
 }
 void Map1::update()
 {
-	m_keyboard->getState();
 	if (m_keyboard->isPressed(DIK_SPACE))
 		m_Mario->setIsBig(true);
 	else if (m_keyboard->isPressed(DIK_C))

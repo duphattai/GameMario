@@ -139,6 +139,7 @@ void Game::render()
 
 void Game::update()
 {
+	keyboard->getState();
 	m_mario->updateVelocity();
 	m_state->updateCollision();
 	m_state->update();

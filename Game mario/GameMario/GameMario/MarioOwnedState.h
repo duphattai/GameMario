@@ -114,6 +114,14 @@ class Small : public State < Mario >
 {
 private:
 	static Small*	m_instance;
+
+	vector<int>		m_frameAnimation;
+	int				m_currentIndex;
+
+	vector<int>		m_frameAnimationAfterEffectSmall;
+
+	int				m_countTime;
+	int				m_timeChangeSprite; // time for load animation effect
 public:
 	Small();
 	virtual ~Small(){}
@@ -130,6 +138,9 @@ class Big : public State < Mario >
 {
 private:
 	static Big*	m_instance;
+
+	vector<int>				m_frameAnimation;
+	int						m_currentIndex;
 public:
 	Big();
 	virtual ~Big(){}
@@ -146,6 +157,11 @@ class Fire : public State < Mario >
 {
 private:
 	static Fire*	m_instance;
+
+	vector<int>		m_frameAnimation;
+	int				m_currentIndex;
+
+	int				m_timeChangeSprite; // time for load animation effect
 public:
 	Fire();
 	virtual ~Fire(){}
@@ -173,31 +189,12 @@ public:
 	virtual void		exit(Mario* mario);
 };
 
-////EFFECT BIG
-class EffectBig : public State < Mario >
-{
-private:
-	static EffectBig*	m_instance;
-	vector<int>				m_frameAnimation;
-	int						m_currentIndex;
-public:
-	EffectBig();
-	virtual ~EffectBig(){}
-
-	static EffectBig*	getInstance();
-
-	virtual void		enter(Mario* mario);
-	virtual void		execute(Mario* mario);
-	virtual void		exit(Mario* mario);
-};
-
-
 /// Star
 class Star : public State < Mario >
 {
 private:
 	static Star*	m_instance;
-	
+
 	vector<int>		*m_frameAnimationBig;
 	vector<int>		*m_frameAnimationSmall;
 	vector<int>		*m_frameAnimation;
@@ -215,41 +212,5 @@ public:
 	virtual void		exit(Mario* mario);
 };
 
-////EFFECT SMALL
-class EffectSmall : public State < Mario >
-{
-private:
-	static EffectSmall*	m_instance;
-	vector<int>				m_frameAnimation;
-	int						m_currentIndex;
-public:
-	EffectSmall();
-	virtual ~EffectSmall(){}
-
-	static EffectSmall*	getInstance();
-
-	virtual void		enter(Mario* mario);
-	virtual void		execute(Mario* mario);
-	virtual void		exit(Mario* mario);
-};
-
-/////////////////////////////////////////
-/////EFFECT FIRE
-class EffectFire : public State < Mario >
-{
-private:
-	static EffectFire*	m_instance;
-	vector<int>				m_frameAnimation;
-	int						m_currentIndex;
-public:
-	EffectFire();
-	virtual ~EffectFire(){}
-
-	static EffectFire*	getInstance();
-
-	virtual void		enter(Mario* mario);
-	virtual void		execute(Mario* mario);
-	virtual void		exit(Mario* mario);
-};
 
 #pragma endregion

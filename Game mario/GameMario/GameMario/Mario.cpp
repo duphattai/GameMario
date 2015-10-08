@@ -1,4 +1,4 @@
-#include "Mario.h"
+﻿#include "Mario.h"
 #include "Source.h"
 #include "Global.h"
 #include <fstream>
@@ -53,11 +53,15 @@ Mario::Mario()
 	m_canShoot = false;
 	m_isStar = false;
 
+	m_effectBig = false;
+	m_effectFire = false;
+
 	m_stateMachine = new StateMachine<Mario>(this);
 	m_stateMachine->changeState(Falling::getInstance());
 
 	m_statusStateMachine = new StateMachine<Mario>(this);
 	m_statusStateMachine->changeState(Small::getInstance());
+	m_effectSmall = false;
 }
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
@@ -71,7 +75,8 @@ void Mario::update()
 	if (m_Gametime->getElapsedTime() < 1000 / 22) return;
 	m_Gametime->update();
 	
-	if (m_FSM_Mario != FSM_Mario::EFFECT_BIG && m_FSM_Mario != FSM_Mario::EFFECT_FIRE && m_FSM_Mario != FSM_Mario::EFFECT_SMALL)
+	// không hiệu ứng small, fire, big mới update position
+	if (!m_effectBig && !m_effectFire && !m_effectSmall)
 	{
 		m_Position.x += m_Velocity.x;
 		m_Position.y += m_Velocity.y;
@@ -93,7 +98,9 @@ void Mario::updateVelocity()
 	if (m_Gametime->getElapsedTime() < 1000 / 22)
 		return;
 
-	m_stateMachine->update();
+	if (!m_effectBig && !m_effectFire && !m_effectSmall)
+		m_stateMachine->update();
+	
 	m_statusStateMachine->update();
 }
 
@@ -132,10 +139,6 @@ Mario::~Mario()
 	delete Standing::getInstance();
 	delete Jumping::getInstance();
 	delete Sitting::getInstance();
-
-	delete EffectBig::getInstance();
-	delete EffectFire::getInstance();
-	delete EffectSmall::getInstance();
 
 	delete Star::getInstance();
 	delete Small::getInstance();

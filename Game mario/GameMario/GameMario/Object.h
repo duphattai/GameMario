@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Sprite.h"
 #include "Global.h"
 #include "GameTime.h"
@@ -15,6 +15,8 @@ protected:
 	D3DXVECTOR2 m_Position; // toa do cua sprite tren map
 	SpriteEffect m_Flip; // co lat hinh hay khong
 	D3DXVECTOR2 m_Scale; // thong so lat hinh (1.0f, 1.0f) = khong flip, (-1.0f, 1.0f) = flip
+
+	D3DXCOLOR	m_alpha; // độ trong suốt
 
 	//Box m_Box;
 	bool m_IsCollision;
@@ -33,41 +35,43 @@ protected:
 	DIR			m_DirCollision;
 public:
 	Object();
-
+	virtual ~Object();
+	
 	// set camera
-	void		setWorldPosition(Vector2);
-	Vector2		getWorldPosition();
+	void			setWorldPosition(Vector2);
+	Vector2			getWorldPosition();
 
-	void		setVelocity(Vector2);
-	Vector2		getVelocity();
+	void			setVelocity(Vector2);
+	Vector2			getVelocity();
 
 	// set position on real world
-	void		setPosition(float, float);
-	Vector2		getPosition();
+	void			setPosition(float, float);
+	Vector2			getPosition();
 
-	virtual void update() = 0;
-	virtual void draw(LPD3DXSPRITE);
+	virtual void	update() = 0;
+	virtual void	draw(LPD3DXSPRITE);
 
-	int getHeight();
-	int getWidth();
+	int				getHeight();
+	int				getWidth();
 
-	Location getLocation();
-	void setLocation(int);
+	Location		getLocation();
+	void			setLocation(int);
 
-	bool isCollision(Object *object);
+	bool			isCollision(Object *object);
 
-	void setDirCollision(DIR);
-	DIR getDirCollision();
+	void			setDirCollision(DIR);
+	DIR				getDirCollision();
 
-	void setFliping(SpriteEffect);
-	SpriteEffect getFliping();
+	void			setFliping(SpriteEffect);
+	SpriteEffect	getFliping();
 
 	Box getBouding()
 	{
 		return Box(m_Position.x, m_Position.y, m_Sprite->getWidth() - 2, m_Sprite->getHeight(), m_Velocity.x, m_Velocity.y);
 	}
 
-	virtual void updateVelocity(){};
+	void			setAlphaColor(int r, int g, int b);
+	D3DXCOLOR		getAlphaColor(); // return white(1.0f, 1.0f, 1.0f)
 
-	virtual ~Object();
+	virtual void	updateVelocity(){};
 };

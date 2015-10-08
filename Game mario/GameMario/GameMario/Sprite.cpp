@@ -128,7 +128,7 @@ void Sprite::setRect(RECT rect)
 // position: tọa độ vật trong thế giới thực
 // scale: dùng để lật ảnh (-1.0f, 1.0f): lật ảnh, (1.0f, 1.0f) không lật
 // vpx, vpy view port hay camera
-void Sprite::draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy)
+void Sprite::draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy, D3DCOLOR alpha)
 {
 	//
 	// WORLD TO VIEWPORT TRANSFORM USING MATRIX
@@ -159,7 +159,7 @@ void Sprite::draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 
 
 	/* Đã thay đổi hướng, tính chất của ảnh */
 	SpriteHandler->SetTransform(&m_FinalMatrix);
-	SpriteHandler->Draw(m_Image, &m_Rect, &center, &p, D3DCOLOR_XRGB(255, 255, 255));
+	SpriteHandler->Draw(m_Image, &m_Rect, &center, &p, alpha);
 	SpriteHandler->SetTransform(&m_OldMatrix);
 }
 

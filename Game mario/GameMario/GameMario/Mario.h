@@ -12,7 +12,6 @@ private:
 	StateMachine<Mario>*	m_stateMachine;
 	StateMachine<Mario>*	m_statusStateMachine;
 
-
 	int			m_lives; // mạng của mario
 
 	bool		m_isBig; // trạng thái Big
@@ -41,6 +40,10 @@ public:
 
 	StateMachine<Mario>*	getStateMachine(){ return m_stateMachine; }
 	StateMachine<Mario>*	getStatusStateMachine(){ return m_statusStateMachine; }
+
+	bool		m_effectBig;
+	bool		m_effectSmall;
+	bool		m_effectFire;
 
 
 	bool		isBig(){ return m_isBig; }

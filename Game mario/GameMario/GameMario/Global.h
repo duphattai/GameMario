@@ -127,9 +127,6 @@ enum FSM_Mario
 	JUMP,
 	FALL,
 	SIT,
-	EFFECT_BIG,
-	EFFECT_FIRE,
-	EFFECT_SMALL,
 	DEAD,
 	STAR
 };

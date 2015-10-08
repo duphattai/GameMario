@@ -22,7 +22,7 @@ public:
 	void next();
 	void setRect(RECT rect);
 	void reset();
-	virtual void draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy);
+	virtual void draw(LPD3DXSPRITE SpriteHandler, D3DXVECTOR2 position, D3DXVECTOR2 scale, int vpx, int vpy, D3DCOLOR alpha = D3DCOLOR_XRGB(255,255,255));
 	int getCount();
 
 	int getWidth();

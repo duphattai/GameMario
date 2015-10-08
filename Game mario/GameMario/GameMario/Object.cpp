@@ -10,6 +10,7 @@ Object::Object()
 
 	m_WorldPosition.x = m_WorldPosition.y = 0;
 	m_Velocity = Vector2(0, 0);
+	m_alpha = D3DCOLOR_XRGB(255, 255, 255);
 }
 Object::~Object()
 {
@@ -17,6 +18,14 @@ Object::~Object()
 	m_IdImage = NULL;
 }
 
+void Object::setAlphaColor(int r, int g, int b)
+{
+	m_alpha = D3DCOLOR_XRGB(r, g, b);
+}
+D3DXCOLOR Object::getAlphaColor()
+{
+	return m_alpha;
+}
 
 void Object::setWorldPosition(Vector2 vector)
 {
@@ -95,6 +104,6 @@ void Object::draw(LPD3DXSPRITE SpriteHandler)
 	else
 		m_Scale = D3DXVECTOR2(1.0f * SCALE, 1.0f * SCALE);
 
-	m_Sprite->draw(SpriteHandler, D3DXVECTOR2(m_Position.x + m_Sprite->getWidth() * SCALE / 2, m_Position.y + m_Sprite->getHeight() * SCALE / 2), m_Scale, m_WorldPosition.x, m_WorldPosition.y);
+	m_Sprite->draw(SpriteHandler, D3DXVECTOR2(m_Position.x + m_Sprite->getWidth() * SCALE / 2, m_Position.y + m_Sprite->getHeight() * SCALE / 2), m_Scale, m_WorldPosition.x, m_WorldPosition.y, m_alpha);
 }
 
