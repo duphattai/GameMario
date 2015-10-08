@@ -18,9 +18,9 @@ Object::~Object()
 	m_IdImage = NULL;
 }
 
-void Object::setAlphaColor(int r, int g, int b)
+void Object::setAlphaColor(D3DXCOLOR alpha)
 {
-	m_alpha = D3DCOLOR_XRGB(r, g, b);
+	m_alpha = alpha;
 }
 D3DXCOLOR Object::getAlphaColor()
 {

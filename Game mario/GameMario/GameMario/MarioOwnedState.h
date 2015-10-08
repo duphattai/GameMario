@@ -118,8 +118,6 @@ private:
 	vector<int>		m_frameAnimation;
 	int				m_currentIndex;
 
-	vector<int>		m_frameAnimationAfterEffectSmall;
-
 	int				m_countTime;
 	int				m_timeChangeSprite; // time for load animation effect
 public:

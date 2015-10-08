@@ -70,7 +70,7 @@ public:
 		return Box(m_Position.x, m_Position.y, m_Sprite->getWidth() - 2, m_Sprite->getHeight(), m_Velocity.x, m_Velocity.y);
 	}
 
-	void			setAlphaColor(int r, int g, int b);
+	void			setAlphaColor(D3DXCOLOR);
 	D3DXCOLOR		getAlphaColor(); // return white(1.0f, 1.0f, 1.0f)
 
 	virtual void	updateVelocity(){};

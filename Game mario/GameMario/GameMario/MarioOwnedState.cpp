@@ -320,6 +320,7 @@ void Small::enter(Mario* mario)
 	mario->setIsBig(false);
 	mario->setCanShoot(false);
 	mario->m_effectSmall = true;
+	m_countTime = 0;
 
 	int bigIndex = mario->getCurrentFrame();
 	bigIndex = bigIndex > MarioSheet::BIG_MARIO_SIT ? bigIndex - 15 : bigIndex; // nếu index > index cua big mario thi chuyen index ve big mario
@@ -332,13 +333,6 @@ void Small::enter(Mario* mario)
 	m_frameAnimation.push_back(bigIndex); // invinbility color 1
 	m_frameAnimation.push_back(bigIndex + 8); // fire mario
 
-	// make effect after small
-	m_frameAnimationAfterEffectSmall.push_back(0); // current index
-	//m_frameAnimationAfterEffectSmall.push_back(26-8); // small fire mario
-	m_frameAnimationAfterEffectSmall.push_back(39 - 8); // small invinbility color 1
-	//m_frameAnimationAfterEffectSmall.push_back(26 - 8); // small fire mario
-	m_frameAnimationAfterEffectSmall.push_back(0); // current index
-
 	m_timeChangeSprite = 1;
 }
 
@@ -349,7 +343,7 @@ void Small::execute(Mario* mario)
 		if (m_currentIndex == m_frameAnimation.size())
 		{	
 			mario->m_effectSmall = false;
-			m_countTime = 30;
+			m_countTime = 80;
 			m_currentIndex = 0;
 		}
 		else if (m_timeChangeSprite-- == 0)
@@ -360,14 +354,6 @@ void Small::execute(Mario* mario)
 	}
 	else
 	{
-		//lấy index của ảnh trước khi cập nhật effect after small
-		int index;
-		if (m_currentIndex == 0)
-			mario->setCurrentFrame(mario->getCurrentFrame() - m_frameAnimationAfterEffectSmall[m_frameAnimationAfterEffectSmall.size() - 1]);
-		else
-			mario->setCurrentFrame(mario->getCurrentFrame() - m_frameAnimationAfterEffectSmall[(m_currentIndex - 1)]);
-
-
 		// update animation of mario
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
@@ -386,12 +372,17 @@ void Small::execute(Mario* mario)
 		// update mờ ảnh sau khi thực hiện smaller
 		if (--m_countTime > 0)
 		{
-			mario->setCurrentFrame(mario->getCurrentFrame() + m_frameAnimationAfterEffectSmall[m_currentIndex++]);
-			if (m_currentIndex >= m_frameAnimationAfterEffectSmall.size())
-				m_currentIndex = 0;
+			D3DXCOLOR colorAlpha = mario->getAlphaColor();
+			colorAlpha *= 255;
+			static int temp = -10;
+			if (colorAlpha.a < 155 || colorAlpha.a > 255)
+				temp *= -1;
+			colorAlpha.a += temp;
+			colorAlpha /= 255;
+			mario->setAlphaColor(colorAlpha);
 		}
 		else
-			m_currentIndex = 0;
+			mario->setAlphaColor(D3DCOLOR_ARGB(255, 255, 255, 255));
 
 
 		if (mario->isBig())
