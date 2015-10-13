@@ -42,7 +42,7 @@ void Standing::execute(Mario* mario)
 	}
 	else if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
 		mario->getStateMachine()->changeState(Sitting::getInstance());
-	else if (keyboard->isKeyDown(DIK_UP))
+	else if (keyboard->isPressed(DIK_UP))
 		mario->getStateMachine()->changeState(Jumping::getInstance());
 }
 
@@ -105,7 +105,7 @@ void Running::execute(Mario* mario)
 	mario->setVelocity(velocity);
 
 
-	if (keyboard->isKeyDown(DIK_UP))
+	if (keyboard->isPressed(DIK_UP))
 		mario->getStateMachine()->changeState(Jumping::getInstance());
 	else if (mario->getLocation() == Location::LOC_IN_AIR)
 		mario->getStateMachine()->changeState(Falling::getInstance());
@@ -343,7 +343,7 @@ void Small::execute(Mario* mario)
 		if (m_currentIndex == m_frameAnimation.size())
 		{	
 			mario->m_effectSmall = false;
-			m_countTime = 80;
+			m_countTime = 70;
 			m_currentIndex = 0;
 		}
 		else if (m_timeChangeSprite-- == 0)
@@ -374,7 +374,7 @@ void Small::execute(Mario* mario)
 		{
 			D3DXCOLOR colorAlpha = mario->getAlphaColor();
 			colorAlpha *= 255;
-			static int temp = -10;
+			static int temp = -25;
 			if (colorAlpha.a < 155 || colorAlpha.a > 255)
 				temp *= -1;
 			colorAlpha.a += temp;
@@ -433,6 +433,7 @@ void Big::enter(Mario* mario)
 	mario->setCanShoot(false);
 
 	mario->m_effectBig = true;
+	m_timeChangeSprite = 2;
 }
 
 void Big::execute(Mario* mario)
@@ -451,7 +452,14 @@ void Big::execute(Mario* mario)
 		// update animation of mario
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
-			int index = mario->getCurrentFrame() + 1;
+			int index = mario->getCurrentFrame();
+			if (--m_timeChangeSprite == 0)
+			{
+				index++;
+				m_timeChangeSprite = 2; // set time change
+			}
+				
+
 			// cap nhật lại index big mario
 			if (index >= MarioSheet::BIG_MARIO_CHANGE_DIR || index < MarioSheet::BIG_MARIO_RUN)
 				index = BIG_MARIO_RUN;
@@ -669,6 +677,7 @@ void Star::enter(Mario* mario)
 {
 	m_currentIndex = 0;
 	m_timeCount = 150;
+	m_timeChangeSprite = 2;
 }
 
 void Star::execute(Mario* mario)

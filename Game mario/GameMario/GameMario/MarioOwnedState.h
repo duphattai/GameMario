@@ -119,7 +119,7 @@ private:
 	int				m_currentIndex;
 
 	int				m_countTime;
-	int				m_timeChangeSprite; // time for load animation effect
+	int				m_timeChangeSprite; // time for load animation effect small
 public:
 	Small();
 	virtual ~Small(){}
@@ -135,10 +135,12 @@ public:
 class Big : public State < Mario >
 {
 private:
-	static Big*	m_instance;
+	static Big*			m_instance;
 
-	vector<int>				m_frameAnimation;
-	int						m_currentIndex;
+	vector<int>			m_frameAnimation;
+	int					m_currentIndex;
+
+	int					m_timeChangeSprite;
 public:
 	Big();
 	virtual ~Big(){}
@@ -198,7 +200,8 @@ private:
 	vector<int>		*m_frameAnimation;
 
 	int				m_currentIndex;
-	int				m_timeCount;
+	int				m_timeCount; // time effect star
+	int				m_timeChangeSprite;
 public:
 	Star();
 	virtual ~Star();
