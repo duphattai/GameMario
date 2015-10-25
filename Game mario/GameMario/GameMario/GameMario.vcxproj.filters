@@ -76,6 +76,27 @@
     <Filter Include="Header Files\GameObject\StateMachine\MarioOwnedState">
       <UniqueIdentifier>{99be3ac5-5598-44e6-8078-1571244161dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\FrameWork\Quadtree">
+      <UniqueIdentifier>{c6714bef-36ab-4a8d-91ef-14212980d80f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork\Quadtree">
+      <UniqueIdentifier>{45afea78-dae7-4eb7-9dd6-01ca36f2b378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FrameWork\XML">
+      <UniqueIdentifier>{4d393025-c8a4-4073-afb0-f56cc5a4dc9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork\XML">
+      <UniqueIdentifier>{4c15cba0-1025-4082-ae9a-2df15e4edf6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\StateMachine\ItemOwnedState">
+      <UniqueIdentifier>{4f8d3922-7e94-437b-9b56-d50df8ee58a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\StateMachine\ItemOwnedState">
+      <UniqueIdentifier>{0193b246-e4f6-4574-bb8a-674a8a6227ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\StateMachine\MarioOwnedState">
+      <UniqueIdentifier>{2ab4edff-a9dd-4cd1-aa8d-33c3773d0305}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -93,12 +114,6 @@
     <ClCompile Include="Sprite.cpp">
       <Filter>Source Files\FrameWork</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files\FrameWork\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files\GameObject\Object</Filter>
-    </ClCompile>
     <ClCompile Include="MapObject.cpp">
       <Filter>Source Files\GameObject\Map</Filter>
     </ClCompile>
@@ -108,11 +123,41 @@
     <ClCompile Include="Mario.cpp">
       <Filter>Source Files\GameObject\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="MarioOwnedState.cpp">
-      <Filter>Source Files\GameObject\StateMachine</Filter>
-    </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Source Files\FrameWork\Coliision</Filter>
+    </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Source Files\FrameWork\Quadtree</Filter>
+    </ClCompile>
+    <ClCompile Include="Xml\tinystr.cpp">
+      <Filter>Source Files\FrameWork\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Xml\tinyxml.cpp">
+      <Filter>Source Files\FrameWork\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Xml\tinyxmlerror.cpp">
+      <Filter>Source Files\FrameWork\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Xml\tinyxmlparser.cpp">
+      <Filter>Source Files\FrameWork\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\GameObject\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ReSource.cpp">
+      <Filter>Source Files\FrameWork\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemInBox.cpp">
+      <Filter>Source Files\GameObject\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="MarioOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\MarioOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\ItemOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="LuckyBox.cpp">
+      <Filter>Source Files\GameObject\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,12 +178,6 @@
     </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>Header Files\FrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="Source.h">
-      <Filter>Header Files\FrameWork\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files\GameObject\Object</Filter>
     </ClInclude>
     <ClInclude Include="MapObject.h">
       <Filter>Header Files\GameObject\Map</Filter>
@@ -163,6 +202,30 @@
     </ClInclude>
     <ClInclude Include="Collision.h">
       <Filter>Header Files\FrameWork\Coliision</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Header Files\FrameWork\Quadtree</Filter>
+    </ClInclude>
+    <ClInclude Include="Xml\tinystr.h">
+      <Filter>Header Files\FrameWork\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="Xml\tinyxml.h">
+      <Filter>Header Files\FrameWork\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\GameObject\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ReSource.h">
+      <Filter>Header Files\FrameWork\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemInBox.h">
+      <Filter>Header Files\GameObject\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\ItemOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="LuckyBox.h">
+      <Filter>Header Files\GameObject\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

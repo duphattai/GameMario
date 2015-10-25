@@ -6,15 +6,14 @@
 #include "Global.h"
 
 // -----------------------windowed
-#define SCALE 1
-#define SCREEN_WIDTH 256 * SCALE
-#define SCREEN_HEIGHT 240 * SCALE
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 240
 #define MAIN_WINDOW_TITLE L"Sample"
 #define FPS 30
 
 // -------------------character
 #define GROUND_Y 200
-#define VIEW_PORT_Y 240* SCALE
+#define VIEW_PORT_Y 240
 #define GRAVITATION	-1
 
 // xet id phu thuoc vao file text quy dinh
@@ -28,8 +27,8 @@
 #define KEYBOARD_BUFFER_SIZE 1024
 
 // ----------------Data
-#define MapData_1 L"Map//1-1//TileMap.png"
-#define NodeTileMap_1 "Map//1-1//TileNode.txt"
+#define TileMapPath L"Map//tileset.png"
+#define NodeTileMap_1 "Map//1-1//TileNode.xml"
 
 
 // --------------------Bullet

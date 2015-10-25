@@ -1,86 +1,116 @@
 ﻿#include "Map1.h"
-#include "Source.h"
+#include "ReSource.h"
 #include "SwapAABB.h"
+#include "LuckyBox.h"
+
 Map1::Map1(Mario *mario)
 {
-	m_Sprite = Source::getInstance()->getSprite(IDImage::IMG_MAP1);
+	m_Sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
 	m_WorldPosition.y = VIEW_PORT_Y;
 
-	Line = 3;
 	m_Mario = mario;
-	m_CheckCollision = new Collision();
 }
 
 void Map1::init(CKeyBoard *keyboard)
 {
 	MapObject::init(keyboard, NodeTileMap_1);
-}
 
-
-void Map1::updateCollision()
-{
-	// collision with map
-	// mario
-	if (m_Mario->getFSM() != FSM_Mario::DEAD)
+	map<int, vector<GameObject*>> listGameObject;
+	for (map<int, vector<ObjectTittle>>::iterator it = m_quadtreeNode.begin(); it != m_quadtreeNode.end(); it++)
 	{
-		m_Mario->setDirCollision(DIR::NONE);
-		m_Mario->setLocation(Location::LOC_IN_AIR);
-		Box marioBound = GetSweptBroadPhaseBox(m_Mario->getBouding()); // tao vung khong gian cho mario
-		for each (Box item in getTileNodeOnScreen())
+		vector<GameObject*> list;
+		for (int i = 0; i < it->second.size(); i++)
 		{
-			// kiem tra item co nam trong vung khong gian cua mario
-			if (CheckAABB(marioBound, item))
+			if (it->second[i].m_Id == 0) // tile map
 			{
-				DIR dir = m_CheckCollision->isCollision(m_Mario, item);
-				if (dir != DIR::NONE)
-				{
-					if (m_Mario->getFSM() != FSM_Mario::JUMP && dir == DIR::TOP) // fall gặp vật cản
-						m_Mario->setLocation(Location::LOC_ON_GROUND);
-				}
+				GameObject*	temp = new GameObject();
+				temp->setSpriteSheet(m_Sprite);
+				temp->setIndexSprite(it->second[i].m_Index);
+				temp->setPosition(it->second[i].m_X, it->second[i].m_Y);
+				temp->setTypeObject(TypeObject::Dynamic_TiledMap);
+				list.push_back(temp);
+			}
+			else if (it->second[i].m_Id == 1) // stand position
+			{
+				GameObject*	temp = new GameObject();
+				temp->setPosition(it->second[i].m_X, it->second[i].m_Y);
+				temp->setBox(Box(it->second[i].m_X, it->second[i].m_Y, it->second[i].m_Width, it->second[i].m_Height));
+				temp->setTypeObject(TypeObject::Dynamic_StandPosition);
+				list.push_back(temp);
+			}
+			else if (it->second[i].m_Id == 25) // item box
+			{
+				GameObject* item = new LuckyBox(ItemsType::IT_GUN);
 
-				if (m_Mario->getDirCollision() == DIR::NONE)
-					m_Mario->setDirCollision(dir);
+				item->setPosition(it->second[i].m_X, it->second[i].m_Y); // set position for luckybox
+				static_cast<LuckyBox*>(item)->getItem()->setPosition(it->second[i].m_X, it->second[i].m_Y); // set position for item in box
+				
+				item->setTypeObject(TypeObject::Dynamic_Item);
+				list.push_back(item);
 			}
 		}
+		if (list.size() != 0) listGameObject.insert(pair<int, vector<GameObject*>>(it->first, list));
 	}
+
+	//build tree
+	m_quadTree = new Quadtree();
+	m_quadTree->buildTree(listGameObject, Box(0, 0, 3584, 3584));
 }
+
+
+//void Map1::updateCollision()
+//{
+	//// collision with map
+	//// mario
+	//if (m_Mario->getFSM() != FSM_Mario::DEAD)
+	//{
+	//	m_Mario->setDirCollision(DIR::NONE);
+	//	m_Mario->setLocation(Location::LOC_IN_AIR);
+	//	Box marioBound = GetSweptBroadPhaseBox(m_Mario->getBouding()); // tao vung khong gian cho mario
+	//	for each (Box item in getTileNodeOnScreen())
+	//	{
+	//		DIR dir = m_CheckCollision->isCollision(m_Mario, item);
+	//		if (dir != DIR::NONE)
+	//		{
+	//			if (m_Mario->getFSM() != FSM_Mario::JUMP && dir == DIR::TOP) // fall gặp vật cản
+	//				m_Mario->setLocation(Location::LOC_ON_GROUND);
+	//		}
+
+	//		if (m_Mario->getDirCollision() == DIR::NONE)
+	//			m_Mario->setDirCollision(dir);
+	//		
+	//	}
+	//}
+//}
+
 void Map1::update()
 {
-	if (m_keyboard->isPressed(DIK_SPACE))
-		m_Mario->setIsBig(true);
-	else if (m_keyboard->isPressed(DIK_C))
-		m_Mario->setCanShoot(true);
-	else if (m_keyboard->isPressed(DIK_K))
-		m_Mario->setDead(true);
-	else if (m_keyboard->isPressed(DIK_V))
-		m_Mario->setStar(true);
+	//if (m_keyboard->isPressed(DIK_SPACE))
+	//	m_Mario->setIsBig(true);
+	//else if (m_keyboard->isPressed(DIK_C))
+	//	m_Mario->setCanShoot(true);
+	//else if (m_keyboard->isPressed(DIK_K))
+	//	m_Mario->setDead(true);
+	//else if (m_keyboard->isPressed(DIK_V))
+	//	m_Mario->setStar(true);
 }
 
-vector<ObjectTittle> getNodeOnCamera(vector<ObjectTittle> listNode, Box camera)
-{
-	vector<ObjectTittle> list;
-	for each(ObjectTittle item in listNode)
-	{
-		Box box(item.m_X, item.m_Y, item.m_Width, item.m_Height);
-		if (CheckAABB(box, camera))
-			list.push_back(item);
-	}
-
-	return list;
-}
 
 void Map1::draw(LPD3DXSPRITE SpriteHandler)
 {
-	vector<ObjectTittle> list = getNodeOnCamera(m_tileMapNode, Box(m_WorldPosition.x, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
-	
-	for each(ObjectTittle item in list)
+	vector<GameObject*> list = m_quadTree->getListObjects(Box(m_WorldPosition.x, m_WorldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT), list);
+	for each (GameObject* var in list)
 	{
-		if (item.m_Id == 0)
+		if (var->getTypeObject() == TypeObject::Dynamic_TiledMap)
 		{
-			m_Sprite->setIndex(item.m_Index);
-			m_Position.x = (float)item.m_X;
-			m_Position.y = (float)item.m_Y;
-			Object::draw(SpriteHandler);
+			var->setIndexSprite(var->getIndexSprite());
+			var->setWorldPosition(Vector2(m_WorldPosition.x, m_WorldPosition.y));
+			var->draw(SpriteHandler);
+		}
+		else if (var->getTypeObject() != TypeObject::Dynamic_StandPosition)
+		{
+			var->setWorldPosition(Vector2(m_WorldPosition.x, m_WorldPosition.y));
+			var->draw(SpriteHandler);
 		}
 	}
 }

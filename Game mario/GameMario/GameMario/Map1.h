@@ -1,5 +1,6 @@
 #pragma once
 #include "MapObject.h"
+#include "Quadtree.h"
 class Map1 : public MapObject
 {
 public:
@@ -7,7 +8,6 @@ public:
 	void init(CKeyBoard *keyboard);
 	void draw(LPD3DXSPRITE SpriteHandler);
 	void update();
-	void updateCollision();
 	~Map1();
 };
 

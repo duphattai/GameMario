@@ -3,23 +3,9 @@
 enum IDImage
 {
 	IMG_MARIOSHEET = 0,
-	IMG_MAP1,
-	//IMG_MAP2,
-	//IMG_HumandExplode,
-	//IMG_MachineExplode,
-	//IMG_BlueExplode,
-	//IMG_ItemBLock,
-	//IMG_ItemGun,
-	//IMG_BlockTank,
-	//IMG_BlockTank2,
-	//IMG_Bridge,
-	//IMG_SoldierRun,
-	//IMG_SoldierJump,
-	//IMG_SoldierSniper_45,
-	//IMG_SoldierSniper_90,
-	//IMG_SoldierSniper_135,
+	IMG_TILEMAP,
+	IMG_ITEMSHEET
 };
-
 
 enum SpriteEffect
 {
@@ -130,6 +116,15 @@ enum FSM_Mario
 	DEAD,
 	STAR
 };
+
+enum TypeObject
+{
+	Moving_Enemy,
+	Dynamic_Item,
+	Dynamic_TiledMap,
+	Dynamic_StandPosition,
+};
+
 
 struct Frame
 {

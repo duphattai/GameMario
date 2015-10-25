@@ -1,0 +1,25 @@
+﻿<Window x:Class="Mapediter.OpenFile"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OpenFile" Height="251.579" Width="300">
+    <Grid>
+        <Label Content="Path Image" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="PathImage" HorizontalAlignment="Left" Height="23" Margin="85,13,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Open" HorizontalAlignment="Left" Margin="217,12,0,0" VerticalAlignment="Top" Width="65" Click="Button_Click"/>
+        <Label Content="Tile width" HorizontalAlignment="Left" Margin="10,105,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.376,-0.53" Background="{x:Null}"/>
+        <TextBox x:Name="TileWidth" HorizontalAlignment="Left" Margin="85,107,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="54"/>
+        <Label Content="Tile height" HorizontalAlignment="Left" Margin="144,105,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="TileHeight" HorizontalAlignment="Left" Margin="217,107,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="65"/>
+        <Label Content="Scale" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.376,-0.53" Background="{x:Null}"/>
+        <TextBox x:Name="Scale" HorizontalAlignment="Left" Margin="85,144,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="54"/>
+        <Button Content="Ok" Margin="186,185,73,0" VerticalAlignment="Top" x:Name="Ok" Click="Ok_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="233,185,0,0" VerticalAlignment="Top" Width="49" Click="Button_Click_1"/>
+        <Label Content="Min width" HorizontalAlignment="Left" Margin="144,142,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.376,-0.53" Background="{x:Null}"/>
+        <TextBox x:Name="Min_width" HorizontalAlignment="Left" Margin="217,144,0,0" TextWrapping="Wrap" Text="448" VerticalAlignment="Top" Width="65"/>
+        <Label Content="Map width" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.376,-0.53" Background="{x:Null}"/>
+        <TextBox x:Name="MapWidth" HorizontalAlignment="Left" Margin="85,64,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="54"/>
+        <Label Content="Map height" HorizontalAlignment="Left" Margin="144,62,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="MapHeight" HorizontalAlignment="Left" Margin="217,64,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="65"/>
+
+    </Grid>
+</Window>

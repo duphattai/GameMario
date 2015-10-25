@@ -14,22 +14,15 @@ static Box GetSweptBroadPhaseBox(Box b)
 
 	broadphasebox.x = b.vx > 0 ? b.x : (float)(b.x + b.vx);
 	broadphasebox.y = b.vy > 0 ? b.y : b.y + (float)b.vy;
-	broadphasebox.width = b.vx > 0 ? b.vx + b.width : b.width - b.vx;
-	broadphasebox.height = b.vy > 0 ? b.vy + b.height : b.height - b.vy;
+	broadphasebox.width = b.vx > 0 ? b.vx + b.width : abs(b.vx - b.width);
+	broadphasebox.height = b.vy > 0 ? b.vy + b.height : abs(b.vy - b.height);
 	
 	return broadphasebox;
 }
 
-// kiem tra box1 co nam trong vung khong gian box2
-// box1 nằm trong box2 return true
-static bool CheckAABB(Box box1, Box box2)
-{
-	return !(box1.x + box1.width < box2.x || box1.x > box2.x + box2.width || box1.y + box1.height < box2.y || box1.y > box2.y + box2.height);
-}
-
 // kiểm tra vật có nằm ngoài vùng
 // kiểm tra va chạm khi chưa có vận tốc
-static DIR AABB(Box &box1, Box &box2)
+static DIR AABB(Box box1, Box box2)
 {
 	float l = box2.x - (box1.x + box1.width);
 	float r = box1.x - (box2.x + box2.width);
@@ -40,11 +33,6 @@ static DIR AABB(Box &box1, Box &box2)
 	if (l > 0 || r > 0 || t > 0 || b > 0)
 		return DIR::NONE;
 
-	// find the offset of both sides
-	box1.vx -= box2.vx;
-	box1.vy -= box2.vy;
-
-	box2.vx = box2.vy = 0.0f;
 
 	// co va cham khong can biet va cham ben nao
 	if (t <= 0 && box1.y + box1.height > box2.y + box2.height) return DIR::TOP;
@@ -78,7 +66,7 @@ static float SweptAABB(Box b1, Box b2, float& normalx, float& normaly)
 	}
 	else
 	{
-		yInvEntry = b2.y + b2.height - (b1.y);
+		yInvEntry = (b2.y + b2.height) - b1.y;
 		yInvExit = b2.y - (b1.y + b1.height);
 	}
 
@@ -137,12 +125,12 @@ static float SweptAABB(Box b1, Box b2, float& normalx, float& normaly)
 		}
 		else
 		{
-			if (yInvEntry <= 0.0f)
+			if (yInvEntry < 0.0f) // top
 			{
 				normalx = 0.0f;
 				normaly = 1.0f;
 			}
-			else
+			else // bottom
 			{
 				normalx = 0.0f;
 				normaly = -1.0f;

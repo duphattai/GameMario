@@ -5,6 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Xml;
+
 
 namespace Mapediter
 {
@@ -65,6 +67,9 @@ namespace Mapediter
         List<Node> m_Temp;
         List<Node> m_ArrayNode;
         string m_infor;
+
+
+        Quadtree m_QuadTree;
         public TileMap(string _Path, List<Node> _List , string _Information,int _TileWidth, int _TileHeight)
         {
             m_Bitmap = new Bitmap(_Path);
@@ -135,11 +140,97 @@ namespace Mapediter
             }
         }
 
+        public void CreateQuadTree()
+        {
+            // make real world left = x, right = x + width, top = y + height, bottom = y
+            foreach (var item in m_Temp)
+                item.m_Y += item.m_Height;
+
+            //for (int i = 0; i < m_ArrayNode.Count; i++)
+            //{
+            //    m_ArrayNode[i].m_Y += m_ArrayNode[i].m_Height;
+            //    m_Temp.Add(m_ArrayNode[i]);
+            //}
+
+            m_QuadTree = new Quadtree(0, 0, m_Bitmap.Width, MainWindow.minWidth);
+            foreach(var item in m_Temp)
+            {
+                item.m_Y = m_Bitmap.Height - item.m_Y;
+                m_QuadTree.Insert(item);
+            }
+        }
+
+        void SavesNode(List<Node> list, XmlWriter write)
+        {
+            foreach (var item in list)
+            {
+                write.WriteStartElement("Object");
+
+                write.WriteAttributeString("id", item.m_Id.ToString());
+                write.WriteAttributeString("index", item.m_Index.ToString());
+                write.WriteAttributeString("x", item.m_X.ToString());
+                write.WriteAttributeString("y", item.m_Y.ToString());
+                write.WriteAttributeString("width", item.m_Width.ToString());
+                write.WriteAttributeString("height", item.m_Height.ToString());
+
+                write.WriteEndElement();
+            }
+        }
+
+        void SavesNode(Quadtree quadTree, string idNode, XmlWriter write)
+        {
+            if (quadTree == null) return;
+
+            if(quadTree.m_List.Count != 0)
+            {
+                write.WriteStartElement("Node");
+                write.WriteAttributeString("id", idNode);
+                foreach(var item in quadTree.m_List)
+                {
+                    write.WriteStartElement("Object");
+
+                    write.WriteAttributeString("id", item.m_Id.ToString());
+                    write.WriteAttributeString("index", item.m_Index.ToString());
+                    write.WriteAttributeString("x", item.m_X.ToString());
+                    write.WriteAttributeString("y", item.m_Y.ToString());
+                    write.WriteAttributeString("width", item.m_Width.ToString());
+                    write.WriteAttributeString("height", item.m_Height.ToString());
+                    
+                    write.WriteEndElement();
+                }
+                write.WriteEndElement();
+            }
+            else
+            {
+                double id = int.Parse(idNode) * 10;
+
+                if(quadTree.m_AreaOne != null)
+                {
+                    SavesNode(quadTree.m_AreaOne, (id + 1).ToString(), write);
+                }
+
+                if (quadTree.m_AreaTwo != null)
+                {
+                    SavesNode(quadTree.m_AreaTwo, (id + 2).ToString(), write);
+                }
+
+                if (quadTree.m_AreaThree != null)
+                {
+                    SavesNode(quadTree.m_AreaThree, (id + 3).ToString(), write);
+                }
+
+                if (quadTree.m_AreaFour != null)
+                {
+                    SavesNode(quadTree.m_AreaFour, (id + 4).ToString(), write);
+                }
+            }
+        }
+
         public void SaveFileTileMap()
         {
             SaveFileDialog saveFile = new SaveFileDialog();
             saveFile.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveFile.FileName = "TileNode.txt";
+            saveFile.FileName = "TileNode.xml";
 
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
@@ -148,6 +239,9 @@ namespace Mapediter
                 path = direc.Parent.FullName;
                 try
                 {
+                    
+                    //Tài: 14/10
+                    /*
                     // make real world left = x, right = x + width, top = y + height, bottom = y
                     foreach (var item in m_Temp)
                         item.m_Y += item.m_Height;
@@ -170,8 +264,61 @@ namespace Mapediter
                             file.WriteLine(temp.ToString());
                         }
                     }
+                    */
 
 
+                    for (int i = 0; i < m_ArrayNode.Count; i++)
+                    {
+                        m_ArrayNode[i].m_Y += m_ArrayNode[i].m_Height;
+                        m_ArrayNode[i].m_Y = m_Bitmap.Height - m_ArrayNode[i].m_Y;
+                    }
+                        
+                    // new code 14/10
+                    // write quadtree into xml file
+                    XmlWriterSettings xmlSetting = new XmlWriterSettings();
+                    xmlSetting.Indent = true;
+                    xmlSetting.IndentChars = "\t";
+                    XmlWriter xmlWriter = XmlWriter.Create(path + "\\TileNode.xml", xmlSetting);
+                   
+                    xmlWriter.WriteStartDocument();
+
+
+                    xmlWriter.WriteStartElement("Game");
+                    
+                    // information
+                    xmlWriter.WriteStartElement("Information");
+                    string[] split = m_infor.Split('\n');
+                    foreach(string item in split)
+                    {
+                        xmlWriter.WriteStartElement("Description");
+                        xmlWriter.WriteAttributeString("des", item);
+                        xmlWriter.WriteEndElement();
+                    }
+                    xmlWriter.WriteEndElement();
+                    //save tile map
+                    xmlWriter.WriteStartElement("Tilemap");
+                    SavesNode(m_ArrayNode, xmlWriter);
+                    xmlWriter.WriteEndElement();
+                    
+                    
+                    // save quadtree
+                    xmlWriter.WriteStartElement("Quadtree");
+                    xmlWriter.WriteAttributeString("mapwidth", m_QuadTree.m_Rect.width.ToString());
+                    xmlWriter.WriteAttributeString("minwidth", m_QuadTree.minWidth.ToString());
+
+                    SavesNode(m_QuadTree.m_AreaOne, "1", xmlWriter);
+                    SavesNode(m_QuadTree.m_AreaTwo, "2", xmlWriter);
+                    SavesNode(m_QuadTree.m_AreaThree, "3", xmlWriter);
+                    SavesNode(m_QuadTree.m_AreaFour, "4", xmlWriter);
+
+                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteEndElement();
+                    
+                    xmlWriter.WriteEndDocument();
+                    xmlWriter.Close();
+                    
+                    
+                    //draw tileMap
                     Bitmap bitmap = new Bitmap(m_ArrayRectBit.Count * m_TileWidth, m_TileHeight);
 
                     for (int k = 0; k < m_ArrayRectBit.Count; k++)
@@ -188,9 +335,9 @@ namespace Mapediter
                     bitmap.Save(path + "\\TileMap.png");
                     MessageBox.Show("Xuat file thanh cong.");
                 }
-                catch
+                catch(Exception ex)
                 {
-
+                    MessageBox.Show(ex.Message);
                 }
             }
         }

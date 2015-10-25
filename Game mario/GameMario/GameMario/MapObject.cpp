@@ -1,66 +1,80 @@
 #include "MapObject.h"
 #include "SwapAABB.h"
+#include "Xml\tinyxml.h"
 MapObject::MapObject()
 {
 	m_Flip = SpriteEffect::None;
 	m_Sprite = NULL;
 	m_keyboard = NULL;
 
+	m_typeObject = TypeObject::Dynamic_TiledMap;
+}
+
+map<int, vector<ObjectTittle>> readQuadTreeFromFile(TiXmlElement *nodeParent)
+{
+	TiXmlElement* node = nodeParent->FirstChildElement(); // get first node
+	map<int, vector<ObjectTittle>> list;
+
+	while (node != nullptr)
+	{
+		int id;
+		node->QueryIntAttribute("id", &id);
+
+		vector<ObjectTittle> listObject;
+		TiXmlElement* object = node->FirstChildElement(); // get first object in node
+		while (object != nullptr) // get all objects in child node
+		{
+			ObjectTittle temp;
+			object->QueryIntAttribute("id", &temp.m_Id);
+			object->QueryIntAttribute("index", &temp.m_Index);
+			object->QueryIntAttribute("x", &temp.m_X);
+			object->QueryIntAttribute("y", &temp.m_Y);
+			object->QueryIntAttribute("width", &temp.m_Width);
+			object->QueryIntAttribute("height", &temp.m_Height);
+
+			listObject.push_back(temp);
+			object = object->NextSiblingElement(); // get next object
+		}
+
+		// insert list object
+		list.insert(std::pair<int, vector<ObjectTittle>>(id, listObject));
+		node = node->NextSiblingElement();//get next node
+	}
+
+	return list;
 }
 
 void MapObject::init(CKeyBoard *keyboard, char *FileMap)
 {
-	ifstream file;
-	file.open(FileMap);
-
-	char s[1000];
-	for (int i = 0; i < Line; i++)
+	// 16/11
+	// read file map xml
+	TiXmlDocument doc(FileMap);
+	if (!doc.LoadFile())
 	{
-		file.getline(s, 1000, '\n');
+		printf("%s", doc.ErrorDesc());
+		return;
 	}
 
-	while (!file.eof())
-	{
-		int Id;
-		int index;
-		int x;
-		int y;
-		int width;
-		int height;
+	TiXmlElement* root = doc.RootElement();
+	TiXmlElement* node = root->FirstChildElement(); // node -> information
 
-		file >> Id >> index >> x >> y >> width >> height;
-
-		ObjectTittle temp(Id, index, x * SCALE, y * SCALE, width * SCALE, height * SCALE);
-
-		if (Id == 0) // for maptile
-		{
-			m_tileMapNode.push_back(temp);
-		}
-		else if (Id == 1) // stand position on map
-		{
-			m_StandPositionOnMap.push_back(Box(--x * SCALE, --y * SCALE, --width *SCALE, --height * SCALE));
-		}
-	}
-	file.close();
+	TiXmlElement* quadTreeNode = node->NextSiblingElement(); // node ->Quadtree
+	m_quadtreeNode = readQuadTreeFromFile(quadTreeNode);
+	//end
 
 	m_keyboard = keyboard;
+	m_colorBackGround = D3DCOLOR_XRGB(146, 144, 255);
+}
+
+vector<GameObject*> MapObject::getListObjectOnCamera()
+{
+	vector<GameObject*> list;
+	if (m_quadTree != nullptr)
+		list = m_quadTree->getListObjects(Box(m_WorldPosition.x, m_WorldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT), list);
+	return list;
 }
 
 MapObject::~MapObject()
 {
 	m_keyboard = NULL;
-}
-
-
-vector<Box> MapObject::getTileNodeOnScreen()
-{
-	vector<Box> list;
-	Box camera(m_WorldPosition.x, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	for each (Box item in m_StandPositionOnMap)
-	{
-		if (CheckAABB(item, camera))
-			list.push_back(Box(item));
-	}
-
-	return list;
 }

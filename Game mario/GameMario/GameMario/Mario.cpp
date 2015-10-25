@@ -1,8 +1,9 @@
 ﻿#include "Mario.h"
-#include "Source.h"
+#include "ReSource.h"
 #include "Global.h"
 #include <fstream>
 #include "MarioOwnedState.h"
+#include "LuckyBox.h"
 
 using namespace std;
 
@@ -40,12 +41,10 @@ Mario::Mario()
 	file.close();
 
 
-	m_Sprite = Source::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
+	m_Sprite = ReSource::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
 	m_MaxVelocity = Vector2(3.00f, 10.0f);
 	m_MinVelocity = Vector2(-3.00f, -10.0f);
 
-	m_Gametime = new GameTime();
-	m_Gametime->setTime();
 
 	m_WorldPosition = Vector2(0, VIEW_PORT_Y);
 	m_lives = 3;
@@ -62,19 +61,18 @@ Mario::Mario()
 	m_statusStateMachine = new StateMachine<Mario>(this);
 	m_statusStateMachine->changeState(Small::getInstance());
 	m_effectSmall = false;
+
+	m_checkCollision = new Collision();
 }
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
 {
 	m_Sprite->setRect(frameList[m_currentFrame].rect);
-	Object::draw(SpriteHandler);
+	GameObject::draw(SpriteHandler);
 }
 
 void Mario::update()
 {
-	if (m_Gametime->getElapsedTime() < 1000 / 22) return;
-	m_Gametime->update();
-	
 	// không hiệu ứng small, fire, big mới update position
 	if (!m_effectBig && !m_effectFire && !m_effectSmall)
 	{
@@ -94,16 +92,75 @@ void Mario::update()
 
 void Mario::updateVelocity()
 {
-	m_Gametime->setTime();
-	if (m_Gametime->getElapsedTime() < 1000 / 22)
-		return;
-
 	if (!m_effectBig && !m_effectFire && !m_effectSmall)
 		m_stateMachine->update();
 	
 	m_statusStateMachine->update();
+
+	// 24/10 
+	// set default, dùng để xét va chạm di chuyển trên map
+	setDirCollision(DIR::NONE);
+	setLocation(Location::LOC_IN_AIR);
 }
 
+
+Box Mario::getBouding()
+{
+	GameObject::getBouding();
+
+	//hard code
+	m_Box.x += 6;
+	m_Box.width = 4;
+
+	return m_Box;
+}
+
+bool Mario::isCollision(GameObject* gameObject)
+{
+	int type = gameObject->getTypeObject();
+	if (type == TypeObject::Dynamic_TiledMap) // không xét va cham với tiled map 
+		return false;
+
+	DIR dir = m_checkCollision->isCollision(this, gameObject);
+	if (dir != DIR::NONE)
+	{
+		m_Velocity = m_checkCollision->getVelocity();
+		if (type == TypeObject::Dynamic_StandPosition)
+		{
+			if ((getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) && dir == DIR::TOP) // fall gặp vật cản
+					setLocation(Location::LOC_ON_GROUND);
+
+			if (getDirCollision() == DIR::NONE)
+				setDirCollision(dir);
+		}
+		else if (type == TypeObject::Moving_Enemy)
+		{
+
+		}
+		else if (type == TypeObject::Dynamic_Item)
+		{
+			if (getDirCollision() == DIR::NONE)
+				setDirCollision(dir);
+
+			if (dir == DIR::BOTTOM)
+			{
+				LuckyBox* luckyBox = static_cast<LuckyBox*>(gameObject);
+				luckyBox->setMakeEffect(true);
+
+				setLocation(Location::LOC_IN_AIR);
+			}
+			else if (dir == DIR::TOP)
+			{
+				if ((getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) && dir == DIR::TOP) // fall gặp vật cản
+					setLocation(Location::LOC_ON_GROUND);
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+}
 
 void Mario::setVelocity(Vector2 velocity)
 {
@@ -111,13 +168,6 @@ void Mario::setVelocity(Vector2 velocity)
 	Vector2 maxVelocity = m_MaxVelocity;
 	Vector2 minVelocity = m_MinVelocity;
 
-	//if (!m_isBig && !m_canShoot) // update velocity for small
-	//{
-	//	maxVelocity.x--;
-	//	maxVelocity.y--;
-	//	minVelocity.x++;
-	//	minVelocity.y++;
-	//}
 
 	if (m_Velocity.x >= maxVelocity.x)
 		m_Velocity.x = maxVelocity.x;
@@ -133,7 +183,6 @@ void Mario::setVelocity(Vector2 velocity)
 
 Mario::~Mario()
 {
-	delete m_Gametime;
 	delete Falling::getInstance();
 	delete Running::getInstance();
 	delete Standing::getInstance();

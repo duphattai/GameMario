@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Quadtree.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -127,6 +128,9 @@
     <Resource Include="Enemies\16.png" />
     <Resource Include="Enemies\17.png" />
     <Resource Include="Enemies\18.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Items\27.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -193,10 +193,12 @@ void Jumping::execute(Mario* mario)
 	{
 		if (dir != DIR::TOP) // left or right
 			mario->getStateMachine()->changeState(Falling::getInstance());
-		else if (velocity.y <= 0 || dir == DIR::TOP)
+		else if (velocity.y <= 0 || mario->getLocation() == Location::LOC_ON_GROUND)
 			mario->getStateMachine()->changeState(Standing::getInstance());
+
 		return;
 	}
+	
 
 
 	velocity.y += GRAVITATION;
@@ -250,6 +252,7 @@ void Falling::enter(Mario* mario)
 {
 	mario->setLocation(Location::LOC_IN_AIR);
 	mario->setFSM(FSM_Mario::FALL);
+	mario->setVelocity(Vector2(mario->getVelocity().x, 0));
 }
 
 void Falling::execute(Mario* mario)
@@ -285,8 +288,7 @@ void Falling::execute(Mario* mario)
 			mario->getStateMachine()->changeState(Running::getInstance());
 		else
 			mario->getStateMachine()->changeState(Standing::getInstance());
-	}
-		
+	}		
 }
 
 void Falling::exit(Mario* mario)

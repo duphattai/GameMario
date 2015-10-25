@@ -2,11 +2,11 @@
 
 ////////////////////////////////////////////////////////////
 #include "StateMachine.h"
-#include "Object.h"
+#include "GameObject.h"
 #include <vector>
 
 
-class Mario : public Object
+class Mario : public GameObject
 {
 private:
 	StateMachine<Mario>*	m_stateMachine;
@@ -45,6 +45,9 @@ public:
 	bool		m_effectSmall;
 	bool		m_effectFire;
 
+	Box			getBouding();
+
+	bool		isCollision(GameObject*);
 
 	bool		isBig(){ return m_isBig; }
 	void		setIsBig(bool x){ m_isBig = x; }
@@ -71,7 +74,7 @@ public:
 	void		setFSM(FSM_Mario state){ m_FSM_Mario = state; }
 	FSM_Mario	getFSM(){ return m_FSM_Mario; }
 
-	void		setCurrentFrame(int frame){ m_currentFrame = frame; }
+	void		setCurrentFrame(int frame){ m_currentFrame = frame; m_Sprite->setRect(frameList[m_currentFrame].rect); }
 	int			getCurrentFrame(){ return m_currentFrame; }
 	//Gun*		getGun(){ return m_gun; }
 };

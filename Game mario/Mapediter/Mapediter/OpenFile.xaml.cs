@@ -22,6 +22,8 @@ namespace Mapediter
         public string fileImagePath;
         public double scale;
         public int tileWidth, tileHeight;
+        public int minWidth;
+
         public OpenFile()
         {
             InitializeComponent();
@@ -48,7 +50,7 @@ namespace Mapediter
             scale = Convert.ToDouble(Scale.Text.ToString());
             tileHeight = Convert.ToInt32(TileHeight.Text.ToString());
             tileWidth = Convert.ToInt32(TileWidth.Text.ToString());
-
+            minWidth = Convert.ToInt32(Min_width.Text.ToString());
             this.Close();
         }
 

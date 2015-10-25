@@ -40,6 +40,7 @@ namespace Mapediter
         List<Node> m_ListNodeImage = new List<Node>(); // store position of icon draw on canvas
         List<Image> listIcon = new List<Image>(); // store icon will draw on canvas
 
+        public static int minWidth; // use for quadtree
 
         // draw a rectangle create from startPoint and endPoint
         Point startPoint;
@@ -62,7 +63,7 @@ namespace Mapediter
             m_TextImage = form.fileImagePath;
             tileHeight = form.tileHeight;
             tileWidth = form.tileWidth;
-
+            minWidth = form.minWidth;
 
             ImageBrush img = new ImageBrush();
             img.ImageSource = new BitmapImage(new Uri(m_TextImage));
@@ -86,13 +87,13 @@ namespace Mapediter
             {
                 m_Information += item + Environment.NewLine;
             }
-            m_Information += "ID\tIndex\tX\tY\tWidth\tHeight" + Environment.NewLine;
+            //m_Information += "ID\tIndex\tX\tY\tWidth\tHeight" + Environment.NewLine;
 
             m_ListNode.AddRange(m_ListNodeImage);
             m_TileMap = new TileMap(m_TextImage, m_ListNode, m_Information, tileWidth, tileHeight);
             m_TileMap.CreateRectBit();
             m_TileMap.CreateTileMap();
-
+            m_TileMap.CreateQuadTree();
             m_TileMap.SaveFileTileMap();
         }
 
@@ -454,6 +455,17 @@ namespace Mapediter
             InputInfor.Text = "item move";
             drawRectangle.IsChecked = false;
         }
+
+        private void item_27_Click(object sender, RoutedEventArgs e)
+        {
+            image_Selected.Source = new BitmapImage(new Uri(@"\Items\27.png", UriKind.Relative));
+            image_Selected.Tag = @"\Items\27.png";
+            InputID.Text = "27";
+            InputInfor.Text = "item brick";
+            drawRectangle.IsChecked = false;
+        }
+
+
         private void checkBoxDrawRectangle_Checked(object sender, RoutedEventArgs e)
         {
             if(drawRectangle.IsChecked.Value)

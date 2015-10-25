@@ -2,11 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Mapediter.MainWindow"
-        Title="MainWindow" Height="551.328" Width="1000" WindowState="Maximized">
+        Title="MainWindow" Height="576.328" Width="1000" WindowState="Maximized">
     <Grid Margin="0,0,0,-8">
         <Grid.RowDefinitions>
-            <RowDefinition Height="478*"/>
-            <RowDefinition Height="51*"/>
+            <RowDefinition Height="252*"/>
+            <RowDefinition Height="25*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -95,7 +95,8 @@
                         <ColumnDefinition Width="64*" />
                         <ColumnDefinition Width="64*" />
                         <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="256*" />
+                        <ColumnDefinition Width="64*" />
+                        <ColumnDefinition Width="192*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*" />
@@ -135,11 +136,16 @@
                             <ImageBrush ImageSource="Items/26.png"/>
                         </Button.Background>
                     </Button>
+                    <Button Width="32" Height="32" Grid.Column="7" x:Name="Item_27" Click="item_27_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Items/27.png"/>
+                        </Button.Background>
+                    </Button>
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label Content="ID" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.591,0.577"/>
-        <TextBox IsReadOnly="True" x:Name="InputID" HorizontalAlignment="Left" Margin="37,123,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top"/>
+        <Label Content="ID" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.591,0.577" Height="26" Width="22"/>
+        <TextBox IsReadOnly="True" x:Name="InputID" HorizontalAlignment="Left" Margin="37,123,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Height="22" Width="16"/>
         <Label Content="Description" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Width="90" Height="26" Grid.Column="1"/>
         <TextBox IsReadOnly="True" x:Name="InputInfor" HorizontalAlignment="Left" Height="23" Margin="90,123,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="151" Grid.Column="1"/>
         <CheckBox x:Name="checkGrid" Content="Grid" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Height="16" Width="49" Checked="checkBoxDrawGrid_Checked" Unchecked="checkBoxDrawGrid_Checked"/>
@@ -149,18 +155,18 @@
             </Canvas>
         </ScrollViewer>
 
-        <StatusBar HorizontalAlignment="Left" Margin="10,6,0,0" Grid.Row="1" VerticalAlignment="Top" Height="32" Grid.ColumnSpan="2">
+        <StatusBar HorizontalAlignment="Left" Margin="10,6,0,0" Grid.Row="1" VerticalAlignment="Top" Height="32" Width="79">
             <StatusBarItem Background="#FFDAD9D9">
                 <Label Content="Label" x:Name="position"/>
             </StatusBarItem>
         </StatusBar>
-        <Border BorderBrush="Black" BorderThickness="1" MinHeight="309" Margin="10,186,0,0" Grid.Column="0" Background="#FFD6D6D6" Width="89">
+        <Border BorderBrush="Black" BorderThickness="1" Margin="10,186,0,0" Grid.Column="0" Background="#FFD6D6D6">
             <Image Height="32" Margin="12,121,11,122" Width="32" x:Name="image_Selected"/>
         </Border>
-        <CheckBox Content="Rectangle" Grid.Column="1" HorizontalAlignment="Left" Margin="10,158,0,0" VerticalAlignment="Top" x:Name="drawRectangle" Checked="checkBoxDrawRectangle_Checked"/>
+        <CheckBox Content="Rectangle" Grid.Column="1" HorizontalAlignment="Left" Margin="10,158,0,0" VerticalAlignment="Top" x:Name="drawRectangle" Checked="checkBoxDrawRectangle_Checked" Height="16" Width="69"/>
         <TextBox x:Name="RectWidth" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="136,153,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="56"/>
         <TextBox x:Name="RectHeight" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="252,153,0,0" TextWrapping="Wrap" Text="16" VerticalAlignment="Top" Width="59" RenderTransformOrigin="2.739,0.435"/>
-        <Label Content="width" Grid.Column="1" HorizontalAlignment="Left" Margin="90,152,0,0" VerticalAlignment="Top" Height="25"/>
-        <Label Content="height" Grid.Column="1" HorizontalAlignment="Left" Margin="197,151,0,0" VerticalAlignment="Top"/>
+        <Label Content="width" Grid.Column="1" HorizontalAlignment="Left" Margin="90,152,0,0" VerticalAlignment="Top" Height="25" Width="40"/>
+        <Label Content="height" Grid.Column="1" HorizontalAlignment="Left" Margin="197,151,0,0" VerticalAlignment="Top" Height="26" Width="44"/>
     </Grid>
 </Window>

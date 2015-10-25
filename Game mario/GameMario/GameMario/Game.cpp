@@ -1,7 +1,7 @@
 ﻿#include "Game.h"
 
 #include "KeyBoard.h"
-#include "Source.h"
+#include "ReSource.h"
 #include "Map1.h"
 #include "Mario.h"
 
@@ -54,8 +54,8 @@ int Game::intiWindow(HINSTANCE hInstance)
 					//WS_EX_TOPMOST | WS_VISIBLE | WS_POPUP,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+		SCREEN_WIDTH * 2,// scale windowed
+		SCREEN_HEIGHT * 2,// scale windowed
 		NULL,
 		NULL,
 		hInstance,
@@ -74,7 +74,7 @@ int Game::intiWindow(HINSTANCE hInstance)
 
 void Game::initGame()//khởi tạo 
 {
-	Source::getInstance()->init(d3ddv);
+	ReSource::getInstance()->init(d3ddv);
 
 	keyboard = new CKeyBoard();//process event of keyboard
 	keyboard->initInput();
@@ -121,7 +121,7 @@ void Game::initDirec3D()//initialize Dir3D
 
 void Game::render()
 {
-	d3ddv->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, NULL);
+	d3ddv->Clear(0, NULL, D3DCLEAR_TARGET, m_state->getColorBackGround(), 1.0f, NULL);
 
 	d3ddv->BeginScene();
 	m_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);//begin of the draw sprite
@@ -140,11 +140,40 @@ void Game::render()
 void Game::update()
 {
 	keyboard->getState();
+
+	// update velocity
 	m_mario->updateVelocity();
-	m_state->updateCollision();
-	m_state->update();
+	vector<GameObject*> listObject = m_state->getListObjectOnCamera();
+	for each (GameObject* item in listObject)
+	{
+		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
+			item->updateVelocity();
+	}
+
+
+	// update collision
+	for each (GameObject* item in listObject)
+	{
+		int type = item->getTypeObject();
+		if (type != TypeObject::Dynamic_TiledMap && type != TypeObject::Dynamic_StandPosition)
+		{
+
+		}
+
+		// update for mario
+		if (m_mario->isCollision(item))
+		{
+		}
+	}
+
+	for each (GameObject* item in listObject)
+	{
+		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
+			item->update();
+	}
 
 	m_mario->update();
+	m_state->update();
 	m_state->setWorldPosition(m_mario->getWorldPosition());
 }
 
