@@ -1,14 +1,18 @@
 #include "GameObject.h"
 
+extern LPD3DXFONT m_font;
+
 GameObject::GameObject()
 {
-	m_Flip = SpriteEffect::None;
-	m_Scale = D3DXVECTOR2(1.0f, 1.0f);
+	m_flip = SpriteEffect::None;
+	m_scale = D3DXVECTOR2(1.0f, 1.0f);
 	//m_Draw = true;
 
-	m_WorldPosition.x = m_WorldPosition.y = 0;
-	m_Velocity = Vector2(0, 0);
+	m_worldPosition.x = m_worldPosition.y = 0;
+	m_velocity = Vector2(0, 0);
 	m_alpha = D3DCOLOR_XRGB(255, 255, 255);
+	m_isActive = true;
+	m_status = StatusObject::ALIVE;
 }
 GameObject::~GameObject()
 {
@@ -25,42 +29,42 @@ D3DXCOLOR GameObject::getAlphaColor()
 
 void GameObject::setWorldPosition(Vector2 vector)
 {
-	m_WorldPosition = vector;
+	m_worldPosition = vector;
 }
 Vector2 GameObject::getWorldPosition()
 {
-	return m_WorldPosition;
+	return m_worldPosition;
 }
 
 
 void GameObject::setPosition(float x, float y)
 {
-	m_Position.x = x;
-	m_Position.y = y;
+	m_position.x = x;
+	m_position.y = y;
 }
 Vector2 GameObject::getPosition()
 {
-	return Vector2(m_Position.x, m_Position.y);
+	return Vector2(m_position.x, m_position.y);
 }
 
 
 void GameObject::setVelocity(Vector2 velocity)
 {
-	m_Velocity = velocity;
+	m_velocity = velocity;
 }
 Vector2 GameObject::getVelocity()
 {
-	return m_Velocity;
+	return m_velocity;
 }
 
 
 int GameObject::getHeight()
 {
-	return m_Sprite->getHeight();
+	return m_sprite->getHeight();
 }
 int GameObject::getWidth()
 {
-	return m_Sprite->getWidth();
+	return m_sprite->getWidth();
 }
 
 
@@ -75,32 +79,32 @@ Location GameObject::getLocation()
 
 SpriteEffect GameObject::getFliping()
 {
-	return m_Flip;
+	return m_flip;
 }
 void GameObject::setFliping(SpriteEffect flip)
 {
-	m_Flip = flip;
+	m_flip = flip;
 }
 
 
 void GameObject::setDirCollision(DIR dir)
 {
-	m_DirCollision = dir;
+	m_dirCollision = dir;
 }
 DIR GameObject::getDirCollision()
 {
-	return m_DirCollision;
+	return m_dirCollision;
 }
 
 void GameObject::setSpriteSheet(Sprite* sprite)
 {
-	m_Sprite = sprite;
+	m_sprite = sprite;
 }
 
 void GameObject::setIndexSprite(int index)
 {
 	m_index = index;
-	m_Sprite->setIndex(index);
+	m_sprite->setIndex(index);
 }
 int GameObject::getIndexSprite()
 {
@@ -109,20 +113,40 @@ int GameObject::getIndexSprite()
 
 Box GameObject::getBouding()
 {
-	if (m_Sprite != nullptr)
-		m_Box = Box(m_Position.x, m_Position.y, m_Sprite->getWidth(), m_Sprite->getHeight(), m_Velocity.x, m_Velocity.y);
+	if (m_sprite != nullptr)
+		m_box = Box(m_position.x, m_position.y, m_sprite->getWidth(), m_sprite->getHeight(), m_velocity.x, m_velocity.y);
 	
-	return m_Box;
+	return m_box;
 }
 
 void GameObject::setBox(Box box)
 {
-	m_Box = box;
+	m_box = box;
 }
 Box GameObject::getBox()
 {
-	return m_Box;
+	return m_box;
 }
+
+
+void GameObject::setStatusObject(StatusObject status)
+{
+	m_status = status;
+}
+StatusObject GameObject::getStatusOBject()
+{
+	return m_status;
+}
+
+void GameObject::setActive(bool x)
+{
+	m_isActive = x;
+}
+bool GameObject::isActive()
+{
+	return m_isActive;
+}
+
 
 void GameObject::setTypeObject(TypeObject type)
 {
@@ -133,14 +157,39 @@ TypeObject GameObject::getTypeObject()
 	return m_typeObject;
 }
 
+void GameObject::setText(wstring text)
+{
+	m_text = text;
+}
+
 
 void GameObject::draw(LPD3DXSPRITE SpriteHandler)
 {
-	if (m_Flip == SpriteEffect::Flip)
-		m_Scale = D3DXVECTOR2(-1.0f, 1.0f);
-	else
-		m_Scale = D3DXVECTOR2(1.0f, 1.0f);
+	if (m_isActive)
+	{
+		if (m_text.size() == 0)
+		{
+			if (m_flip == SpriteEffect::Flip)
+				m_scale = D3DXVECTOR2(-1.0f, 1.0f);
+			else
+				m_scale = D3DXVECTOR2(1.0f, 1.0f);
 
-	m_Sprite->draw(SpriteHandler, D3DXVECTOR2(m_Position.x + m_Sprite->getWidth() / 2, m_Position.y + m_Sprite->getHeight() / 2), m_Scale, m_WorldPosition.x, m_WorldPosition.y, m_alpha);
+			m_sprite->draw(SpriteHandler, D3DXVECTOR2(m_position.x + m_sprite->getWidth() / 2, m_position.y + m_sprite->getHeight() / 2), m_scale, m_worldPosition.x, m_worldPosition.y, m_alpha);
+		}
+		else
+		{
+			drawText(m_text, Vector2(m_position.x - m_worldPosition.x, VIEW_PORT_Y - (m_position.y + m_sprite->getHeight())));
+		}
+	}
 }
 
+void GameObject::drawText(wstring text, Vector2 position)
+{
+	RECT rct;
+	rct.left = position.x;
+	rct.right = rct.left + 12 * text.length();
+	rct.top = position.y;
+	rct.bottom = position.y + 12;
+
+	m_font->DrawText(NULL, text.c_str(), -1, &rct, 0, D3DCOLOR_XRGB(255, 255, 255));
+}

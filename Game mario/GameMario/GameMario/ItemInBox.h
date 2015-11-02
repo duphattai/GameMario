@@ -1,31 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "GameObject.h"
 #include "StateMachine.h"
 #include <vector>
+using namespace std;
 
-enum ItemSheet
-{
-	IS_MUSHROOM_BIGGER = 0,
-	IS_MUSHROOM_UP = 1,
-	IS_GUNFLOWER = 2,
-	IS_STAR = 6,
-	IS_COIN = 10,
-	IS_LUCKYBOX = 18,
-	IS_BREAKBRICK = 22,
-	IS_BULLET = 25,
-	IS_BULLET_EXPLODE = 29,
-	IS_FLAG = 32
-};
-
-enum ItemsType
-{
-	IT_COIN = 0,
-	IT_MUSHROOM_BIGGER,
-	IT_MUSHROOM_UP,
-	IT_GUN,
-	IT_STAR,
-	IT_BRICK
-};
+Vector2 vanTocNemXien(int time, float v, float alpha);
 
 class ItemInBox : public GameObject
 {
@@ -36,23 +15,22 @@ private:
 	bool						m_finishAnimation;
 
 	int							m_currentFrame;
-	std::vector<Frame>			m_frameList;
-
-	int							m_timeAnimation;
-
-	bool						m_isCollision;
-	bool						m_isActive;
+	vector<Frame>				m_frameList;
 public:
-	ItemInBox(std::vector<Frame> frameList, ItemsType type);
+	ItemInBox(ItemsType type);
 	~ItemInBox();
 
 	StateMachine<ItemInBox>*	getStateMachine(){ return m_stateMachine; };
+
+	bool					isCollision(GameObject*);
+
+	Box			getBouding();
 
 	void		update();
 	void		updateVelocity();
 	void		draw(LPD3DXSPRITE SpriteHandler);
 
-	void		setCurrentFrame(int frame){ m_currentFrame = frame; m_Sprite->setRect(m_frameList[m_currentFrame].rect); }
+	void		setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(m_frameList[m_currentFrame].rect); }
 	int			getCurrentFrame(){ return m_currentFrame; }
 
 	int			getSizeFrameList(){ return m_frameList.size(); }
@@ -60,16 +38,10 @@ public:
 	bool		finishAnimation(){ return m_finishAnimation; }
 	void		setFinishAnimation(bool x){ m_finishAnimation = x; }
 
-	void		setTimeAnimation(int x){ m_timeAnimation = x; }
-	int			getTimeAnimation(){ return m_timeAnimation; }
-
-	bool		getCollision(){ return m_isCollision; }
-	void		setCollision(bool x){ m_isCollision = x; }
-
 	void		setItemsType(ItemsType type);
+	ItemsType	getItemsType(){ return m_type; }
 
-	void		setActive(bool x){ m_isActive = x; }
-	bool		isActive(){ return m_isActive; }
-
+	int			m_time; // thời gian xác định vận tốc
+	Vector2(*m_mathematical)(int, float v, float alpha);// con trỏ hàm
 };
 

@@ -105,7 +105,7 @@ static float SweptAABB(Box b1, Box b2, float& normalx, float& normaly)
 	{
 		normalx = 0.0f;
 		normaly = 0.0f;
-		return 1.0f;
+		return 1.20f;
 	}
 	else // if there was a collision
 	{

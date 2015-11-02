@@ -4,6 +4,7 @@
 #include <fstream>
 #include "MarioOwnedState.h"
 #include "LuckyBox.h"
+#include "Brick.h"
 
 using namespace std;
 
@@ -41,12 +42,12 @@ Mario::Mario()
 	file.close();
 
 
-	m_Sprite = ReSource::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
+	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
 	m_MaxVelocity = Vector2(3.00f, 10.0f);
 	m_MinVelocity = Vector2(-3.00f, -10.0f);
 
 
-	m_WorldPosition = Vector2(0, VIEW_PORT_Y);
+	m_worldPosition = Vector2(0, VIEW_PORT_Y);
 	m_lives = 3;
 	m_isBig = false;
 	m_canShoot = false;
@@ -67,7 +68,7 @@ Mario::Mario()
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
 {
-	m_Sprite->setRect(frameList[m_currentFrame].rect);
+	m_sprite->setRect(frameList[m_currentFrame].rect);
 	GameObject::draw(SpriteHandler);
 }
 
@@ -76,18 +77,18 @@ void Mario::update()
 	// không hiệu ứng small, fire, big mới update position
 	if (!m_effectBig && !m_effectFire && !m_effectSmall)
 	{
-		m_Position.x += m_Velocity.x;
-		m_Position.y += m_Velocity.y;
+		m_position.x += m_velocity.x;
+		m_position.y += m_velocity.y;
 	}
 	
 
 	// make mario not move off camera
-	if (m_Position.x < m_WorldPosition.x)
-		m_Position.x = m_WorldPosition.x;
+	if (m_position.x < m_worldPosition.x)
+		m_position.x = m_worldPosition.x;
 
 	// update camera just move right
-	if (m_WorldPosition.x < m_Position.x - SCREEN_WIDTH / 2)
-		m_WorldPosition.x = m_Position.x - SCREEN_WIDTH / 2;
+	if (m_worldPosition.x < m_position.x - SCREEN_WIDTH / 2)
+		m_worldPosition.x = m_position.x - SCREEN_WIDTH / 2;
 }
 
 void Mario::updateVelocity()
@@ -109,22 +110,51 @@ Box Mario::getBouding()
 	GameObject::getBouding();
 
 	//hard code
-	m_Box.x += 6;
-	m_Box.width = 4;
+	m_box.x += 6;
+	m_box.width = 4;
+	m_box.y += 2;
+	m_box.height -= 8;
 
-	return m_Box;
+	return m_box;
 }
 
 bool Mario::isCollision(GameObject* gameObject)
 {
 	int type = gameObject->getTypeObject();
-	if (type == TypeObject::Dynamic_TiledMap) // không xét va cham với tiled map 
+	if (type == TypeObject::Dynamic_TiledMap || gameObject->getStatusOBject() == StatusObject::DEAD) // không xét va cham với tiled map 
 		return false;
 
+
+	// update with item in luckybox
+	if (type == TypeObject::Dynamic_Item)
+	{
+		LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
+		if (luckyBox != nullptr && luckyBox->getItem()->isActive() && luckyBox->getItem()->getStatusOBject() == StatusObject::ALIVE)
+		{
+			if (m_checkCollision->isCollision(this, luckyBox->getItem()) != DIR::NONE)
+			{
+				m_velocity = m_checkCollision->getVelocity();
+				luckyBox->getItem()->setStatusObject(StatusObject::DEAD);
+
+				// update state for mario
+				int typeItem = luckyBox->getType();
+				if (typeItem == ItemsType::IT_MUSHROOM_BIGGER)
+					m_isBig = true;
+				else if (typeItem == ItemsType::IT_STAR)
+					m_isStar = true;
+				else if (typeItem == ItemsType::IT_GUN)
+					m_canShoot = true;
+				else if (typeItem == ItemsType::IT_MUSHROOM_UP)
+					m_lives++;
+			}
+		}
+	}
+
+	// update with object
 	DIR dir = m_checkCollision->isCollision(this, gameObject);
 	if (dir != DIR::NONE)
 	{
-		m_Velocity = m_checkCollision->getVelocity();
+		m_velocity = m_checkCollision->getVelocity();
 		if (type == TypeObject::Dynamic_StandPosition)
 		{
 			if ((getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) && dir == DIR::TOP) // fall gặp vật cản
@@ -144,10 +174,26 @@ bool Mario::isCollision(GameObject* gameObject)
 
 			if (dir == DIR::BOTTOM)
 			{
-				LuckyBox* luckyBox = static_cast<LuckyBox*>(gameObject);
-				luckyBox->setMakeEffect(true);
+				// cập nhật cho luckybox
+				LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
+				if (luckyBox != nullptr)
+					luckyBox->setMakeEffect(true);
 
-				setLocation(Location::LOC_IN_AIR);
+				// cập nhật cho brick
+				Brick* brick = dynamic_cast<Brick*>(gameObject);
+				if (brick != nullptr)
+				{
+					if (!m_isBig)
+					{
+						brick->setMakeEffect(true);	
+					}
+					else
+					{
+						brick->setStatusObject(StatusObject::DEAD);
+						brick->setIsBreak(true);
+					}
+				}
+					
 			}
 			else if (dir == DIR::TOP)
 			{
@@ -164,20 +210,20 @@ bool Mario::isCollision(GameObject* gameObject)
 
 void Mario::setVelocity(Vector2 velocity)
 {
-	m_Velocity = velocity;
+	m_velocity = velocity;
 	Vector2 maxVelocity = m_MaxVelocity;
 	Vector2 minVelocity = m_MinVelocity;
 
 
-	if (m_Velocity.x >= maxVelocity.x)
-		m_Velocity.x = maxVelocity.x;
-	else if (m_Velocity.x <= minVelocity.x)
-		m_Velocity.x = minVelocity.x;
+	if (m_velocity.x >= maxVelocity.x)
+		m_velocity.x = maxVelocity.x;
+	else if (m_velocity.x <= minVelocity.x)
+		m_velocity.x = minVelocity.x;
 
-	if (m_Velocity.y >= maxVelocity.y)
-		m_Velocity.y = maxVelocity.y;
-	else if (m_Velocity.y <= minVelocity.y)
-		m_Velocity.y = minVelocity.y;
+	if (m_velocity.y >= maxVelocity.y)
+		m_velocity.y = maxVelocity.y;
+	else if (m_velocity.y <= minVelocity.y)
+		m_velocity.y = minVelocity.y;
 	
 }
 

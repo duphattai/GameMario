@@ -74,7 +74,7 @@ public:
 	void		setFSM(FSM_Mario state){ m_FSM_Mario = state; }
 	FSM_Mario	getFSM(){ return m_FSM_Mario; }
 
-	void		setCurrentFrame(int frame){ m_currentFrame = frame; m_Sprite->setRect(frameList[m_currentFrame].rect); }
+	void		setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(frameList[m_currentFrame].rect); }
 	int			getCurrentFrame(){ return m_currentFrame; }
 	//Gun*		getGun(){ return m_gun; }
 };

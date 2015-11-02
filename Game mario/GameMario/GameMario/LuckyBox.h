@@ -1,6 +1,7 @@
 #pragma once
 #include "ItemInBox.h"
 
+
 class LuckyBox : public GameObject
 {
 	StateMachine<LuckyBox>*		m_stateMachine;
@@ -13,17 +14,17 @@ class LuckyBox : public GameObject
 	bool						m_finishAnimation;
 
 	int							m_currentFrame;
-	std::vector<Frame>			m_frameList;
-
-	int							m_timeAnimation;
+	vector<Frame>				m_frameList;
 
 	bool						m_makeEffect;
 public:
 	LuckyBox(ItemsType type, int countCoin = 1);
 	~LuckyBox();
 
-	void					setCurrentFrame(int frame){ m_currentFrame = frame; m_Sprite->setRect(m_frameList[m_currentFrame].rect); }
+	void					setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(m_frameList[m_currentFrame].rect); }
 	int						getCurrentFrame(){ return m_currentFrame; }
+
+	bool					isCollision(GameObject*);
 
 	void					update();
 	void					updateVelocity();
@@ -31,9 +32,6 @@ public:
 
 	int						getCountItem(){ return m_countItem; }
 	void					setCountItem(int x){ m_countItem = x; }
-
-	void					setTimeAnimation(int x){ m_timeAnimation = x; }
-	int						getTimeAnimation(){ return m_timeAnimation; }
 
 	StateMachine<LuckyBox>*	getStateMachine(){ return m_stateMachine; }
 

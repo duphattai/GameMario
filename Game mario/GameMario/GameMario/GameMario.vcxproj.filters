@@ -159,6 +159,9 @@
     <ClCompile Include="LuckyBox.cpp">
       <Filter>Source Files\GameObject\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Source Files\GameObject\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -225,6 +228,9 @@
       <Filter>Header Files\GameObject\StateMachine\ItemOwnedState</Filter>
     </ClInclude>
     <ClInclude Include="LuckyBox.h">
+      <Filter>Header Files\GameObject\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
       <Filter>Header Files\GameObject\Object</Filter>
     </ClInclude>
   </ItemGroup>

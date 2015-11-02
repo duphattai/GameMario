@@ -6,7 +6,6 @@ class Map1 : public MapObject
 public:
 	Map1(Mario *mario);
 	void init(CKeyBoard *keyboard);
-	void draw(LPD3DXSPRITE SpriteHandler);
 	void update();
 	~Map1();
 };

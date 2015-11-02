@@ -8,6 +8,7 @@ class Game
 	LPDIRECT3DDEVICE9 d3ddv;
 	LPDIRECT3D9 d3d;
 
+
 	LPD3DXSPRITE m_SpriteHandler;
 public:
 	Game(HINSTANCE hInstance);

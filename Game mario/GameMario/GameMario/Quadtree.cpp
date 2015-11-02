@@ -26,7 +26,8 @@ void Quadtree::insert(vector<GameObject*> list, int level, Box box)
 	m_Rect = box;
 	if (level == 0)
 	{
-		m_listObject = list;
+		//m_listObject = list;
+		m_listObject.insert(m_listObject.end(), list.begin(), list.end());
 	}
 	else
 	{
@@ -67,6 +68,55 @@ void Quadtree::insert(vector<GameObject*> list, int level, Box box)
 			Box temp(m_Rect.x + m_Rect.width / 2, m_Rect.y, m_Rect.width / 2, m_Rect.width / 2);
 			m_AreaFour->insert(list, du, temp);
 		}	
+	}
+}
+
+void Quadtree::insert(GameObject* gameObject, int level, Box box)
+{
+	m_Rect = box;
+	if (level == 0)
+	{
+		m_listObject.push_back(gameObject);
+	}
+	else
+	{
+		string temp = to_string(level);
+		int length = temp.length() - 1;
+		int node = level / (int)pow(10.0, length);
+		int du = level % (int)pow(10.0, length);
+
+		if (node == 1)
+		{
+			if (m_AreaOne == nullptr)
+				m_AreaOne = new Quadtree();
+
+			Box temp(m_Rect.x + m_Rect.width / 2, m_Rect.y + m_Rect.height / 2, m_Rect.width / 2, m_Rect.width / 2);
+			m_AreaOne->insert(gameObject, du, temp);
+		}
+		else if (node == 2)
+		{
+			if (m_AreaTwo == nullptr)
+				m_AreaTwo = new Quadtree();
+
+			Box temp(m_Rect.x, m_Rect.y + m_Rect.height / 2, m_Rect.width / 2, m_Rect.width / 2);
+			m_AreaTwo->insert(gameObject, du, temp);
+		}
+		else if (node == 3)
+		{
+			if (m_AreaThree == nullptr)
+				m_AreaThree = new Quadtree();
+
+			Box temp(m_Rect.x, m_Rect.y, m_Rect.width / 2, m_Rect.width / 2);
+			m_AreaThree->insert(gameObject, du, temp);
+		}
+		else if (node == 4)
+		{
+			if (m_AreaFour == nullptr)
+				m_AreaFour = new Quadtree();
+
+			Box temp(m_Rect.x + m_Rect.width / 2, m_Rect.y, m_Rect.width / 2, m_Rect.width / 2);
+			m_AreaFour->insert(gameObject, du, temp);
+		}
 	}
 }
 

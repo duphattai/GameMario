@@ -22,6 +22,7 @@ public:
 	Quadtree();
 	~Quadtree();
 	void					insert(vector<GameObject*>, int, Box);
+	void					insert(GameObject*, int, Box);
 	void					buildTree(map<int, vector<GameObject*>>, Box);
 	void					update(vector<GameObject*>);
 	void					remove(GameObject*);

@@ -191,14 +191,14 @@ void Jumping::execute(Mario* mario)
 	DIR dir = mario->getDirCollision();
 	if (dir != DIR::NONE) // iscollision
 	{
-		if (dir != DIR::TOP) // left or right
+		if (dir == DIR::BOTTOM) // left or right
 			mario->getStateMachine()->changeState(Falling::getInstance());
-		else if (velocity.y <= 0 || mario->getLocation() == Location::LOC_ON_GROUND)
-			mario->getStateMachine()->changeState(Standing::getInstance());
+		else 
+			if (mario->getLocation() == Location::LOC_ON_GROUND)
+				mario->getStateMachine()->changeState(Standing::getInstance());
 
 		return;
 	}
-	
 
 
 	velocity.y += GRAVITATION;
@@ -226,6 +226,9 @@ void Jumping::execute(Mario* mario)
 			mario->setCurrentFrame(MarioSheet::BIG_SUPER_SIT);
 	}
 	mario->setVelocity(velocity);
+	if (velocity.y <= 0) // nếu vận tốc theo y bằng 0 thì chuyển state
+		mario->getStateMachine()->changeState(Falling::getInstance());
+
 }
 
 void Jumping::exit(Mario* mario)
@@ -284,7 +287,7 @@ void Falling::execute(Mario* mario)
 	//// nếu xảy ra va chạm
 	if (mario->getLocation() == Location::LOC_ON_GROUND)
 	{
-		if (keyboard->isKeyDown(DIK_LEFT) || keyboard->isKeyDown(DIK_RIGHT))
+		if (mario->getVelocity().x != 0)
 			mario->getStateMachine()->changeState(Running::getInstance());
 		else
 			mario->getStateMachine()->changeState(Standing::getInstance());
@@ -336,6 +339,7 @@ void Small::enter(Mario* mario)
 	m_frameAnimation.push_back(bigIndex + 8); // fire mario
 
 	m_timeChangeSprite = 1;
+	mario->setTimeAnimation(2);
 }
 
 void Small::execute(Mario* mario)
@@ -360,11 +364,16 @@ void Small::execute(Mario* mario)
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
 			int index = mario->getCurrentFrame() + 1;
-			// cap nhật lại index small mario
-			if (index >= MarioSheet::MARIO_CHANGE_DIR || index < MarioSheet::MARIO_RUN)
-				index = MarioSheet::MARIO_RUN;
+			mario->setTimeAnimation(mario->getTimeAnimation() - 1);
+			if (mario->getTimeAnimation() == 0)
+			{
+				mario->setTimeAnimation(2);
+				// cap nhật lại index small mario
+				if (index >= MarioSheet::MARIO_CHANGE_DIR || index < MarioSheet::MARIO_RUN)
+					index = MarioSheet::MARIO_RUN;
 
-			mario->setCurrentFrame(index);
+				mario->setCurrentFrame(index);
+			}
 		}
 		else if (mario->getFSM() == FSM_Mario::STAND)
 			mario->setCurrentFrame(MarioSheet::MARIO_STAND);

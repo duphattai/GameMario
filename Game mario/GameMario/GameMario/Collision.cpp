@@ -73,28 +73,20 @@ DIR Collision::isCollision(GameObject *moveObject, GameObject* dynamicObject)
 		
 	else // xảy ra va chạm
 	{
-		//Vector2 position = moveObject->getPosition();
-
 		if (dir == TOP) // top
 		{
-			//position.y = dynamicBox.y + dynamicBox.height + 1;
 			moveBox.y = dynamicBox.y + dynamicBox.height + 1;
 		}
 		else if (dir == DIR::BOTTOM) // bottom
 		{
-			//position.y = dynamicBox.y - moveBox.height - 1;
 			moveBox.y = dynamicBox.y - moveBox.height - 1;
 		}
 		else if (dir == DIR::LEFT)  // left
 		{
-			//position.x = dynamicBox.x - moveBox.width - 1;
 			moveBox.x = dynamicBox.x - moveBox.width - 1;
 		}
-			
-		
 		else if (dir == DIR::RIGHT)
 		{
-			//position.x = dynamicBox.x + dynamicBox.width + 1;
 			moveBox.x = dynamicBox.x + dynamicBox.width + 1;
 		}
 

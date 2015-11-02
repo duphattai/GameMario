@@ -9,6 +9,8 @@ CKeyBoard *keyboard = NULL;
 Map1 *m_state;
 Mario *m_mario = NULL;
 
+LPD3DXFONT m_font;
+
 Game::Game(HINSTANCE hInstance)
 {
 	this->hInstance = hInstance;
@@ -72,20 +74,6 @@ int Game::intiWindow(HINSTANCE hInstance)
 	return 1;
 }
 
-void Game::initGame()//khởi tạo 
-{
-	ReSource::getInstance()->init(d3ddv);
-
-	keyboard = new CKeyBoard();//process event of keyboard
-	keyboard->initInput();
-	keyboard->initKeyBoard(hWnd);
-
-	m_mario = new Mario();
-	m_mario->setPosition(50, 50);
-	m_state = new Map1(m_mario);
-	m_state->init(keyboard);
-}
-
 void Game::initDirec3D()//initialize Dir3D
 {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
@@ -117,30 +105,30 @@ void Game::initDirec3D()//initialize Dir3D
 	}
 
 	D3DXCreateSprite(d3ddv, &m_SpriteHandler);
+
+	// create font
+	D3DXCreateFont(d3ddv, 12, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times New Roman"), &m_font);
 }
 
-void Game::render()
+
+void Game::initGame()//khởi tạo 
 {
-	d3ddv->Clear(0, NULL, D3DCLEAR_TARGET, m_state->getColorBackGround(), 1.0f, NULL);
+	ReSource::getInstance()->init(d3ddv);
 
-	d3ddv->BeginScene();
-	m_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);//begin of the draw sprite
+	keyboard = new CKeyBoard();//process event of keyboard
+	keyboard->initInput();
+	keyboard->initKeyBoard(hWnd);
 
-	// map 1.1
-	m_state->draw(m_SpriteHandler);
-	m_mario->draw(m_SpriteHandler);
-
-
-	m_SpriteHandler->End();//end action draw sprite
-	d3ddv->EndScene();
-
-	d3ddv->Present(NULL, NULL, NULL, NULL);//draw from buffer to screen
+	m_mario = new Mario();
+	m_mario->setPosition(50, 50);
+	m_state = new Map1(m_mario);
+	m_state->init(keyboard);
 }
+
 
 void Game::update()
 {
 	keyboard->getState();
-
 	// update velocity
 	m_mario->updateVelocity();
 	vector<GameObject*> listObject = m_state->getListObjectOnCamera();
@@ -155,9 +143,16 @@ void Game::update()
 	for each (GameObject* item in listObject)
 	{
 		int type = item->getTypeObject();
-		if (type != TypeObject::Dynamic_TiledMap && type != TypeObject::Dynamic_StandPosition)
+		if (type != TypeObject::Dynamic_TiledMap && type != TypeObject::Dynamic_StandPosition) // nếu là item hoặc enemy
 		{
-
+			for each (GameObject* temp in listObject)
+			{
+				int type = temp->getTypeObject();
+				if (type != TypeObject::Dynamic_TiledMap)
+				{
+					item->isCollision(temp);
+				}
+			}
 		}
 
 		// update for mario
@@ -176,6 +171,24 @@ void Game::update()
 	m_state->update();
 	m_state->setWorldPosition(m_mario->getWorldPosition());
 }
+
+void Game::render()
+{
+	d3ddv->Clear(0, NULL, D3DCLEAR_TARGET, m_state->getColorBackGround(), 1.0f, NULL);
+
+	d3ddv->BeginScene();
+	m_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);//begin of the draw sprite
+
+	// map 1.1
+	m_state->draw(m_SpriteHandler);
+	m_mario->draw(m_SpriteHandler);
+
+	m_SpriteHandler->End();//end action draw sprite
+	d3ddv->EndScene();
+
+	d3ddv->Present(NULL, NULL, NULL, NULL);//draw from buffer to screen
+}
+
 
 void Game::gameRun()
 {

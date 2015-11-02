@@ -125,6 +125,15 @@ enum TypeObject
 	Dynamic_StandPosition,
 };
 
+enum ItemsType
+{
+	IT_COIN = 0,
+	IT_MUSHROOM_BIGGER,
+	IT_MUSHROOM_UP,
+	IT_GUN,
+	IT_STAR,
+	IT_BRICK
+};
 
 struct Frame
 {
@@ -167,4 +176,19 @@ struct ObjectTittle
 		m_Width = width;
 		m_Height = height;
 	}
+
+	bool operator==(const ObjectTittle& temp)
+	{
+		if (temp.m_Id != m_Id || temp.m_Height != m_Height || temp.m_Index != m_Index ||
+			temp.m_Width != m_Width || temp.m_X != m_X || temp.m_Y != m_Y)
+			return false;
+
+		return true;
+	}
+};
+
+enum class StatusObject
+{
+	ALIVE,
+	DEAD
 };
