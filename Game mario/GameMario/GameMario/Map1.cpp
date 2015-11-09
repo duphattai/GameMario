@@ -75,14 +75,15 @@ void Map1::init(CKeyBoard *keyboard)
 	m_quadTree->buildTree(listGameObject, Box(0, 0, 3584, 3584)); // build từ những object không nằm trên biên
 	for each (ObjectTittle var in listObjectExist)// build object nằm trên biên
 	{
-		GameObject* temp = createGameObject(var);
+		vector<GameObject*> list;
+		list.push_back(createGameObject(var));
 		for (map<int, vector<ObjectTittle>>::iterator it = m_quadtreeNode.begin(); it != m_quadtreeNode.end(); it++)
 		{
 			for (int i = 0; i < it->second.size(); i++)
 			{
 				if (var == it->second[i]) // nằm trên biên
 				{
-					m_quadTree->insert(temp, it->first, Box(0, 0, 3584, 3584));
+					m_quadTree->insert(list, it->first, Box(0, 0, 3584, 3584));
 					break;
 				}
 			}

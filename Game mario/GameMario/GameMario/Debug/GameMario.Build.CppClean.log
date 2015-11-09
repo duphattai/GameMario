@@ -1,8 +1,8 @@
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\vc120.pdb
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\vc120.idb
-c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\collision.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\game.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\gametime.obj
+c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\gun.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\iteminbox.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\itemownedstate.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\keyboard.obj
@@ -21,6 +21,9 @@ c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\tinyxml.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\tinyxmlerror.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\tinyxmlparser.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\brick.obj
+c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\bullet.obj
+c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\bulletownedstate.obj
+c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\collision.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\debug\gamemario.ilk
 c:\users\tai\desktop\new folder\game mario\gamemario\debug\gamemario.exe
 c:\users\tai\desktop\new folder\game mario\gamemario\debug\gamemario.pdb

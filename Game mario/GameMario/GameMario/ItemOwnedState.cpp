@@ -109,6 +109,15 @@ void LuckyBoxEffect::execute(LuckyBox* item)
 	{
 		item->getItem()->setActive(true);
 		item->getItem()->setPosition(item->getPosition().x, item->getPosition().y);
+
+		// playsound
+		//Tài: 9/11 play sound
+		if (item->getType() == ItemsType::IT_COIN)
+			PlaySound(L"Sounds/smb_coin.wav", NULL, SND_ASYNC);
+		else if (item->getType() == ItemsType::IT_MUSHROOM_BIGGER)
+			PlaySound(L"Sounds/smb_powerup_appears.wav", NULL, SND_ASYNC);
+		else if (item->getType() == ItemsType::IT_MUSHROOM_UP)
+			PlaySound(L"Sounds/smb_powerup_appears.wav", NULL, SND_ASYNC);
 	}
 }
 
@@ -140,7 +149,7 @@ ItemInLuckyBoxIdle* ItemInLuckyBoxIdle::getInstance()
 void ItemInLuckyBoxIdle::enter(ItemInBox* item)
 {
 	item->setTimeAnimation(5);
-	item->setVelocity(Vector2(0, 6));
+	item->setVelocity(Vector2(0, 5));
 }
 
 void ItemInLuckyBoxIdle::execute(ItemInBox* item)
@@ -328,7 +337,7 @@ void MoveMushroomItem::execute(ItemInBox* item)
 		}
 		else
 		{
-			velocity.y = -3;
+			velocity.y += GRAVITATION;
 			if (item->getFliping() == SpriteEffect::None)
 				velocity.x = 2;
 			else
@@ -361,7 +370,7 @@ CoinInLuckyBox* CoinInLuckyBox::getInstance()
 void CoinInLuckyBox::enter(ItemInBox* item)
 {
 	item->setCurrentFrame(0);
-	item->setTimeAnimation(5);
+	item->setTimeAnimation(3);
 	item->setVelocity(Vector2(0, 7));
 }
 
@@ -385,7 +394,7 @@ void CoinInLuckyBox::execute(ItemInBox* item)
 			}
 			else
 			{	
-				velocity.y--;
+				velocity.y -= 1;
 				// animation coin
 				item->setTimeAnimation(item->getTimeAnimation() - 1);
 				if (item->getTimeAnimation() <= 0)
@@ -395,7 +404,7 @@ void CoinInLuckyBox::execute(ItemInBox* item)
 						currentIndex = 0;
 					item->setCurrentFrame(currentIndex);
 
-					item->setTimeAnimation(4);
+					item->setTimeAnimation(3);
 				}
 			}
 
@@ -410,15 +419,6 @@ void CoinInLuckyBox::exit(ItemInBox* item)
 
 
 //////////////////////////////// star
-Vector2 vanTocNemXien(int time, float v, float alpha)
-{
-	Vector2 velocity;
-	velocity.x = v * cos(alpha);
-	velocity.y = v * sin(alpha) + GRAVITATION * time / 1.5;
-
-	return velocity;
-}
-
 StarItem* StarItem::m_instance = 0;
 
 StarItem* StarItem::getInstance()
@@ -543,6 +543,8 @@ void BrickEffect::enter(Brick* brick)
 	brick->setIndexSprite(1); // hard code
 	brick->setVelocity(Vector2(0, 3));
 	brick->setMakeEffect(false);
+
+	PlaySound(L"Sounds/smb_kick.wav", NULL, SND_ASYNC);
 }
 
 void BrickEffect::execute(Brick* brick)
@@ -581,6 +583,9 @@ void BrickBroken::enter(Brick* brick)
 	brick->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET));
 	brick->setCurrentFrame(0);
 	brick->setVelocity(Vector2(0, 0));
+
+	// play sound
+	PlaySound(L"Sounds/smb_breakblock.wav", NULL, SND_ASYNC);
 }
 
 void BrickBroken::execute(Brick* brick)
@@ -591,7 +596,7 @@ void BrickBroken::execute(Brick* brick)
 		int time = brick->m_time;
 		vector<Vector2> framePosition = brick->getFramePosition();
 
-		velocity = vanTocNemXien(time, 6, 3.14 / 4); // 45 độ, sang phải
+		velocity = vanTocNemXien(time, 6, 3.14 / 3); // 60 độ, sang phải
 		framePosition[0].x += velocity.x;
 		framePosition[0].y += velocity.y;
 
@@ -599,7 +604,7 @@ void BrickBroken::execute(Brick* brick)
 		framePosition[1].x += velocity.x;
 		framePosition[1].y += velocity.y;
 
-		velocity = vanTocNemXien(time, 6, 3 * 3.14 / 4); // 135 độ, sang trái
+		velocity = vanTocNemXien(time, 6, 2 * 3.14 / 3); // 120 độ, sang trái
 		framePosition[2].x += velocity.x;
 		framePosition[2].y += velocity.y;
 
@@ -615,15 +620,18 @@ void BrickBroken::execute(Brick* brick)
 			int m_currentFrame = brick->getCurrentFrame() + 1;
 			if (m_currentFrame > brick->getSizeOfFrameList() - 1)
 				m_currentFrame = 0;
-			timeAnimation = 3;
+			timeAnimation = 4;
 		}
 		brick->setTimeAnimation(timeAnimation);
 		brick->m_time++;
+		if (brick->m_time >= 20)
+			brick->setActive(false);
 	}
 }
 
 void BrickBroken::exit(Brick* brick)
 {
+	brick->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP));
 }
 
 #pragma endregion

@@ -82,10 +82,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletOwnedState.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="ItemInBox.h" />
     <ClInclude Include="ItemOwnedState.h" />
     <ClInclude Include="KeyBoard.h" />
@@ -107,9 +110,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletOwnedState.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="ItemInBox.cpp" />
     <ClCompile Include="ItemOwnedState.cpp" />
     <ClCompile Include="KeyBoard.cpp" />

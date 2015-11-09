@@ -28,6 +28,9 @@ public:
 	virtual			vector<GameObject*>		getListObjectOnCamera();
 	D3DXCOLOR		getColorBackGround(){ return m_colorBackGround; }
 	void			draw(LPD3DXSPRITE SpriteHandler);
+
+	Quadtree*		getTree(){ return m_quadTree; }
+
 	virtual ~MapObject();
 };
 

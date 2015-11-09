@@ -31,7 +31,6 @@ Brick::Brick(Vector2 position)
 	m_type = ItemsType::IT_BRICK;
 	m_timeAnimation = 3;
 	m_currentFrame = 0;
-
 	m_stateMachine = new StateMachine<Brick>(this);
 	m_stateMachine->changeState(BrickIdle::getInstance());
 }
@@ -59,11 +58,13 @@ void Brick::draw(LPD3DXSPRITE SpriteHandler)
 
 	if (!m_isBreak)
 	{
+		m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
 		m_sprite->setIndex(1);
 		GameObject::draw(SpriteHandler);
 	}
 	else
 	{
+		m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
 		for each (Vector2 item in m_framePosition)
 		{
 			m_sprite->setRect(m_frameList[m_currentFrame].rect);

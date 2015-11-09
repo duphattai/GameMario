@@ -5,8 +5,6 @@
 
 using namespace std;
 
-Vector2 vanTocNemXien(int time, float v, float alpha);
-
 class Brick : public GameObject
 {
 	StateMachine<Brick>*		m_stateMachine;

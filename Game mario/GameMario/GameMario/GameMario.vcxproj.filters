@@ -97,6 +97,18 @@
     <Filter Include="Source Files\GameObject\StateMachine\MarioOwnedState">
       <UniqueIdentifier>{2ab4edff-a9dd-4cd1-aa8d-33c3773d0305}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject\Entity\Gun">
+      <UniqueIdentifier>{5fb36dde-0ad4-430a-8f8a-f72effd5ba5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Entity\Gun">
+      <UniqueIdentifier>{824af586-77a2-48cc-b703-cd72ce402631}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\StateMachine\BulletOwnedState">
+      <UniqueIdentifier>{85502bf9-a007-4801-9263-afefd9888df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\StateMachine\BulletOwnedState">
+      <UniqueIdentifier>{69c3de6b-e440-4f17-835c-9f5b3ca57d8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -161,6 +173,15 @@
     </ClCompile>
     <ClCompile Include="Brick.cpp">
       <Filter>Source Files\GameObject\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files\GameObject\Entity\Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\BulletOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Source Files\GameObject\Entity\Gun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +253,15 @@
     </ClInclude>
     <ClInclude Include="Brick.h">
       <Filter>Header Files\GameObject\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header Files\GameObject\Entity\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\BulletOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>Header Files\GameObject\Entity\Gun</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

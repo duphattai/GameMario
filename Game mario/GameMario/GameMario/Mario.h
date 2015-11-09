@@ -2,9 +2,8 @@
 
 ////////////////////////////////////////////////////////////
 #include "StateMachine.h"
-#include "GameObject.h"
 #include <vector>
-
+#include "Gun.h"
 
 class Mario : public GameObject
 {
@@ -29,7 +28,7 @@ private:
 	Vector2		m_MinVelocity;
 
 	FSM_Mario	m_FSM_Mario;
-	//Gun*		m_gun;
+	Gun*		m_gun;
 public:
 	Mario();
 	~Mario();
@@ -71,10 +70,13 @@ public:
 
 	void		setVelocity(Vector2);
 
+	Box			getCamera();
+
 	void		setFSM(FSM_Mario state){ m_FSM_Mario = state; }
 	FSM_Mario	getFSM(){ return m_FSM_Mario; }
 
 	void		setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(frameList[m_currentFrame].rect); }
 	int			getCurrentFrame(){ return m_currentFrame; }
-	//Gun*		getGun(){ return m_gun; }
+
+	Gun*		getGun(){ return m_gun; }
 };

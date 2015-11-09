@@ -128,7 +128,6 @@ void Game::initGame()//khởi tạo
 
 void Game::update()
 {
-	keyboard->getState();
 	// update velocity
 	m_mario->updateVelocity();
 	vector<GameObject*> listObject = m_state->getListObjectOnCamera();
@@ -143,7 +142,7 @@ void Game::update()
 	for each (GameObject* item in listObject)
 	{
 		int type = item->getTypeObject();
-		if (type != TypeObject::Dynamic_TiledMap && type != TypeObject::Dynamic_StandPosition) // nếu là item hoặc enemy
+		if (type == TypeObject::Moving_Enemy || type == TypeObject::Dynamic_Item) // nếu là item hoặc enemy
 		{
 			for each (GameObject* temp in listObject)
 			{
@@ -159,6 +158,8 @@ void Game::update()
 		if (m_mario->isCollision(item))
 		{
 		}
+
+		m_mario->getGun()->isCollision(item);
 	}
 
 	for each (GameObject* item in listObject)
@@ -168,8 +169,9 @@ void Game::update()
 	}
 
 	m_mario->update();
-	m_state->update();
 	m_state->setWorldPosition(m_mario->getWorldPosition());
+	m_state->update();
+	m_state->getTree()->update(listObject, m_mario->getCamera());
 }
 
 void Game::render()
@@ -205,4 +207,7 @@ Game::~Game()
 
 	if (d3d != NULL)
 		d3d->Release();
+
+	if (m_font != NULL)
+		m_font->Release();
 }

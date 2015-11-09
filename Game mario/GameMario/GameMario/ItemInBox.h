@@ -4,8 +4,6 @@
 #include <vector>
 using namespace std;
 
-Vector2 vanTocNemXien(int time, float v, float alpha);
-
 class ItemInBox : public GameObject
 {
 private:

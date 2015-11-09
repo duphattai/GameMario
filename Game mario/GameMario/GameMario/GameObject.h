@@ -27,7 +27,7 @@ protected:
 	StatusObject	m_status;
 
 	bool			m_isCollision;
-	float			m_timeAnimation; // thoi gian de update su chuyen dong cua sprite
+	int			m_timeAnimation; // thoi gian de update su chuyen dong cua sprite
 
 	Vector2			m_worldPosition;
 

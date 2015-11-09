@@ -30,6 +30,8 @@ void Standing::execute(Mario* mario)
 {
 	mario->setVelocity(Vector2(0, GRAVITATION));
 
+	keyboard->getState();
+	keyboard->clearKeyCode();
 	if (keyboard->isKeyDown(DIK_LEFT))
 	{
 		mario->setFliping(SpriteEffect::Flip);
@@ -75,6 +77,8 @@ void Running::execute(Mario* mario)
 	Vector2 velocity = mario->getVelocity();
 	velocity.y = GRAVITATION; // gravity
 
+	keyboard->getState();
+	keyboard->clearKeyCode();
 	// update velocity
 	if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
 	{
@@ -145,7 +149,8 @@ void Sitting::execute(Mario* mario)
 		velocity.x--;
 	mario->setVelocity(velocity);
 
-
+	keyboard->getState();
+	keyboard->clearKeyCode();
 	if (keyboard->isKeyDown(DIK_UP))
 	{
 		mario->getStateMachine()->changeState(Jumping::getInstance());
@@ -203,6 +208,8 @@ void Jumping::execute(Mario* mario)
 
 	velocity.y += GRAVITATION;
 	// update velocity
+	keyboard->getState();
+	keyboard->clearKeyCode();
 	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0)
 		velocity.y += m_timeJump;
 
@@ -234,6 +241,12 @@ void Jumping::execute(Mario* mario)
 void Jumping::exit(Mario* mario)
 {
 	m_timeJump = 4;
+
+	//Tài: 9/11 play sound
+	if (mario->isBig())
+		PlaySound(L"Sounds/smb_jump-super.wav", NULL, SND_ASYNC);
+	else
+		PlaySound(L"Sounds/smb_jump-small.wav", NULL, SND_ASYNC);
 }
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -263,7 +276,8 @@ void Falling::execute(Mario* mario)
 	Vector2 velocity = mario->getVelocity();
 	velocity.y += GRAVITATION;
 
-
+	keyboard->getState();
+	keyboard->clearKeyCode();
 	// update velocity
 	if (keyboard->isKeyDown(DIK_RIGHT))
 	{
@@ -327,16 +341,17 @@ void Small::enter(Mario* mario)
 	mario->m_effectSmall = true;
 	m_countTime = 0;
 
+	// dành cho fire mario
 	int bigIndex = mario->getCurrentFrame();
-	bigIndex = bigIndex > MarioSheet::BIG_MARIO_SIT ? bigIndex - 15 : bigIndex; // nếu index > index cua big mario thi chuyen index ve big mario
+	bigIndex = bigIndex > MarioSheet::BIG_MARIO_SIT ? bigIndex - MarioSheet::BIG_SUPER_STAND : bigIndex; // nếu index > index cua big mario thi chuyen index ve big mario
 
 	// make effect mario big -> small
 	m_frameAnimation.push_back(bigIndex); // big mario
-	m_frameAnimation.push_back(bigIndex + 8); // fire mario
+	m_frameAnimation.push_back(bigIndex + MARIO_STAND); // fire mario
 	m_frameAnimation.push_back(bigIndex); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 22); // invinbility color 2
+	m_frameAnimation.push_back(bigIndex + BIG_SUPER_FIRE_RUN); // invinbility color 2
 	m_frameAnimation.push_back(bigIndex); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 8); // fire mario
+	m_frameAnimation.push_back(bigIndex + MARIO_STAND); // fire mario
 
 	m_timeChangeSprite = 1;
 	mario->setTimeAnimation(2);
@@ -445,6 +460,9 @@ void Big::enter(Mario* mario)
 
 	mario->m_effectBig = true;
 	m_timeChangeSprite = 2;
+
+	//Tài: 9/11 play sound
+	PlaySound(L"Sounds/smb_powerup.wav", NULL, SND_ASYNC);
 }
 
 void Big::execute(Mario* mario)
@@ -592,13 +610,13 @@ void Fire::enter(Mario* mario)
 
 	int bigIndex = mario->getCurrentFrame();
 	m_frameAnimation.push_back(bigIndex); // big mario
-	m_frameAnimation.push_back(bigIndex + 15); // fire mario
-	m_frameAnimation.push_back(bigIndex + 32); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 45); // invinbility color 2
-	m_frameAnimation.push_back(bigIndex + 32); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 15); // fire mario
-	m_frameAnimation.push_back(bigIndex + 32); // invinbility color 1
-	m_frameAnimation.push_back(bigIndex + 15); // fire mario
+	m_frameAnimation.push_back(bigIndex + BIG_SUPER_STAND); // fire mario
+	m_frameAnimation.push_back(bigIndex + BIG_INVINCIBILITY_COLOR_1_STAND); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + BIG_INVINCIBILITY_COLOR_2_STAND); // invinbility color 2
+	m_frameAnimation.push_back(bigIndex + BIG_INVINCIBILITY_COLOR_1_STAND); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + BIG_SUPER_STAND); // fire mario
+	m_frameAnimation.push_back(bigIndex + BIG_INVINCIBILITY_COLOR_1_STAND); // invinbility color 1
+	m_frameAnimation.push_back(bigIndex + BIG_SUPER_STAND); // fire mario
 
 	m_timeChangeSprite = 2;
 }
@@ -639,6 +657,20 @@ void Fire::execute(Mario* mario)
 				mario->setCurrentFrame(MarioSheet::BIG_SUPER_JUMP);
 		}
 
+		if (keyboard->isPressed(DIK_SPACE) && mario->getFSM() != FSM_Mario::SIT)
+		{
+			if (mario->getCurrentFrame() == MarioSheet::BIG_SUPER_STAND)
+				mario->setCurrentFrame(mario->getCurrentFrame() + 7);
+			else
+				mario->setCurrentFrame(mario->getCurrentFrame() + 6);
+
+			Vector2 position = mario->getPosition();
+			if (mario->getFliping() == SpriteEffect::None)
+				position.x += mario->getWidth();
+			Vector2 camera = mario->getWorldPosition();
+
+			mario->getGun()->shoot(position.x, position.y, camera.x, camera.y, mario->getFliping());
+		}
 
 		if (mario->isDead())
 			mario->getStatusStateMachine()->changeState(Small::getInstance());
@@ -658,22 +690,22 @@ Star* Star::m_instance = 0;
 Star::Star()
 {
 	m_frameAnimationBig = new vector<int>();
-	m_frameAnimationBig->push_back(0); // big mario
-	m_frameAnimationBig->push_back(15); // fire mario
-	m_frameAnimationBig->push_back(32); // invinbility color 1
-	m_frameAnimationBig->push_back(45); // fire mario
-	m_frameAnimationBig->push_back(32); // invinbility color 1
-	m_frameAnimationBig->push_back(15); // fire mario
-	m_frameAnimationBig->push_back(0); // big mario
+	m_frameAnimationBig->push_back(MarioSheet::BIG_MARIO_STAND); // big mario
+	m_frameAnimationBig->push_back(MarioSheet::BIG_SUPER_STAND); // fire mario
+	m_frameAnimationBig->push_back(MarioSheet::BIG_INVINCIBILITY_COLOR_1_STAND); // invinbility color 1
+	m_frameAnimationBig->push_back(MarioSheet::BIG_INVINCIBILITY_COLOR_2_STAND); // fire mario
+	m_frameAnimationBig->push_back(MarioSheet::BIG_INVINCIBILITY_COLOR_1_STAND); // invinbility color 1
+	m_frameAnimationBig->push_back(MarioSheet::BIG_SUPER_STAND); // fire mario
+	m_frameAnimationBig->push_back(MarioSheet::BIG_MARIO_STAND); // big mario
 
 	m_frameAnimationSmall = new vector<int>();
-	m_frameAnimationSmall->push_back(0); // mario
-	m_frameAnimationSmall->push_back(26 - 8); // fire mario
-	m_frameAnimationSmall->push_back(39 - 8); // invinbility color 1
-	m_frameAnimationSmall->push_back(52 - 8); // fire mario
-	m_frameAnimationSmall->push_back(39 - 8); // invinbility color 1
-	m_frameAnimationSmall->push_back(26 - 8); // fire mario
-	m_frameAnimationSmall->push_back(0); // mario
+	m_frameAnimationSmall->push_back(MarioSheet::BIG_MARIO_STAND); // mario
+	m_frameAnimationSmall->push_back(SMALL_SUPER_FIRE_STAND - MARIO_STAND); // fire mario
+	m_frameAnimationSmall->push_back(SMALL_INVINCIBILITY_COLOR_1_STAND - MARIO_STAND); // invinbility color 1
+	m_frameAnimationSmall->push_back(SMALL_INVINCIBILITY_COLOR_2_STAND - MARIO_STAND); // fire mario
+	m_frameAnimationSmall->push_back(SMALL_INVINCIBILITY_COLOR_1_STAND - MARIO_STAND); // invinbility color 1
+	m_frameAnimationSmall->push_back(SMALL_SUPER_FIRE_STAND - MARIO_STAND); // fire mario
+	m_frameAnimationSmall->push_back(BIG_MARIO_STAND); // mario
 }
 
 Star* Star::getInstance()

@@ -81,7 +81,7 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 	{
 		list = m_quadTree->getListObjects(Box(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT), list);
 
-		// xóa các object nằm trên các biên
+		// các object nằm trên biên chỉ lấy 1 lần trong danh sách
 		for (int i = 0; i < list.size() - 1; i++)
 		{
 			for (int j = i + 1; j < list.size(); j++)
@@ -101,7 +101,7 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 
 void MapObject::draw(LPD3DXSPRITE SpriteHandler)
 {
-	vector<GameObject*> list = m_quadTree->getListObjects(Box(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT), list);
+	vector<GameObject*> list = getListObjectOnCamera();
 	if (list.size() == 0) return;
 
 

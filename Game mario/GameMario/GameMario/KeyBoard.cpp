@@ -40,7 +40,7 @@ void CKeyBoard::initKeyBoard(HWND hWnd)
 	m_Keyboard->SetDataFormat(&c_dfDIKeyboard);
 
 	// thiet lap quyen uu tien
-	m_Keyboard->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE);
+	m_Keyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 
 	DIPROPDWORD dipw;
 
@@ -77,10 +77,15 @@ void CKeyBoard::clearKeyCode()
 
 void CKeyBoard::getState()
 {
-	m_Keyboard->GetDeviceState(sizeof(m_Keys), (LPVOID)&m_Keys);
+	HRESULT hr = m_Keyboard->GetDeviceState(sizeof(m_Keys), (LPVOID)&m_Keys);
 
 	DWORD dwElements = KEYBOARD_BUFFER_SIZE;
 	m_Keyboard->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), m_KeyEvents, &dwElements, 0);
+
+	if (FAILED(hr))
+	{
+		m_Keyboard->Acquire();
+	}
 }
 
 bool CKeyBoard::isPressed(int Key)
@@ -102,4 +107,11 @@ bool CKeyBoard::isPressed(int Key)
 
 CKeyBoard::~CKeyBoard()
 {
+	if (m_Input != NULL)
+		m_Input->Release();
+
+	if (m_Keyboard != NULL)
+		m_Keyboard->Release();
+
+
 }

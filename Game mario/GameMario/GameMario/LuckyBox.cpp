@@ -56,13 +56,6 @@ void LuckyBox::update()
 
 bool LuckyBox::isCollision(GameObject* gameObject)
 {
-	int type = gameObject->getTypeObject();
-	if (type == TypeObject::Dynamic_TiledMap || type == TypeObject::Moving_Enemy) 
-		return false;
-
-	// xét va chạm với stand position và item
-	// nếu item không active thì không xét
-
 	return m_item->isCollision(gameObject);
 }
 

@@ -3,7 +3,10 @@
 #include <d3dx9.h>
 #include <d3d9.h>
 #include <dinput.h>
-#include "Global.h"
+#include <windows.h>
+
+// playsound 
+#pragma comment(lib, "winmm.lib")
 
 // -----------------------windowed
 #define SCREEN_WIDTH 256

@@ -14,17 +14,15 @@ private:
 	Quadtree* m_AreaThree; // x < 0, y < 0
 	Quadtree* m_AreaFour;  // x > 0, y < 0
 
-	
-	//void	insert(Quadtree*, GameObject*);
-
 	bool	IsContain(Box);
+	void					insert(GameObject*);
 public:
 	Quadtree();
 	~Quadtree();
 	void					insert(vector<GameObject*>, int, Box);
-	void					insert(GameObject*, int, Box);
+	
 	void					buildTree(map<int, vector<GameObject*>>, Box);
-	void					update(vector<GameObject*>);
+	void					update(vector<GameObject*>, Box);
 	void					remove(GameObject*);
 
 	vector<GameObject*>		getListObjects(Box, vector<GameObject*> list);

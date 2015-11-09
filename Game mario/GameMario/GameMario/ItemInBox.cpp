@@ -151,8 +151,12 @@ bool ItemInBox::isCollision(GameObject* gameObject)
 {
 	// xét va chạm với stand position và item
 	// nếu item không active thì không xét
-	// velocity.y > 0 đang thực hiện animation 
-	if (!m_isActive || m_stateMachine->isInState(*ItemInLuckyBoxIdle::getInstance()))
+	// chỉ xét cho mushroom bigger, up, star
+	int type = gameObject->getTypeObject();
+	if (type == TypeObject::Dynamic_TiledMap || type == TypeObject::Moving_Enemy // tiled map, enemy  
+		|| !m_isActive // không active
+		|| m_stateMachine->isInState(*ItemInLuckyBoxIdle::getInstance()) // item trong trạng thái move up
+		|| m_type == ItemsType::IT_COIN || m_type == ItemsType::IT_GUN)
 		return false;
 
 	DIR dir = m_checkCollision->isCollision(this, gameObject);
@@ -165,7 +169,7 @@ bool ItemInBox::isCollision(GameObject* gameObject)
 		else if (dir == DIR::RIGHT)
 			m_flip = SpriteEffect::None;
 		
-
+		// hướng để dùng cho staritem
 		if (m_dirCollision == DIR::NONE)
 			m_dirCollision = dir;
 		return true;

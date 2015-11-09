@@ -1,7 +1,7 @@
 {ID, description}
 {0, big mario}{1, small mario}{2, big fire mario}{3, small fire mario}{4, big invincibility color 1}{5, small invincibility color 1}{6, big invincibility color 2}{7, small invincibility color 2}
 {Index, description}
-{0, stand}{1, run}{2, c.dir}{3, jump}{4, sit}{5, dead}{6,big small stand}{7, run fire}{8, c.dir fire}
+{0, stand}{1, run}{2, c.dir}{3, jump}{4, sit}{5, dead}{6,big small stand}{7, run fire}{8, c.dir fire}{9, jump fire}
 ID	Index	X	Y	Width	Height
 0	0	80	0	16	32
 0	1	96	0	16	32
@@ -29,6 +29,7 @@ ID	Index	X	Y	Width	Height
 2	7	354	96	14	32
 2	7	368	96	16	32
 2	8	385	96	16	32
+2	9	400	96	16	32
 3	0	80	128	15	16
 3	1	97	128	15	16
 3	1	112	128	15	16

@@ -43,8 +43,8 @@ Mario::Mario()
 
 
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
-	m_MaxVelocity = Vector2(3.00f, 10.0f);
-	m_MinVelocity = Vector2(-3.00f, -10.0f);
+	m_MaxVelocity = Vector2(3.0f, 10.0f);
+	m_MinVelocity = Vector2(-3.0f, -10.0f);
 
 
 	m_worldPosition = Vector2(0, VIEW_PORT_Y);
@@ -64,12 +64,16 @@ Mario::Mario()
 	m_effectSmall = false;
 
 	m_checkCollision = new Collision();
+
+	m_gun = new Gun(2);
 }
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
 {
 	m_sprite->setRect(frameList[m_currentFrame].rect);
 	GameObject::draw(SpriteHandler);
+
+	m_gun->draw(SpriteHandler);
 }
 
 void Mario::update()
@@ -89,6 +93,8 @@ void Mario::update()
 	// update camera just move right
 	if (m_worldPosition.x < m_position.x - SCREEN_WIDTH / 2)
 		m_worldPosition.x = m_position.x - SCREEN_WIDTH / 2;
+
+	m_gun->update();
 }
 
 void Mario::updateVelocity()
@@ -97,7 +103,8 @@ void Mario::updateVelocity()
 		m_stateMachine->update();
 	
 	m_statusStateMachine->update();
-
+	
+	m_gun->updateVelocity();
 	// 24/10 
 	// set default, dùng để xét va chạm di chuyển trên map
 	setDirCollision(DIR::NONE);
@@ -125,11 +132,14 @@ bool Mario::isCollision(GameObject* gameObject)
 		return false;
 
 
-	// update with item in luckybox
+	// xét va chạm với item in luckybox
 	if (type == TypeObject::Dynamic_Item)
 	{
 		LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
-		if (luckyBox != nullptr && luckyBox->getItem()->isActive() && luckyBox->getItem()->getStatusOBject() == StatusObject::ALIVE)
+		// chỉ xét va chạm với item in box khi active = true và trạng thái alive
+		if (luckyBox != nullptr && luckyBox->getItem()->isActive() && 
+			luckyBox->getItem()->getStatusOBject() == StatusObject::ALIVE && 
+			luckyBox->getType() != ItemsType::IT_COIN && luckyBox->getType() != ItemsType::IT_BRICK)
 		{
 			if (m_checkCollision->isCollision(this, luckyBox->getItem()) != DIR::NONE)
 			{
@@ -150,12 +160,12 @@ bool Mario::isCollision(GameObject* gameObject)
 		}
 	}
 
-	// update with object
+	// xét va chạm với enemy, standposition, item
 	DIR dir = m_checkCollision->isCollision(this, gameObject);
 	if (dir != DIR::NONE)
 	{
 		m_velocity = m_checkCollision->getVelocity();
-		if (type == TypeObject::Dynamic_StandPosition)
+		if (type == TypeObject::Dynamic_StandPosition) // trường hợp với stand position
 		{
 			if ((getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) && dir == DIR::TOP) // fall gặp vật cản
 					setLocation(Location::LOC_ON_GROUND);
@@ -163,11 +173,11 @@ bool Mario::isCollision(GameObject* gameObject)
 			if (getDirCollision() == DIR::NONE)
 				setDirCollision(dir);
 		}
-		else if (type == TypeObject::Moving_Enemy)
+		else if (type == TypeObject::Moving_Enemy) // va chạm với enemy
 		{
 
 		}
-		else if (type == TypeObject::Dynamic_Item)
+		else if (type == TypeObject::Dynamic_Item) // va chạm với item
 		{
 			if (getDirCollision() == DIR::NONE)
 				setDirCollision(dir);
@@ -183,7 +193,7 @@ bool Mario::isCollision(GameObject* gameObject)
 				Brick* brick = dynamic_cast<Brick*>(gameObject);
 				if (brick != nullptr)
 				{
-					if (!m_isBig)
+					if (!m_isBig && !m_canShoot)
 					{
 						brick->setMakeEffect(true);	
 					}
@@ -192,12 +202,11 @@ bool Mario::isCollision(GameObject* gameObject)
 						brick->setStatusObject(StatusObject::DEAD);
 						brick->setIsBreak(true);
 					}
-				}
-					
+				}					
 			}
 			else if (dir == DIR::TOP)
 			{
-				if ((getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) && dir == DIR::TOP) // fall gặp vật cản
+				if (getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) // fall gặp vật cản
 					setLocation(Location::LOC_ON_GROUND);
 			}
 		}
@@ -243,4 +252,10 @@ Mario::~Mario()
 
 	delete m_stateMachine;
 	delete m_statusStateMachine;
+}
+
+Box Mario::getCamera()
+{
+	Box camera(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT);
+	return camera;
 }
