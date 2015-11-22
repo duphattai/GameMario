@@ -7,29 +7,30 @@
 #include <map>
 #include "Mario.h";
 #include "Quadtree.h"
-
+#include "Xml\tinyxml.h"
 using namespace std;
 
 
 class MapObject : public GameObject
 {
 protected:
-	CKeyBoard *m_keyboard;
-	Mario	  *m_Mario;
+	map<int, vector<ObjectTittle>>		m_quadtreeNode;
+	Quadtree*							m_quadTree;
+	D3DXCOLOR							m_colorBackGround;
 
-	map<int, vector<ObjectTittle>> m_quadtreeNode;
-	Quadtree*	m_quadTree;
-	D3DXCOLOR	m_colorBackGround;
-
-	GameObject*	createGameObject(ObjectTittle object);
+	GameObject*							createGameObject(ObjectTittle object);
+	map<int, vector<ObjectTittle>>		readQuadTreeFromFile(TiXmlElement *nodeParent);
+	void								buildQuadTree();
 public:
 	MapObject();
-	virtual void	init(CKeyBoard *keyboard, char *FileMap);
-	virtual			vector<GameObject*>		getListObjectOnCamera();
-	D3DXCOLOR		getColorBackGround(){ return m_colorBackGround; }
-	void			draw(LPD3DXSPRITE SpriteHandler);
+	virtual void						init(char *FileMap);
+	virtual	vector<GameObject*>			getListObjectOnCamera();
+	D3DXCOLOR							getColorBackGround(){ return m_colorBackGround; }
+	void								draw(LPD3DXSPRITE SpriteHandler);
 
-	Quadtree*		getTree(){ return m_quadTree; }
+	void								update(Mario*);
+
+	Quadtree*							getTree(){ return m_quadTree; }
 
 	virtual ~MapObject();
 };

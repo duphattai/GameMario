@@ -1,7 +1,7 @@
 ﻿#include "Mario.h"
 #include "MarioOwnedState.h"
 #include "KeyBoard.h"
-
+#include "SoundClass.h"
 extern CKeyBoard *keyboard; // ý nghĩa là keyboard đã được đinh nghĩa ở đâu đó
 
 
@@ -244,9 +244,9 @@ void Jumping::exit(Mario* mario)
 
 	//Tài: 9/11 play sound
 	if (mario->isBig())
-		PlaySound(L"Sounds/smb_jump-super.wav", NULL, SND_ASYNC);
+		SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Jump_Super);
 	else
-		PlaySound(L"Sounds/smb_jump-small.wav", NULL, SND_ASYNC);
+		SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Jump_Small);
 }
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -274,7 +274,7 @@ void Falling::enter(Mario* mario)
 void Falling::execute(Mario* mario)
 {
 	Vector2 velocity = mario->getVelocity();
-	velocity.y += GRAVITATION;
+	velocity.y += GRAVITATION * 1.5;
 
 	keyboard->getState();
 	keyboard->clearKeyCode();
@@ -355,6 +355,10 @@ void Small::enter(Mario* mario)
 
 	m_timeChangeSprite = 1;
 	mario->setTimeAnimation(2);
+
+	// thiết lập âm thanh, chỉ play âm thanh khi được chuyển từ Big, Fire state
+	if (mario->getStateMachine()->GetPreviousState() == Big::getInstance() || mario->getStateMachine()->GetPreviousState() == Fire::getInstance())
+		SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Pipe);
 }
 
 void Small::execute(Mario* mario)
@@ -417,6 +421,7 @@ void Small::execute(Mario* mario)
 		}
 		else if (mario->isDead()) // không gọi lại
 		{
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_MarioDie);
 			mario->getStatusStateMachine()->changeState(Dead::getInstance());
 		}
 		else if (mario->isStar())
@@ -462,7 +467,7 @@ void Big::enter(Mario* mario)
 	m_timeChangeSprite = 2;
 
 	//Tài: 9/11 play sound
-	PlaySound(L"Sounds/smb_powerup.wav", NULL, SND_ASYNC);
+	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp);
 }
 
 void Big::execute(Mario* mario)
@@ -515,6 +520,7 @@ void Big::execute(Mario* mario)
 		}
 		else if (mario->isDead())
 		{
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Vine);
 			mario->getStatusStateMachine()->changeState(Small::getInstance());
 		}
 		else if (mario->isStar())
@@ -554,6 +560,8 @@ void Dead::enter(Mario* mario)
 
 	mario->setIsBig(false);
 	mario->setCanShoot(false);
+
+	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_MarioDie);
 }
 
 void Dead::execute(Mario* mario)
@@ -619,6 +627,8 @@ void Fire::enter(Mario* mario)
 	m_frameAnimation.push_back(bigIndex + BIG_SUPER_STAND); // fire mario
 
 	m_timeChangeSprite = 2;
+
+	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp);
 }
 
 void Fire::execute(Mario* mario)

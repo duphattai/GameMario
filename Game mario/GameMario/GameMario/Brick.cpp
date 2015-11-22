@@ -28,7 +28,7 @@ Brick::Brick(Vector2 position)
 
 	m_isBreak = false;
 	m_velocity = Vector2(0, 0);
-	m_type = ItemsType::IT_BRICK;
+	//m_type = LuckyBoxsType::IT_BRICK;
 	m_timeAnimation = 3;
 	m_currentFrame = 0;
 	m_stateMachine = new StateMachine<Brick>(this);
@@ -38,6 +38,7 @@ Brick::Brick(Vector2 position)
 
 Brick::~Brick()
 {
+	delete m_stateMachine;
 }
 
 void Brick::update()

@@ -34,8 +34,7 @@ public:
 };
 #pragma endregion
 
-
-#pragma region Animation of Lucky Box
+#pragma region Animation of Yellow Lucky Box
 //////////////////////////////////// animation for lucky box
 
 class IdleLuckyBox : public State<LuckyBox>
@@ -70,6 +69,40 @@ public:
 
 #pragma endregion
 
+#pragma region Animation of Brick Lucky Box
+//////////////////////////////////// animation for lucky box
+
+class IdleBrickItem : public State<LuckyBox>
+{
+	static IdleBrickItem*	m_instance;
+public:
+	IdleBrickItem(){}
+	virtual ~IdleBrickItem(){}
+
+	static IdleBrickItem*	getInstance();
+
+	virtual void		enter(LuckyBox* item);
+	virtual void		execute(LuckyBox* item);
+	virtual void		exit(LuckyBox* item);
+
+};
+
+class BrickItemEffect : public State<LuckyBox>
+{
+	static BrickItemEffect*	m_instance;
+public:
+	BrickItemEffect(){}
+	virtual ~BrickItemEffect(){}
+
+	static BrickItemEffect*	getInstance();
+
+	virtual void		enter(LuckyBox* item);
+	virtual void		execute(LuckyBox* item);
+	virtual void		exit(LuckyBox* item);
+
+};
+
+#pragma endregion
 
 //////////////////////////////////////////// Flower gun
 class FlowerGun : public State<ItemInBox>

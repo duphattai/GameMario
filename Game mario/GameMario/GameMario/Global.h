@@ -127,7 +127,7 @@ enum TypeObject
 	Dynamic_StandPosition,
 };
 
-enum ItemsType
+enum LuckyBoxsType
 {
 	IT_COIN = 0,
 	IT_MUSHROOM_BIGGER,
@@ -135,6 +135,13 @@ enum ItemsType
 	IT_GUN,
 	IT_STAR,
 	IT_BRICK
+};
+
+enum class ItemTypes
+{
+	BrickLuckyBox,
+	YellowLuckyBox,
+	Brick
 };
 
 struct Frame
@@ -210,3 +217,26 @@ static Vector2 vanTocNemXien(int time, float v, float alpha)
 
 	return velocity;
 }
+
+enum class IDSounds
+{
+	Sound_1_Up,
+	Sound_BreakBlock,
+	Sound_Coin,
+	Sound_FireBall,
+	Sound_FireWorks,
+	Sound_GameOver,
+	Sound_Jump_Small,
+	Sound_Jump_Super,
+	Sound_Kick,
+	Sound_MarioDie,
+	Sound_Pause,
+	Sound_Pipe,
+	Sound_PowerUp,
+	Sound_PowerUp_Appears,
+	Sound_StageCLear,
+	Sound_Stomp,
+	Sound_Vine,
+	Sound_Warning,
+	Sound_WorldCLear
+};

@@ -109,6 +109,30 @@
     <Filter Include="Source Files\GameObject\StateMachine\BulletOwnedState">
       <UniqueIdentifier>{69c3de6b-e440-4f17-835c-9f5b3ca57d8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject\Object\LuckyBox">
+      <UniqueIdentifier>{6a16e18e-448a-4138-a355-ae8d60c62cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\LuckyBox">
+      <UniqueIdentifier>{f6ba0c5c-3d11-4af8-be9a-58c92ce1c59f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Object\Coin">
+      <UniqueIdentifier>{62a8c3fe-1d0d-4df2-8135-ae47760cc668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Object\Brick">
+      <UniqueIdentifier>{e24b5154-ceac-4f1b-830a-eaedf1d182d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Brick">
+      <UniqueIdentifier>{a173fcd1-e368-4eee-9cae-e73d36ef1657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Coin">
+      <UniqueIdentifier>{8d54e4d2-901f-44e4-b2da-9620478699f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FrameWork\Sounds">
+      <UniqueIdentifier>{9205ac26-a35f-46d4-ac96-f5fc15a59ad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork\Sounds">
+      <UniqueIdentifier>{7990570e-0dbe-4ec4-bb17-205a56fcc51e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -159,20 +183,11 @@
     <ClCompile Include="ReSource.cpp">
       <Filter>Source Files\FrameWork\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ItemInBox.cpp">
-      <Filter>Source Files\GameObject\Object</Filter>
-    </ClCompile>
     <ClCompile Include="MarioOwnedState.cpp">
       <Filter>Source Files\GameObject\StateMachine\MarioOwnedState</Filter>
     </ClCompile>
     <ClCompile Include="ItemOwnedState.cpp">
       <Filter>Source Files\GameObject\StateMachine\ItemOwnedState</Filter>
-    </ClCompile>
-    <ClCompile Include="LuckyBox.cpp">
-      <Filter>Source Files\GameObject\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Brick.cpp">
-      <Filter>Source Files\GameObject\Object</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files\GameObject\Entity\Gun</Filter>
@@ -182,6 +197,21 @@
     </ClCompile>
     <ClCompile Include="Gun.cpp">
       <Filter>Source Files\GameObject\Entity\Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="LuckyBox.cpp">
+      <Filter>Source Files\GameObject\Object\LuckyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemInBox.cpp">
+      <Filter>Source Files\GameObject\Object\LuckyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Source Files\GameObject\Object\Brick</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Source Files\GameObject\Object\Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundClass.cpp">
+      <Filter>Source Files\FrameWork\Sounds</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,17 +272,8 @@
     <ClInclude Include="ReSource.h">
       <Filter>Header Files\FrameWork\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ItemInBox.h">
-      <Filter>Header Files\GameObject\Object</Filter>
-    </ClInclude>
     <ClInclude Include="ItemOwnedState.h">
       <Filter>Header Files\GameObject\StateMachine\ItemOwnedState</Filter>
-    </ClInclude>
-    <ClInclude Include="LuckyBox.h">
-      <Filter>Header Files\GameObject\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Brick.h">
-      <Filter>Header Files\GameObject\Object</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>Header Files\GameObject\Entity\Gun</Filter>
@@ -262,6 +283,21 @@
     </ClInclude>
     <ClInclude Include="Gun.h">
       <Filter>Header Files\GameObject\Entity\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="LuckyBox.h">
+      <Filter>Header Files\GameObject\Object\LuckyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemInBox.h">
+      <Filter>Header Files\GameObject\Object\LuckyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Header Files\GameObject\Object\Brick</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>Header Files\GameObject\Object\Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundClass.h">
+      <Filter>Header Files\FrameWork\Sounds</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

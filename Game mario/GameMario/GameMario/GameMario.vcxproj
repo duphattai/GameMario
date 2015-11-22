@@ -84,6 +84,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletOwnedState.h" />
+    <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameTime.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="ReSource.h" />
+    <ClInclude Include="SoundClass.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
@@ -112,6 +114,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletOwnedState.cpp" />
+    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTime.cpp" />
@@ -128,6 +131,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="ReSource.cpp" />
+    <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Xml\tinystr.cpp" />
     <ClCompile Include="Xml\tinyxml.cpp" />

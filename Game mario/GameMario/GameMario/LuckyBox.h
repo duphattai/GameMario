@@ -9,7 +9,7 @@ class LuckyBox : public GameObject
 	ItemInBox*					m_item;
 	int							m_countItem;
 
-	ItemsType					m_type;
+	ItemTypes					m_itemType;
 
 	bool						m_finishAnimation;
 
@@ -18,7 +18,7 @@ class LuckyBox : public GameObject
 
 	bool						m_makeEffect;
 public:
-	LuckyBox(ItemsType type, int countCoin = 1);
+	LuckyBox(LuckyBoxsType, ItemTypes, int countCoin = 1);
 	~LuckyBox();
 
 	void					setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(m_frameList[m_currentFrame].rect); }
@@ -41,8 +41,8 @@ public:
 
 	ItemInBox*				getItem(){ return m_item; }
 
-	void					changeItemsType(ItemsType type);
-	ItemsType				getType(){ return m_type; }
+	void					changeItemsType(LuckyBoxsType type);
+	LuckyBoxsType			getType(){ return m_item->getItemsType(); }
 
 	void					setMakeEffect(bool x){ m_makeEffect = x; }
 	bool					getMakeEffect(){ return m_makeEffect; }

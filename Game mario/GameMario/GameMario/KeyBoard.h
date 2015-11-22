@@ -11,10 +11,12 @@ protected:
 
 	BYTE m_Keys[256];
 	DIDEVICEOBJECTDATA m_KeyEvents[KEYBOARD_BUFFER_SIZE];
+
+	bool initInput();
+	bool initKeyBoard(HWND);
 public:
 	CKeyBoard();
-	void initInput();
-	void initKeyBoard(HWND);
+	bool initialize(HWND);
 	bool isKeyDown(int);
 	int  getKeyCode();
 	void clearKeyCode();

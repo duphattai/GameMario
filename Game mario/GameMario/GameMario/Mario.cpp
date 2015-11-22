@@ -5,6 +5,8 @@
 #include "MarioOwnedState.h"
 #include "LuckyBox.h"
 #include "Brick.h"
+#include "Coin.h"
+
 
 using namespace std;
 
@@ -128,7 +130,7 @@ Box Mario::getBouding()
 bool Mario::isCollision(GameObject* gameObject)
 {
 	int type = gameObject->getTypeObject();
-	if (type == TypeObject::Dynamic_TiledMap || gameObject->getStatusOBject() == StatusObject::DEAD) // không xét va cham với tiled map 
+	if (type == TypeObject::Dynamic_TiledMap || gameObject->getStatusOBject() == StatusObject::DEAD || !gameObject->isActive()) // không xét va cham với tiled map 
 		return false;
 
 
@@ -139,7 +141,7 @@ bool Mario::isCollision(GameObject* gameObject)
 		// chỉ xét va chạm với item in box khi active = true và trạng thái alive
 		if (luckyBox != nullptr && luckyBox->getItem()->isActive() && 
 			luckyBox->getItem()->getStatusOBject() == StatusObject::ALIVE && 
-			luckyBox->getType() != ItemsType::IT_COIN && luckyBox->getType() != ItemsType::IT_BRICK)
+			luckyBox->getType() != LuckyBoxsType::IT_COIN && luckyBox->getType() != LuckyBoxsType::IT_BRICK)
 		{
 			if (m_checkCollision->isCollision(this, luckyBox->getItem()) != DIR::NONE)
 			{
@@ -148,13 +150,13 @@ bool Mario::isCollision(GameObject* gameObject)
 
 				// update state for mario
 				int typeItem = luckyBox->getType();
-				if (typeItem == ItemsType::IT_MUSHROOM_BIGGER)
+				if (typeItem == LuckyBoxsType::IT_MUSHROOM_BIGGER)
 					m_isBig = true;
-				else if (typeItem == ItemsType::IT_STAR)
+				else if (typeItem == LuckyBoxsType::IT_STAR)
 					m_isStar = true;
-				else if (typeItem == ItemsType::IT_GUN)
+				else if (typeItem == LuckyBoxsType::IT_GUN)
 					m_canShoot = true;
-				else if (typeItem == ItemsType::IT_MUSHROOM_UP)
+				else if (typeItem == LuckyBoxsType::IT_MUSHROOM_UP)
 					m_lives++;
 			}
 		}
@@ -164,9 +166,10 @@ bool Mario::isCollision(GameObject* gameObject)
 	DIR dir = m_checkCollision->isCollision(this, gameObject);
 	if (dir != DIR::NONE)
 	{
-		m_velocity = m_checkCollision->getVelocity();
+		//m_velocity = m_checkCollision->getVelocity();
 		if (type == TypeObject::Dynamic_StandPosition) // trường hợp với stand position
 		{
+			m_velocity = m_checkCollision->getVelocity();
 			if ((getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) && dir == DIR::TOP) // fall gặp vật cản
 					setLocation(Location::LOC_ON_GROUND);
 
@@ -182,12 +185,24 @@ bool Mario::isCollision(GameObject* gameObject)
 			if (getDirCollision() == DIR::NONE)
 				setDirCollision(dir);
 
+			Coin* coin = dynamic_cast<Coin*>(gameObject);
+			if (coin != nullptr)
+			{
+				coin->setStatusObject(StatusObject::DEAD);
+				return true;
+			}
+
+			m_velocity = m_checkCollision->getVelocity();
 			if (dir == DIR::BOTTOM)
 			{
 				// cập nhật cho luckybox
 				LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
 				if (luckyBox != nullptr)
+				{
 					luckyBox->setMakeEffect(true);
+					return true;
+				}
+					
 
 				// cập nhật cho brick
 				Brick* brick = dynamic_cast<Brick*>(gameObject);
@@ -202,7 +217,8 @@ bool Mario::isCollision(GameObject* gameObject)
 						brick->setStatusObject(StatusObject::DEAD);
 						brick->setIsBreak(true);
 					}
-				}					
+					return true;
+				}
 			}
 			else if (dir == DIR::TOP)
 			{

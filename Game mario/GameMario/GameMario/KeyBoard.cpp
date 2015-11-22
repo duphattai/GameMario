@@ -6,7 +6,7 @@ CKeyBoard::CKeyBoard()
 	KeyCode = -1;
 }
 
-void CKeyBoard::initInput()
+bool CKeyBoard::initInput()
 {
 	HRESULT result;
 
@@ -20,7 +20,7 @@ void CKeyBoard::initInput()
 	if (result != D3D_OK)
 	{
 		MessageBox(0, L"Cannot create device input.", L"Error", MB_OK);
-		return;
+		return false;
 	}
 
 	//Create device use
@@ -30,17 +30,21 @@ void CKeyBoard::initInput()
 	if (result != D3D_OK)
 	{
 		MessageBox(0, L"Cannot create device keyboard.", L"Error", MB_OK);
-		return;
+		return false;
 	}
+
+	return true;
 }
 
-void CKeyBoard::initKeyBoard(HWND hWnd)
+bool CKeyBoard::initKeyBoard(HWND hWnd)
 {
+	HRESULT result;
 	// Directx understand handler with keyboard device
-	m_Keyboard->SetDataFormat(&c_dfDIKeyboard);
-
+	result = m_Keyboard->SetDataFormat(&c_dfDIKeyboard);
+	if (FAILED(result))
+		return false;
 	// thiet lap quyen uu tien
-	m_Keyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = m_Keyboard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 
 	DIPROPDWORD dipw;
 
@@ -50,9 +54,28 @@ void CKeyBoard::initKeyBoard(HWND hWnd)
 	dipw.diph.dwHow = DIPH_DEVICE;
 	dipw.diph.dwObj = 0;
 
-	m_Keyboard->SetProperty(DIPROP_BUFFERSIZE, &dipw.diph);
+	result = m_Keyboard->SetProperty(DIPROP_BUFFERSIZE, &dipw.diph);
+	if (FAILED(result))
+		return false;
+
 
 	m_Keyboard->Acquire();
+
+	return true;
+}
+
+bool CKeyBoard::initialize(HWND hWnd)
+{
+	bool result;
+	result = initInput();
+	if (!result)
+		return false;
+
+	result = initKeyBoard(hWnd);
+	if (!result)
+		return false;
+
+	return true;
 }
 
 bool CKeyBoard::isKeyDown(int key)
@@ -112,6 +135,4 @@ CKeyBoard::~CKeyBoard()
 
 	if (m_Keyboard != NULL)
 		m_Keyboard->Release();
-
-
 }

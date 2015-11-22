@@ -9,13 +9,13 @@ class ItemInBox : public GameObject
 private:
 	StateMachine<ItemInBox>*	m_stateMachine;
 
-	ItemsType					m_type;
+	LuckyBoxsType				m_type;
 	bool						m_finishAnimation;
 
 	int							m_currentFrame;
 	vector<Frame>				m_frameList;
 public:
-	ItemInBox(ItemsType type);
+	ItemInBox(LuckyBoxsType type);
 	~ItemInBox();
 
 	StateMachine<ItemInBox>*	getStateMachine(){ return m_stateMachine; };
@@ -36,8 +36,8 @@ public:
 	bool		finishAnimation(){ return m_finishAnimation; }
 	void		setFinishAnimation(bool x){ m_finishAnimation = x; }
 
-	void		setItemsType(ItemsType type);
-	ItemsType	getItemsType(){ return m_type; }
+	void		setItemsType(LuckyBoxsType type);
+	LuckyBoxsType	getItemsType(){ return m_type; }
 
 	int			m_time; // thời gian xác định vận tốc
 	Vector2(*m_mathematical)(int, float v, float alpha);// con trỏ hàm

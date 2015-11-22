@@ -4,6 +4,7 @@
 #include "ReSource.h"
 #include "Map1.h"
 #include "Mario.h"
+#include "SoundClass.h"
 
 CKeyBoard *keyboard = NULL;
 Map1 *m_state;
@@ -110,25 +111,29 @@ void Game::initDirec3D()//initialize Dir3D
 	D3DXCreateFont(d3ddv, 12, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times New Roman"), &m_font);
 }
 
-
 void Game::initGame()//khởi tạo 
 {
+	// khởi tạo resource hình ảnh
 	ReSource::getInstance()->init(d3ddv);
+	// khởi tạo âm thanh
+	SoundClass::getInstance()->initialize(hWnd);
 
+	// <key board>
 	keyboard = new CKeyBoard();//process event of keyboard
-	keyboard->initInput();
-	keyboard->initKeyBoard(hWnd);
+	keyboard->initialize(hWnd);
+	// </key board>
 
+	// khởi tạo mario
 	m_mario = new Mario();
 	m_mario->setPosition(50, 50);
-	m_state = new Map1(m_mario);
-	m_state->init(keyboard);
-}
 
+	m_state = new Map1();
+	m_state->init();
+}
 
 void Game::update()
 {
-	// update velocity
+	// <cập nhật vận tốc>
 	m_mario->updateVelocity();
 	vector<GameObject*> listObject = m_state->getListObjectOnCamera();
 	for each (GameObject* item in listObject)
@@ -136,32 +141,33 @@ void Game::update()
 		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
 			item->updateVelocity();
 	}
+	// </>
 
-
-	// update collision
+	// <xét va chạm>
 	for each (GameObject* item in listObject)
 	{
+		// xét va chạm cho item, enemy với stand position
 		int type = item->getTypeObject();
-		if (type == TypeObject::Moving_Enemy || type == TypeObject::Dynamic_Item) // nếu là item hoặc enemy
+		if (type == TypeObject::Moving_Enemy || type == TypeObject::Dynamic_Item)
 		{
 			for each (GameObject* temp in listObject)
 			{
-				int type = temp->getTypeObject();
-				if (type != TypeObject::Dynamic_TiledMap)
-				{
-					item->isCollision(temp);
-				}
+				item->isCollision(temp);	
 			}
 		}
 
-		// update for mario
+		// xét va chạm mario với object trong game
 		if (m_mario->isCollision(item))
 		{
 		}
 
+		// xét va chạm cho đạn
 		m_mario->getGun()->isCollision(item);
 	}
+	//</>
 
+
+	// cập nhật tọa độ
 	for each (GameObject* item in listObject)
 	{
 		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
@@ -191,12 +197,12 @@ void Game::render()
 	d3ddv->Present(NULL, NULL, NULL, NULL);//draw from buffer to screen
 }
 
-
 void Game::gameRun()
 {
 	update();
 	render();
 }
+
 Game::~Game()
 {
 	if (m_SpriteHandler != NULL)
@@ -210,4 +216,16 @@ Game::~Game()
 
 	if (m_font != NULL)
 		m_font->Release();
+
+	if (m_mario)
+		delete m_mario;
+
+	if (ReSource::getInstance())
+		ReSource::getInstance()->clear();
+
+	if (SoundClass::getInstance())
+		SoundClass::getInstance()->shutdown();
+
+	delete keyboard;
+	delete m_state;
 }

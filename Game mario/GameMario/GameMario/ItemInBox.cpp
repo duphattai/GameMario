@@ -5,7 +5,7 @@
 
 
 // hard code, thiết lập frameList cho từng loại item
-vector<Frame> getFrameAnimationBy(ItemsType type)
+vector<Frame> getFrameAnimationBy(LuckyBoxsType type)
 {
 	vector<Frame> frameItem;
 	RECT rect;
@@ -72,7 +72,7 @@ vector<Frame> getFrameAnimationBy(ItemsType type)
 	return frameItem;
 }
 
-ItemInBox::ItemInBox(ItemsType type)
+ItemInBox::ItemInBox(LuckyBoxsType type)
 {
 	m_isActive = false; // default
 	m_stateMachine = new StateMachine<ItemInBox>(this);
@@ -84,11 +84,13 @@ ItemInBox::ItemInBox(ItemsType type)
 
 ItemInBox::~ItemInBox()
 {
+	delete m_stateMachine;
+	delete m_checkCollision;
 }
 
-void ItemInBox::setItemsType(ItemsType type)
+void ItemInBox::setItemsType(LuckyBoxsType type)
 {
-	if (type == ItemsType::IT_STAR)
+	if (type == LuckyBoxsType::IT_STAR)
 		m_mathematical = &vanTocNemXien;
 
 	m_currentFrame = 0;
@@ -111,7 +113,7 @@ void ItemInBox::update()
 		m_position.y += m_velocity.y;
 
 		// xứ lý va chạm đối với item star
-		if (m_type == ItemsType::IT_STAR)
+		if (m_type == LuckyBoxsType::IT_STAR)
 		{
 			if (m_dirCollision != DIR::NONE)
 			{
@@ -120,6 +122,7 @@ void ItemInBox::update()
 				{
 					StarItem::getInstance()->alpha = 3.14 / 3;
 					StarItem::getInstance()->v = 6;
+					m_time = 0;
 				}
 				else
 				{
@@ -149,14 +152,13 @@ Box ItemInBox::getBouding()
 
 bool ItemInBox::isCollision(GameObject* gameObject)
 {
-	// xét va chạm với stand position và item
-	// nếu item không active thì không xét
-	// chỉ xét cho mushroom bigger, up, star
+	// xét va chạm item di chuyển trên game
 	int type = gameObject->getTypeObject();
-	if (type == TypeObject::Dynamic_TiledMap || type == TypeObject::Moving_Enemy // tiled map, enemy  
-		|| !m_isActive // không active
+	if (type == TypeObject::Dynamic_TiledMap // tiled map
+		|| type == TypeObject::Moving_Enemy // enemy  
+		|| !m_isActive // item hiện đang không active
 		|| m_stateMachine->isInState(*ItemInLuckyBoxIdle::getInstance()) // item trong trạng thái move up
-		|| m_type == ItemsType::IT_COIN || m_type == ItemsType::IT_GUN)
+		|| m_type == LuckyBoxsType::IT_COIN || m_type == LuckyBoxsType::IT_GUN) // xét va chạm cho bigger, up, star
 		return false;
 
 	DIR dir = m_checkCollision->isCollision(this, gameObject);

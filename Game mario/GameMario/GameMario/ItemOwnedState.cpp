@@ -1,8 +1,8 @@
 ﻿#include "ItemOwnedState.h"
 #include "ReSource.h"
-
+#include "SoundClass.h"
 // hiệu ứng di chuyển lên xuống luckybox
-#pragma region LuckyBox
+#pragma region Yellow LuckyBox
 
 IdleLuckyBox* IdleLuckyBox::m_instance = 0;
 
@@ -107,17 +107,21 @@ void LuckyBoxEffect::execute(LuckyBox* item)
 		item->getStateMachine()->changeState(IdleLuckyBox::getInstance());
 	else if (velocity.y == 0)
 	{
+		// fix dành cho nhiều coin trong box
+		if (item->getItem()->getItemsType() == LuckyBoxsType::IT_COIN)
+			item->getItem()->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
+
 		item->getItem()->setActive(true);
 		item->getItem()->setPosition(item->getPosition().x, item->getPosition().y);
 
 		// playsound
 		//Tài: 9/11 play sound
-		if (item->getType() == ItemsType::IT_COIN)
-			PlaySound(L"Sounds/smb_coin.wav", NULL, SND_ASYNC);
-		else if (item->getType() == ItemsType::IT_MUSHROOM_BIGGER)
-			PlaySound(L"Sounds/smb_powerup_appears.wav", NULL, SND_ASYNC);
-		else if (item->getType() == ItemsType::IT_MUSHROOM_UP)
-			PlaySound(L"Sounds/smb_powerup_appears.wav", NULL, SND_ASYNC);
+		if (item->getType() == LuckyBoxsType::IT_COIN)
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Coin);
+		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
+		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_UP)
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
 	}
 }
 
@@ -129,6 +133,103 @@ void LuckyBoxEffect::exit(LuckyBox* item)
 
 #pragma endregion
 
+// hiệu ứng di chuyển lên xuống brick luckybox
+#pragma region Brick LuckyBox
+
+IdleBrickItem* IdleBrickItem::m_instance = 0;
+
+IdleBrickItem* IdleBrickItem::getInstance()
+{
+	if (m_instance == NULL)
+	{
+		m_instance = new IdleBrickItem();
+	}
+
+	return m_instance;
+}
+
+void IdleBrickItem::enter(LuckyBox* item)
+{
+	item->setVelocity(Vector2(0, 0));
+}
+
+void IdleBrickItem::execute(LuckyBox* item)
+{
+	if (item->getCountItem() > 0)
+	{
+		item->setIndexSprite(1);
+	}
+
+	// change state make effect
+	if (item->getMakeEffect() && item->getCountItem() > 0)
+	{
+		item->getStateMachine()->changeState(BrickItemEffect::getInstance());
+		item->setCountItem(item->getCountItem() - 1);
+	}
+}
+
+void IdleBrickItem::exit(LuckyBox* item)
+{
+	item->setMakeEffect(false);
+}
+
+
+
+///// effect when box is collided
+BrickItemEffect* BrickItemEffect::m_instance = 0;
+
+BrickItemEffect* BrickItemEffect::getInstance()
+{
+	if (m_instance == NULL)
+		m_instance = new BrickItemEffect();
+
+	return m_instance;
+}
+
+void BrickItemEffect::enter(LuckyBox* item)
+{
+	item->setVelocity(Vector2(0, 3));
+}
+
+void BrickItemEffect::execute(LuckyBox* item)
+{
+	if (item->getCountItem() == 0)
+	{
+		item->setIndexSprite(3);//hard code
+	}
+
+	// update position
+	Vector2 velocity = item->getVelocity();
+	velocity.y -= 1;
+	item->setVelocity(velocity);
+
+	if (velocity.y < -3)
+		item->getStateMachine()->changeState(IdleBrickItem::getInstance());
+	else if (velocity.y == 0)
+	{
+		// fix dành cho nhiều coin trong box
+		if (item->getItem()->getItemsType() == LuckyBoxsType::IT_COIN)
+			item->getItem()->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
+
+		item->getItem()->setActive(true);
+		item->getItem()->setPosition(item->getPosition().x, item->getPosition().y);
+
+		// playsound
+		//Tài: 9/11 play sound
+		if (item->getType() == LuckyBoxsType::IT_COIN)
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Coin);
+		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
+		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_UP)
+			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
+	}
+}
+
+void BrickItemEffect::exit(LuckyBox* item)
+{
+	item->setVelocity(Vector2(0, 0));
+}
+#pragma endregion
 
 // hiệu ứng item đi lên và show ra số điểm
 #pragma region Item in luckybox
@@ -164,21 +265,21 @@ void ItemInLuckyBoxIdle::execute(ItemInBox* item)
 		{
 			switch (item->getItemsType())
 			{
-				case ItemsType::IT_COIN:
-					item->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
-					break;
-				case ItemsType::IT_GUN:
-					item->getStateMachine()->changeState(FlowerGun::getInstance());
-					break;
-				case ItemsType::IT_MUSHROOM_BIGGER:
-					item->getStateMachine()->changeState(MoveMushroomItem::getInstance());
-					break;
-				case ItemsType::IT_MUSHROOM_UP:
-					item->getStateMachine()->changeState(MoveMushroomItem::getInstance());
-					break;
-				case ItemsType::IT_STAR:
-					item->getStateMachine()->changeState(StarItem::getInstance());
-					break;
+				case LuckyBoxsType::IT_COIN:
+						item->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
+						break;
+				case LuckyBoxsType::IT_GUN:
+						item->getStateMachine()->changeState(FlowerGun::getInstance());
+						break;
+				case LuckyBoxsType::IT_MUSHROOM_BIGGER:
+						item->getStateMachine()->changeState(MoveMushroomItem::getInstance());
+						break;
+				case LuckyBoxsType::IT_MUSHROOM_UP:
+						item->getStateMachine()->changeState(MoveMushroomItem::getInstance());
+						break;
+				case LuckyBoxsType::IT_STAR:
+						item->getStateMachine()->changeState(StarItem::getInstance());
+						break;
 			}
 		}
 	}
@@ -208,19 +309,19 @@ void ItemInLuckyBoxScore::enter(ItemInBox* item)
 
 	switch (item->getItemsType())
 	{
-	case ItemsType::IT_COIN:
+	case LuckyBoxsType::IT_COIN:
 		item->setText(L"200");
 		break;
-	case ItemsType::IT_GUN:
+	case LuckyBoxsType::IT_GUN:
 		item->setText(L"1000");
 		break;
-	case ItemsType::IT_MUSHROOM_BIGGER:
+	case LuckyBoxsType::IT_MUSHROOM_BIGGER:
 		item->setText(L"1000");
 		break;
-	case ItemsType::IT_MUSHROOM_UP:
+	case LuckyBoxsType::IT_MUSHROOM_UP:
 		item->setText(L"1 UP");
 		break;
-	case ItemsType::IT_STAR:
+	case LuckyBoxsType::IT_STAR:
 		item->setText(L"1000");
 		break;
 	}
@@ -251,6 +352,7 @@ void ItemInLuckyBoxScore::exit(ItemInBox* item)
 }
 
 #pragma endregion
+
 
 
 /////////////////
@@ -338,6 +440,9 @@ void MoveMushroomItem::execute(ItemInBox* item)
 		else
 		{
 			velocity.y += GRAVITATION;
+			if (velocity.y <= -10)
+				velocity.y = -10;
+
 			if (item->getFliping() == SpriteEffect::None)
 				velocity.x = 2;
 			else
@@ -371,7 +476,7 @@ void CoinInLuckyBox::enter(ItemInBox* item)
 {
 	item->setCurrentFrame(0);
 	item->setTimeAnimation(3);
-	item->setVelocity(Vector2(0, 7));
+	item->setVelocity(Vector2(0, 9));
 }
 
 void CoinInLuckyBox::execute(ItemInBox* item)
@@ -457,6 +562,8 @@ void StarItem::execute(ItemInBox* item)
 		{
 			// update velocity, tạo hiệu ứng của coin
 			velocity = item->m_mathematical(item->m_time++, v, alpha);
+			if (velocity.y <= -10)
+				velocity.y = -10;
 			if (item->getFliping() == SpriteEffect::Flip)
 				velocity.x *= -1;
 
@@ -544,7 +651,8 @@ void BrickEffect::enter(Brick* brick)
 	brick->setVelocity(Vector2(0, 3));
 	brick->setMakeEffect(false);
 
-	PlaySound(L"Sounds/smb_kick.wav", NULL, SND_ASYNC);
+	//PlaySound(L"Sounds/smb_kick.wav", NULL, SND_ASYNC);
+	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Kick);
 }
 
 void BrickEffect::execute(Brick* brick)
@@ -585,7 +693,7 @@ void BrickBroken::enter(Brick* brick)
 	brick->setVelocity(Vector2(0, 0));
 
 	// play sound
-	PlaySound(L"Sounds/smb_breakblock.wav", NULL, SND_ASYNC);
+	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_BreakBlock);
 }
 
 void BrickBroken::execute(Brick* brick)

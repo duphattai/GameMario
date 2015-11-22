@@ -4,8 +4,8 @@
 class Map1 : public MapObject
 {
 public:
-	Map1(Mario *mario);
-	void init(CKeyBoard *keyboard);
+	Map1();
+	void init();
 	void update();
 	~Map1();
 };

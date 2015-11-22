@@ -2,13 +2,13 @@
 #include "ReSource.h"
 #include "ItemOwnedState.h"
 
-LuckyBox::LuckyBox(ItemsType type, int countCoin)
+LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, int countCoin)
 {
-	m_type = type;
 	m_countItem = countCoin;
+	m_itemType = itemType;
 
 	m_currentFrame = 0;
-	// hard code, tọa độ của luckybox trong ItemSheet
+	// hard code, tọa độ của animation luckybox trong ItemSheet
 	for (int i = 0; i < 4; i++)
 	{
 		RECT rect;
@@ -30,14 +30,26 @@ LuckyBox::LuckyBox(ItemsType type, int countCoin)
 
 	//end
 	m_item = new ItemInBox(type);
-	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
+	
 
 	m_stateMachine = new StateMachine<LuckyBox>(this);
-	m_stateMachine->changeState(IdleLuckyBox::getInstance());
+	if (itemType == ItemTypes::BrickLuckyBox)
+	{
+		m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
+		m_stateMachine->changeState(IdleBrickItem::getInstance());
+	}
+	else if (itemType == ItemTypes::YellowLuckyBox)
+	{
+		m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
+		m_stateMachine->changeState(IdleLuckyBox::getInstance());
+	}
+		
 }
 
 LuckyBox::~LuckyBox()
 {
+	delete m_stateMachine;
+	delete m_item;
 }
 
 void LuckyBox::updateVelocity()
@@ -64,11 +76,15 @@ void LuckyBox::draw(LPD3DXSPRITE SpriteHandler)
 	m_item->setWorldPosition(m_worldPosition);
 	m_item->draw(SpriteHandler);
 
-	m_sprite->setRect(m_frameList[m_currentFrame].rect);
+	if (m_itemType == ItemTypes::YellowLuckyBox)
+		m_sprite->setRect(m_frameList[m_currentFrame].rect);
+	else if (m_itemType == ItemTypes::BrickLuckyBox)
+		m_sprite->setIndex(m_index);
+
 	GameObject::draw(SpriteHandler);
 }
 
-void LuckyBox::changeItemsType(ItemsType type)
-{
+void LuckyBox::changeItemsType(LuckyBoxsType type)
+{	
 	m_item->setItemsType(type);
 }
