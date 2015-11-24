@@ -50,3 +50,12 @@ void Coin::draw(LPD3DXSPRITE SpriteHandler)
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
 	GameObject::draw(SpriteHandler);
 }
+
+Box Coin::getBouding()
+{
+	m_box = GameObject::getBouding();
+	m_box.width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left);
+	m_box.height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top);
+
+	return m_box;
+}

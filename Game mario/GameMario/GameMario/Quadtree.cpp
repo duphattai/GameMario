@@ -182,7 +182,6 @@ void Quadtree::remove(GameObject* object)
 	}
 }
 
-
 // cập nhật lại vùng không gian cho enemy
 // nếu item in luckybox ra khỏi camera thì thiết lập active = false
 void Quadtree::update(vector<GameObject*> list, Box camera)

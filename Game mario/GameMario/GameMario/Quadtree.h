@@ -7,7 +7,7 @@ class Quadtree
 {
 private:
 	Box m_Rect;
-	vector<GameObject*> m_listObject;
+	vector<GameObject*>		m_listObject;
 
 	Quadtree* m_AreaOne; // x > 0, y > 0
 	Quadtree* m_AreaTwo; // x < 0, y > 0
@@ -26,6 +26,5 @@ public:
 	void					remove(GameObject*);
 
 	vector<GameObject*>		getListObjects(Box, vector<GameObject*> list);
-	void					release();
 };
 

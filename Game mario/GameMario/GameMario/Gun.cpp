@@ -1,5 +1,5 @@
 ﻿#include "Gun.h"
-
+#include "SoundClass.h"
 
 Gun::Gun(int countBullet)
 {

@@ -1,6 +1,7 @@
 ﻿#include "ItemOwnedState.h"
 #include "ReSource.h"
 #include "SoundClass.h"
+#include "ScoreGame.h"
 // hiệu ứng di chuyển lên xuống luckybox
 #pragma region Yellow LuckyBox
 
@@ -116,11 +117,10 @@ void LuckyBoxEffect::execute(LuckyBox* item)
 
 		// playsound
 		//Tài: 9/11 play sound
-		if (item->getType() == LuckyBoxsType::IT_COIN)
+		int type = item->getTypeItem();
+		if (type == LuckyBoxsType::IT_COIN)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Coin);
-		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
-			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
-		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_UP)
+		else
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
 	}
 }
@@ -216,11 +216,11 @@ void BrickItemEffect::execute(LuckyBox* item)
 
 		// playsound
 		//Tài: 9/11 play sound
-		if (item->getType() == LuckyBoxsType::IT_COIN)
+		if (item->getTypeItem() == LuckyBoxsType::IT_COIN)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Coin);
-		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+		else if (item->getTypeItem() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
-		else if (item->getType() == LuckyBoxsType::IT_MUSHROOM_UP)
+		else if (item->getTypeItem() == LuckyBoxsType::IT_MUSHROOM_UP)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
 	}
 }
@@ -311,18 +311,23 @@ void ItemInLuckyBoxScore::enter(ItemInBox* item)
 	{
 	case LuckyBoxsType::IT_COIN:
 		item->setText(L"200");
+		ScoreGame::getInstance()->setCountOfCoin(ScoreGame::getInstance()->getCountOfCoin() + 1);
+		ScoreGame::getInstance()->setScore(ScoreGame::getInstance()->getScore() + 200);
 		break;
 	case LuckyBoxsType::IT_GUN:
 		item->setText(L"1000");
+		ScoreGame::getInstance()->setScore(ScoreGame::getInstance()->getScore() + 1000);
 		break;
 	case LuckyBoxsType::IT_MUSHROOM_BIGGER:
 		item->setText(L"1000");
+		ScoreGame::getInstance()->setScore(ScoreGame::getInstance()->getScore() + 1000);
 		break;
 	case LuckyBoxsType::IT_MUSHROOM_UP:
 		item->setText(L"1 UP");
 		break;
 	case LuckyBoxsType::IT_STAR:
 		item->setText(L"1000");
+		ScoreGame::getInstance()->setScore(ScoreGame::getInstance()->getScore() + 1000);
 		break;
 	}
 }

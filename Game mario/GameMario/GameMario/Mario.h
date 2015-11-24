@@ -51,9 +51,6 @@ public:
 	bool		isBig(){ return m_isBig; }
 	void		setIsBig(bool x){ m_isBig = x; }
 
-	Vector2		getMaxVelocity(){ return m_MaxVelocity; }
-	Vector2		getMinVelocity(){ return m_MinVelocity; }
-
 	bool		canShoot(){ return m_canShoot; }
 	void		setCanShoot(bool x){ m_canShoot = x; }
 

@@ -6,7 +6,6 @@ class ReSource
 	Sprite *m_MarioSheet;
 	Sprite *m_ItemSheet;
 
-
 	ReSource();
 	static ReSource *m_Instance;
 public:

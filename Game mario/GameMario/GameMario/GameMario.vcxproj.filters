@@ -133,6 +133,18 @@
     <Filter Include="Source Files\FrameWork\Sounds">
       <UniqueIdentifier>{7990570e-0dbe-4ec4-bb17-205a56fcc51e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject\StateMachine\MapOwnedState">
+      <UniqueIdentifier>{f12679f4-693a-477f-afac-69f7f05e37eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\StateMachine\MapOwnedState">
+      <UniqueIdentifier>{da60d103-d000-4d09-aa8c-7391cef982bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Object\Score">
+      <UniqueIdentifier>{92b016fe-1666-4d15-a219-f9ba484d1bc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Score">
+      <UniqueIdentifier>{ace29c5c-2c33-4f4b-8aa4-2c6b548e1ddc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -151,9 +163,6 @@
       <Filter>Source Files\FrameWork</Filter>
     </ClCompile>
     <ClCompile Include="MapObject.cpp">
-      <Filter>Source Files\GameObject\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Map1.cpp">
       <Filter>Source Files\GameObject\Map</Filter>
     </ClCompile>
     <ClCompile Include="Mario.cpp">
@@ -213,6 +222,12 @@
     <ClCompile Include="SoundClass.cpp">
       <Filter>Source Files\FrameWork\Sounds</Filter>
     </ClCompile>
+    <ClCompile Include="MapOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\MapOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreGame.cpp">
+      <Filter>Source Files\GameObject\Object\Score</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -234,9 +249,6 @@
       <Filter>Header Files\FrameWork</Filter>
     </ClInclude>
     <ClInclude Include="MapObject.h">
-      <Filter>Header Files\GameObject\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Map1.h">
       <Filter>Header Files\GameObject\Map</Filter>
     </ClInclude>
     <ClInclude Include="SwapAABB.h">
@@ -298,6 +310,12 @@
     </ClInclude>
     <ClInclude Include="SoundClass.h">
       <Filter>Header Files\FrameWork\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="MapOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\MapOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreGame.h">
+      <Filter>Header Files\GameObject\Object\Score</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

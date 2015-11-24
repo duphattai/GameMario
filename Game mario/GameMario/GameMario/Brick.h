@@ -9,7 +9,6 @@ class Brick : public GameObject
 {
 	StateMachine<Brick>*		m_stateMachine;
 
-	//ItemsType					m_type;
 	bool						m_isBreak;
 
 	int							m_currentFrame;
@@ -35,12 +34,9 @@ public:
 	void					setMakeEffect(bool x){ m_makeEffect = x; }
 	bool					getMakeEffect(){ return m_makeEffect; }
 
-
 	void					updateVelocity();
 	void					update();
 	void					draw(LPD3DXSPRITE SpriteHandler);
-
-	//ItemsType				getType(){ return m_type; }
 
 	void					setIsBreak(bool x){ m_isBreak = x; }
 	bool					isBreak(){ return m_isBreak; }

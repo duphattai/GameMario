@@ -77,6 +77,13 @@ enum MarioSheet
 	SMALL_INVINCIBILITY_COLOR_2_JUMP = 58,
 };
 
+enum class IDMap
+{
+	MapOne,
+	MapTwo,
+	MapThree
+};
+
 struct Box
 {
 	float x, y;
@@ -133,8 +140,7 @@ enum LuckyBoxsType
 	IT_MUSHROOM_BIGGER,
 	IT_MUSHROOM_UP,
 	IT_GUN,
-	IT_STAR,
-	IT_BRICK
+	IT_STAR
 };
 
 enum class ItemTypes

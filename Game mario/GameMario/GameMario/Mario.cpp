@@ -45,8 +45,8 @@ Mario::Mario()
 
 
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_MARIOSHEET);
-	m_MaxVelocity = Vector2(3.0f, 10.0f);
-	m_MinVelocity = Vector2(-3.0f, -10.0f);
+	m_MaxVelocity = Vector2(4.0f, 10.0f);
+	m_MinVelocity = Vector2(-4.0f, -10.0f);
 
 
 	m_worldPosition = Vector2(0, VIEW_PORT_Y);
@@ -113,16 +113,15 @@ void Mario::updateVelocity()
 	setLocation(Location::LOC_IN_AIR);
 }
 
-
 Box Mario::getBouding()
 {
 	GameObject::getBouding();
 
 	//hard code
-	m_box.x += 6;
-	m_box.width = 4;
+	m_box.x += 4;
+	m_box.width = 8;
 	m_box.y += 2;
-	m_box.height -= 8;
+	m_box.height -= 4;
 
 	return m_box;
 }
@@ -141,7 +140,7 @@ bool Mario::isCollision(GameObject* gameObject)
 		// chỉ xét va chạm với item in box khi active = true và trạng thái alive
 		if (luckyBox != nullptr && luckyBox->getItem()->isActive() && 
 			luckyBox->getItem()->getStatusOBject() == StatusObject::ALIVE && 
-			luckyBox->getType() != LuckyBoxsType::IT_COIN && luckyBox->getType() != LuckyBoxsType::IT_BRICK)
+			luckyBox->getTypeItem() != LuckyBoxsType::IT_COIN)
 		{
 			if (m_checkCollision->isCollision(this, luckyBox->getItem()) != DIR::NONE)
 			{
@@ -149,7 +148,7 @@ bool Mario::isCollision(GameObject* gameObject)
 				luckyBox->getItem()->setStatusObject(StatusObject::DEAD);
 
 				// update state for mario
-				int typeItem = luckyBox->getType();
+				int typeItem = luckyBox->getTypeItem();
 				if (typeItem == LuckyBoxsType::IT_MUSHROOM_BIGGER)
 					m_isBig = true;
 				else if (typeItem == LuckyBoxsType::IT_STAR)
@@ -186,44 +185,45 @@ bool Mario::isCollision(GameObject* gameObject)
 				setDirCollision(dir);
 
 			Coin* coin = dynamic_cast<Coin*>(gameObject);
+			LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
+			Brick* brick = dynamic_cast<Brick*>(gameObject);
+
 			if (coin != nullptr)
 			{
 				coin->setStatusObject(StatusObject::DEAD);
 				return true;
 			}
-
-			m_velocity = m_checkCollision->getVelocity();
-			if (dir == DIR::BOTTOM)
+			else if (luckyBox != nullptr)
 			{
-				// cập nhật cho luckybox
-				LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
-				if (luckyBox != nullptr)
+				m_velocity = m_checkCollision->getVelocity();
+				if (dir == DIR::BOTTOM)
 				{
 					luckyBox->setMakeEffect(true);
-					return true;
 				}
-					
-
-				// cập nhật cho brick
-				Brick* brick = dynamic_cast<Brick*>(gameObject);
-				if (brick != nullptr)
+				else if (dir == DIR::TOP)
+				{
+					if (getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) // fall gặp vật cản
+						setLocation(Location::LOC_ON_GROUND);
+				}	
+			}
+			else if (brick != nullptr)
+			{
+				m_velocity = m_checkCollision->getVelocity();
+				if (dir == DIR::BOTTOM)
 				{
 					if (!m_isBig && !m_canShoot)
-					{
-						brick->setMakeEffect(true);	
-					}
+						brick->setMakeEffect(true);
 					else
 					{
 						brick->setStatusObject(StatusObject::DEAD);
 						brick->setIsBreak(true);
 					}
-					return true;
 				}
-			}
-			else if (dir == DIR::TOP)
-			{
-				if (getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) // fall gặp vật cản
-					setLocation(Location::LOC_ON_GROUND);
+				else if (dir == DIR::TOP)
+				{
+					if (getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) // fall gặp vật cản
+						setLocation(Location::LOC_ON_GROUND);
+				}
 			}
 		}
 
@@ -239,6 +239,12 @@ void Mario::setVelocity(Vector2 velocity)
 	Vector2 maxVelocity = m_MaxVelocity;
 	Vector2 minVelocity = m_MinVelocity;
 
+	// thiết lập max, min cho trường hợp small
+	if (!m_isBig && !m_canShoot)
+	{
+		maxVelocity.x--;
+		minVelocity.y++;
+	}
 
 	if (m_velocity.x >= maxVelocity.x)
 		m_velocity.x = maxVelocity.x;

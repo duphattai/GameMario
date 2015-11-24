@@ -197,6 +197,8 @@ private:
 
 	vector<int>		*m_frameAnimationBig;
 	vector<int>		*m_frameAnimationSmall;
+	vector<int>		*m_frameAnimationFire;
+
 	vector<int>		*m_frameAnimation;
 
 	int				m_currentIndex;

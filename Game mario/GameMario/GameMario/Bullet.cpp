@@ -6,17 +6,22 @@ Bullet::Bullet()
 {
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
 
-	//hard code, xác định framelist cho bullet
-	m_frameList.push_back(Frame(96, 144, 8, 8)); //<- animation move
+	// hard code, xác định animation cho bullet
+	// <move>
+	m_frameList.push_back(Frame(96, 144, 8, 8));
 	m_frameList.push_back(Frame(104, 144, 8, 8));
 	m_frameList.push_back(Frame(96, 152, 8, 8));
 	m_frameList.push_back(Frame(104, 152, 8, 8));
-	m_frameList.push_back(Frame(112, 144, 16, 16)); //<- animation explode
+	// </move>
+	// <explode>
+	m_frameList.push_back(Frame(112, 144, 16, 16));
 	m_frameList.push_back(Frame(112, 160, 16, 16));
 	m_frameList.push_back(Frame(112, 176, 16, 16));
+	// </explode>
 
 	m_stateMachine = new StateMachine<Bullet>(this);
 	m_stateMachine->changeState(BulletIdle::getInstance());
+
 	time = 0;
 	m_isExplode = false;
 	m_currentFrame = 0;

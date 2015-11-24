@@ -6,7 +6,6 @@ GameObject::GameObject()
 {
 	m_flip = SpriteEffect::None;
 	m_scale = D3DXVECTOR2(1.0f, 1.0f);
-	//m_Draw = true;
 
 	m_worldPosition.x = m_worldPosition.y = 0;
 	m_velocity = Vector2(0, 0);

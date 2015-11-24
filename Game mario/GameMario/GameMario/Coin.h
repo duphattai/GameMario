@@ -16,5 +16,7 @@ public:
 	void					update();
 	void					updateVelocity();
 	void					draw(LPD3DXSPRITE SpriteHandler);
+
+	virtual Box				getBouding();
 };
 

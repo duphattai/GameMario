@@ -3,7 +3,8 @@
 #include "LuckyBox.h"
 #include "Brick.h"
 #include "Coin.h"
-
+#include "MapOwnedState.h"
+#include "ReSource.h"
 
 MapObject::MapObject()
 {
@@ -11,10 +12,18 @@ MapObject::MapObject()
 	m_sprite = NULL;
 
 	m_typeObject = TypeObject::Dynamic_TiledMap;
+
+	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
+	m_worldPosition.y = VIEW_PORT_Y;
+
+	m_stateMachine = new StateMachine<MapObject>(this);
+	m_stateMachine->changeState(BrosTitle::getInstance());
 }
 
 MapObject::~MapObject()
 {
+	release();
+	delete m_stateMachine;
 }
 
 map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(TiXmlElement *nodeParent)
@@ -52,9 +61,24 @@ map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(TiXmlElement *nod
 	return list;
 }
 
-void MapObject::init(char *FileMap)
+void MapObject::init(IDMap map)
 {
-	// 16/11
+	char *FileMap = nullptr;
+	// thiết lập đường dẫn
+	if (map == IDMap::MapOne)
+	{
+		FileMap = NodeTileMap_1;
+		//m_stateMachine->changeState(MapOne::getInstance());
+	}
+	else if (map == IDMap::MapTwo)
+	{
+	}
+	else if (map == IDMap::MapThree)
+	{
+
+	}
+
+
 	// đọc quadtree từ file xml
 	TiXmlDocument doc(FileMap);
 	if (!doc.LoadFile())
@@ -62,17 +86,15 @@ void MapObject::init(char *FileMap)
 		printf("%s", doc.ErrorDesc());
 		return;
 	}
-	m_quadtreeNode = readQuadTreeFromFile(doc.RootElement());
+	std::map<int, vector<ObjectTittle>> quadtreeNode = readQuadTreeFromFile(doc.RootElement());
 	// end
-
-
 	// build tree
-	buildQuadTree();
+	buildQuadTree(quadtreeNode);
+
 	m_colorBackGround = D3DCOLOR_XRGB(146, 144, 255);
 }
 
 // <build tree>
-
 // kiểm tra node có nằm ở trên biên
 bool checkExist(ObjectTittle temp, map<int, vector<ObjectTittle>> &treeNode)
 {
@@ -93,17 +115,17 @@ bool checkExist(ObjectTittle temp, map<int, vector<ObjectTittle>> &treeNode)
 	return false;
 }
 
-void MapObject::buildQuadTree()
+void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 {
 	vector<ObjectTittle> listObjectExist; // chứa danh sách object nằm trên biên
 	map<int, vector<GameObject*>> listGameObject; // chưa danh sách object trong cây (không nằm trên biên)
 
-	for (map<int, vector<ObjectTittle>>::iterator it = m_quadtreeNode.begin(); it != m_quadtreeNode.end(); it++)
+	for (map<int, vector<ObjectTittle>>::iterator it = quadtreeNode.begin(); it != quadtreeNode.end(); it++)
 	{
 		vector<GameObject*> list; // danh sách object không nằm trên biên
 		for (int i = 0; i < it->second.size(); i++)
 		{
-			if (checkExist(it->second[i], m_quadtreeNode)) // nằm trên biên
+			if (checkExist(it->second[i], quadtreeNode)) // nằm trên biên
 			{
 				// kiểm tra object muốn thêm vào đã tồn tại trong listObjectExist hay chưa
 				bool exist = false;
@@ -125,7 +147,10 @@ void MapObject::buildQuadTree()
 			// chỉ tạo object nào không nằm trên biên
 			GameObject*	temp = createGameObject(it->second[i]);
 			if (temp != nullptr)
+			{
 				list.push_back(temp);
+				m_gameObjects.push_back(temp);
+			}
 		}
 		if (list.size() != 0) listGameObject.insert(pair<int, vector<GameObject*>>(it->first, list));
 	}
@@ -143,8 +168,9 @@ void MapObject::buildQuadTree()
 		if (temp == nullptr)
 			continue;
 
+		m_gameObjects.push_back(temp);
 		list.push_back(createGameObject(var));
-		for (map<int, vector<ObjectTittle>>::iterator it = m_quadtreeNode.begin(); it != m_quadtreeNode.end(); it++)
+		for (map<int, vector<ObjectTittle>>::iterator it = quadtreeNode.begin(); it != quadtreeNode.end(); it++)
 		{
 			for (int i = 0; i < it->second.size(); i++)
 			{
@@ -158,7 +184,6 @@ void MapObject::buildQuadTree()
 	}
 }
 // </build tree>
-
 
 vector<GameObject*> MapObject::getListObjectOnCamera()
 {
@@ -175,7 +200,7 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 				if (list[i] == list[j])
 				{
 					list.erase(list.begin() + j);
-					break;
+					j--;
 				}
 			}
 		}
@@ -185,11 +210,10 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 	return list;
 }
 
-void MapObject::draw(LPD3DXSPRITE SpriteHandler)
+void MapObject::draw(LPD3DXSPRITE spriteHandler)
 {
 	vector<GameObject*> list = getListObjectOnCamera();
 	if (list.size() == 0) return;
-
 
 	// vẽ tiled map trước
 	for each (GameObject* var in list)
@@ -197,8 +221,8 @@ void MapObject::draw(LPD3DXSPRITE SpriteHandler)
 		if (var->getTypeObject() == TypeObject::Dynamic_TiledMap)
 		{
 			var->setIndexSprite(var->getIndexSprite());
-			var->setWorldPosition(Vector2(m_worldPosition.x, m_worldPosition.y));
-			var->draw(SpriteHandler);
+			var->setWorldPosition(getWorldPosition());
+			var->draw(spriteHandler);
 		}
 	}
 	// vẽ item và enemy sau
@@ -206,10 +230,12 @@ void MapObject::draw(LPD3DXSPRITE SpriteHandler)
 	{
 		if (var->getTypeObject() == TypeObject::Dynamic_Item || var->getTypeObject() == TypeObject::Moving_Enemy)
 		{
-			var->setWorldPosition(Vector2(m_worldPosition.x, m_worldPosition.y));
-			var->draw(SpriteHandler);
+			var->setWorldPosition(getWorldPosition());
+			var->draw(spriteHandler);
 		}
 	}
+
+	m_stateMachine->GetCurrentState()->draw(this, spriteHandler);
 }
 
 GameObject* MapObject::createGameObject(ObjectTittle gameObject)
@@ -218,7 +244,7 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	if (gameObject.m_Id == 0) // tile map
 	{
 		temp = new GameObject();
-		temp->setSpriteSheet(m_sprite);
+		temp->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP));
 		temp->setIndexSprite(gameObject.m_Index);
 		temp->setPosition(gameObject.m_X, gameObject.m_Y);
 		temp->setTypeObject(TypeObject::Dynamic_TiledMap);
@@ -277,21 +303,26 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 void MapObject::update(Mario* mario)
 {
-	vector<GameObject*> list = getListObjectOnCamera();
-	// cập nhật loại item bigger, nếu mario trong trạng thái to thì bigger -> gun
-	for each (GameObject* var in list)
+	m_stateMachine->update();
+	// nếu đang ở state bros title thì không làm gì thêm
+	if (m_stateMachine->isInState(*BrosTitle::getInstance())) 
+		return;
+
+	// <cập nhật loại item bigger, nếu mario trong trạng thái to thì bigger -> gun>
+	vector<GameObject*> listObjectOnCamera = getListObjectOnCamera();
+	for each (GameObject* var in listObjectOnCamera)
 	{
 		if (var->getTypeObject() == TypeObject::Dynamic_Item)
 		{
 			LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(var);
 			if (luckyBox != nullptr && !luckyBox->getItem()->isActive())
 			{
-				if (luckyBox->getType() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+				if (luckyBox->getTypeItem() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
 				{
 					if (mario->isBig() || mario->canShoot())
 						luckyBox->changeItemsType(LuckyBoxsType::IT_GUN);
 				}
-				else if (luckyBox->getType() == LuckyBoxsType::IT_GUN)
+				else if (luckyBox->getTypeItem() == LuckyBoxsType::IT_GUN)
 				{
 					if (!mario->isBig() && !mario->canShoot())
 						luckyBox->changeItemsType(LuckyBoxsType::IT_MUSHROOM_BIGGER);
@@ -299,7 +330,72 @@ void MapObject::update(Mario* mario)
 			}
 		}
 	}
+	// </>
+
+
+	// <cập nhật vận tốc>
+	mario->updateVelocity();
+	for each (GameObject* item in listObjectOnCamera)
+	{
+		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
+			item->updateVelocity();
+	}
+	// </>
+
+	// <xét va chạm>
+	for each (GameObject* item in listObjectOnCamera)
+	{
+		// xét va chạm cho item, enemy với stand position
+		int type = item->getTypeObject();
+		if (type == TypeObject::Moving_Enemy || type == TypeObject::Dynamic_Item)
+		{
+			for each (GameObject* temp in listObjectOnCamera)
+				item->isCollision(temp);
+		}
+
+		// xét va chạm mario với object trong game
+		mario->isCollision(item);
+
+		// xét va chạm cho đạn
+		mario->getGun()->isCollision(item);
+	}
+	//</>
+
+
+	// <cập nhật tọa độ>
+	for each (GameObject* item in listObjectOnCamera)
+	{
+		if (item->getTypeObject() == TypeObject::Dynamic_Item 
+			|| item->getTypeObject() == TypeObject::Moving_Enemy)
+			item->update();
+	}
+
+	mario->update();
+	setWorldPosition(mario->getWorldPosition());
+	// </>
+
 
 	// cập nhật quadtree
-	m_quadTree->update(list, mario->getCamera());
+	m_quadTree->update(listObjectOnCamera, mario->getCamera());
+}
+
+void MapObject::updateVelocity(Mario* mario)
+{
+	
+}
+
+void MapObject::release()
+{
+	if (m_quadTree != nullptr)
+	{
+		for (int i = 0; i < m_gameObjects.size(); i++)
+		{
+			m_quadTree->remove(m_gameObjects[i]);
+			delete m_gameObjects[i];
+			m_gameObjects.erase(m_gameObjects.begin() + i);
+			i--;
+		}
+
+		delete m_quadTree;
+	}	
 }

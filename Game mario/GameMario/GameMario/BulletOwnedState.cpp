@@ -1,5 +1,5 @@
 ﻿#include "BulletOwnedState.h"
-
+#include "SoundClass.h"
 
 BulletIdle* BulletIdle::m_instance = 0;
 
@@ -49,7 +49,11 @@ void BulletMoving::enter(Bullet* bullet)
 	bullet->setCurrentFrame(0);
 	bullet->time = 0;
 	bullet->alpha = -3.14 / 4;
-	bullet->setTimeToLive(60);
+	bullet->setTimeToLive(50);
+	bullet->setTimeAnimation(2);
+
+	// play sound
+	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_FireBall);
 }
 
 void BulletMoving::execute(Bullet* bullet)
@@ -61,8 +65,8 @@ void BulletMoving::execute(Bullet* bullet)
 	else
 	{
 		// update velocity
-		Vector2 velocity = vanTocNemXien(bullet->time, 8, bullet->alpha);
-		bullet->time++;
+		Vector2 velocity = vanTocNemXien(bullet->time, 9, bullet->alpha);
+		bullet->time += 1.5;
 		if (bullet->getFliping() == SpriteEffect::Flip)
 			velocity.x *= -1;
 		bullet->setVelocity(velocity);
@@ -76,6 +80,8 @@ void BulletMoving::execute(Bullet* bullet)
 				currentFrame = 0;
 
 			bullet->setCurrentFrame(currentFrame);
+
+			timeAnimation = 2;
 		}
 		bullet->setTimeAnimation(timeAnimation);
 		
@@ -116,6 +122,7 @@ void BulletExplode::enter(Bullet* bullet)
 {
 	bullet->setCurrentFrame(4);
 	bullet->setVelocity(Vector2());
+	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_FireWorks);
 }
 
 void BulletExplode::execute(Bullet* bullet)

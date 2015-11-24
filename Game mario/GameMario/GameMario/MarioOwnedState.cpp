@@ -78,7 +78,6 @@ void Running::execute(Mario* mario)
 	velocity.y = GRAVITATION; // gravity
 
 	keyboard->getState();
-	keyboard->clearKeyCode();
 	// update velocity
 	if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
 	{
@@ -464,7 +463,7 @@ void Big::enter(Mario* mario)
 	mario->setCanShoot(false);
 
 	mario->m_effectBig = true;
-	m_timeChangeSprite = 2;
+	m_timeChangeSprite = 1;
 
 	//Tài: 9/11 play sound
 	SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp);
@@ -483,16 +482,20 @@ void Big::execute(Mario* mario)
 	}
 	else
 	{
-		// update animation of mario
+		// update animation of mario theo vận tốc
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
 			int index = mario->getCurrentFrame();
-			if (--m_timeChangeSprite == 0)
+			if (abs(mario->getVelocity().x) < 2.5f)
 			{
-				index++;
-				m_timeChangeSprite = 2; // set time change
+				if (m_timeChangeSprite-- == 0)
+				{
+					index++;
+					m_timeChangeSprite = 1; // set time change
+				}
 			}
-				
+			else index++;
+			
 
 			// cap nhật lại index big mario
 			if (index >= MarioSheet::BIG_MARIO_CHANGE_DIR || index < MarioSheet::BIG_MARIO_RUN)
@@ -649,7 +652,17 @@ void Fire::execute(Mario* mario)
 	{
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
-			int index = mario->getCurrentFrame() + 1;
+			// cập nhật animation theo vận tốc
+			int index = mario->getCurrentFrame();
+			if (abs(mario->getVelocity().x) < 2.5f)
+			{
+				if (m_timeChangeSprite-- == 0)
+				{
+					index++;
+					m_timeChangeSprite = 1; // set time change
+				}
+			}
+			else index++;
 			// cap nhật lại index fire mario
 			if (index >= MarioSheet::BIG_SUPER_CHANGE_DIR || index < MarioSheet::BIG_SUPER_RUN)
 				index = MarioSheet::BIG_SUPER_RUN;
@@ -684,13 +697,14 @@ void Fire::execute(Mario* mario)
 
 		if (mario->isDead())
 			mario->getStatusStateMachine()->changeState(Small::getInstance());
+		else if (mario->isStar())
+			mario->getStatusStateMachine()->changeState(Star::getInstance());
 	}
 }
 
 void Fire::exit(Mario* mario)
 {
 	mario->setDead(false);
-	mario->setCanShoot(false);
 	m_frameAnimation.clear();
 }
 
@@ -716,6 +730,15 @@ Star::Star()
 	m_frameAnimationSmall->push_back(SMALL_INVINCIBILITY_COLOR_1_STAND - MARIO_STAND); // invinbility color 1
 	m_frameAnimationSmall->push_back(SMALL_SUPER_FIRE_STAND - MARIO_STAND); // fire mario
 	m_frameAnimationSmall->push_back(BIG_MARIO_STAND); // mario
+
+	m_frameAnimationFire = new vector<int>();
+	m_frameAnimationFire->push_back(MarioSheet::BIG_MARIO_STAND - MarioSheet::BIG_SUPER_STAND); // big mario
+	m_frameAnimationFire->push_back(MarioSheet::BIG_SUPER_STAND - MarioSheet::BIG_SUPER_STAND); // fire mario
+	m_frameAnimationFire->push_back(MarioSheet::BIG_INVINCIBILITY_COLOR_1_STAND - MarioSheet::BIG_SUPER_STAND); // invinbility color 1
+	m_frameAnimationFire->push_back(MarioSheet::BIG_INVINCIBILITY_COLOR_2_STAND - MarioSheet::BIG_SUPER_STAND); // fire mario
+	m_frameAnimationFire->push_back(MarioSheet::BIG_INVINCIBILITY_COLOR_1_STAND - MarioSheet::BIG_SUPER_STAND); // invinbility color 1
+	m_frameAnimationFire->push_back(MarioSheet::BIG_SUPER_STAND - MarioSheet::BIG_SUPER_STAND); // fire mario
+	m_frameAnimationFire->push_back(MarioSheet::BIG_MARIO_STAND - MarioSheet::BIG_SUPER_STAND); // big mario
 }
 
 Star* Star::getInstance()
@@ -729,7 +752,7 @@ Star* Star::getInstance()
 void Star::enter(Mario* mario)
 {
 	m_currentIndex = 0;
-	m_timeCount = 150;
+	m_timeCount = 200;
 	m_timeChangeSprite = 2;
 }
 
@@ -738,8 +761,10 @@ void Star::execute(Mario* mario)
 	// update status of mario
 	mario->setIsBig(mario->isBig());
 	mario->setCanShoot(mario->canShoot());
-	if (mario->isBig() || mario->canShoot())
+	if (mario->isBig())
 		m_frameAnimation = m_frameAnimationBig;
+	else if (mario->canShoot())
+		m_frameAnimation = m_frameAnimationFire;
 	else // for small
 		m_frameAnimation = m_frameAnimationSmall;
 
@@ -812,12 +837,7 @@ void Star::execute(Mario* mario)
 
 	if (m_timeCount == 0)
 	{
-		if (mario->isBig())
-			mario->getStatusStateMachine()->changeState(Big::getInstance());
-		else if (mario->canShoot())
-			mario->getStatusStateMachine()->changeState(Fire::getInstance());
-		else
-			mario->getStatusStateMachine()->changeState(mario->getStatusStateMachine()->GetPreviousState());
+		mario->getStatusStateMachine()->changeState(mario->getStatusStateMachine()->GetPreviousState());
 
 		// make not effect
 		mario->m_effectBig = false;
@@ -842,8 +862,10 @@ Star::~Star()
 {
 	m_frameAnimationBig->clear();
 	m_frameAnimationSmall->clear();
+	m_frameAnimationFire->clear();
 
 	delete m_frameAnimationBig;
 	delete m_frameAnimationSmall;
+	delete m_frameAnimationFire;
 }
 #pragma endregion

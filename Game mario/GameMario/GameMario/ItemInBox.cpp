@@ -65,8 +65,6 @@ vector<Frame> getFrameAnimationBy(LuckyBoxsType type)
 			frameItem.push_back(Frame(0, rect));
 		}
 		break;
-	case IT_BRICK:
-		break;
 	}
 
 	return frameItem;
@@ -142,10 +140,12 @@ void ItemInBox::update()
 
 Box ItemInBox::getBouding()
 {
-	GameObject::getBouding();
+	m_box = GameObject::getBouding();
+	m_box.width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left);
+	m_box.height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top);
 
-	m_box.x += 4;
-	m_box.width = 8;
+	m_box.x += 2;
+	m_box.width -= 4;
 
 	return m_box;
 }

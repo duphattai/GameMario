@@ -1,15 +1,14 @@
 ﻿#include "Game.h"
-
+#include "MapObject.h"
 #include "KeyBoard.h"
 #include "ReSource.h"
-#include "Map1.h"
 #include "Mario.h"
 #include "SoundClass.h"
+#include "ScoreGame.h"
 
 CKeyBoard *keyboard = NULL;
-Map1 *m_state;
+MapObject *m_state;
 Mario *m_mario = NULL;
-
 LPD3DXFONT m_font;
 
 Game::Game(HINSTANCE hInstance)
@@ -108,7 +107,7 @@ void Game::initDirec3D()//initialize Dir3D
 	D3DXCreateSprite(d3ddv, &m_SpriteHandler);
 
 	// create font
-	D3DXCreateFont(d3ddv, 12, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times New Roman"), &m_font);
+	D3DXCreateFont(d3ddv, 12, 0, FW_NORMAL, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times New Roman"), &m_font);
 }
 
 void Game::initGame()//khởi tạo 
@@ -117,7 +116,8 @@ void Game::initGame()//khởi tạo
 	ReSource::getInstance()->init(d3ddv);
 	// khởi tạo âm thanh
 	SoundClass::getInstance()->initialize(hWnd);
-
+	//
+	ScoreGame::getInstance()->init(d3ddv);
 	// <key board>
 	keyboard = new CKeyBoard();//process event of keyboard
 	keyboard->initialize(hWnd);
@@ -127,73 +127,30 @@ void Game::initGame()//khởi tạo
 	m_mario = new Mario();
 	m_mario->setPosition(50, 50);
 
-	m_state = new Map1();
-	m_state->init();
+	m_state = new MapObject();
 }
 
 void Game::update()
 {
-	// <cập nhật vận tốc>
-	m_mario->updateVelocity();
-	vector<GameObject*> listObject = m_state->getListObjectOnCamera();
-	for each (GameObject* item in listObject)
-	{
-		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
-			item->updateVelocity();
-	}
-	// </>
-
-	// <xét va chạm>
-	for each (GameObject* item in listObject)
-	{
-		// xét va chạm cho item, enemy với stand position
-		int type = item->getTypeObject();
-		if (type == TypeObject::Moving_Enemy || type == TypeObject::Dynamic_Item)
-		{
-			for each (GameObject* temp in listObject)
-			{
-				item->isCollision(temp);	
-			}
-		}
-
-		// xét va chạm mario với object trong game
-		if (m_mario->isCollision(item))
-		{
-		}
-
-		// xét va chạm cho đạn
-		m_mario->getGun()->isCollision(item);
-	}
-	//</>
-
-
-	// cập nhật tọa độ
-	for each (GameObject* item in listObject)
-	{
-		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
-			item->update();
-	}
-
-	m_mario->update();
-	m_state->setWorldPosition(m_mario->getWorldPosition());
-	m_state->update();
-	m_state->getTree()->update(listObject, m_mario->getCamera());
+	m_state->update(m_mario);
 }
 
 void Game::render()
 {
 	d3ddv->Clear(0, NULL, D3DCLEAR_TARGET, m_state->getColorBackGround(), 1.0f, NULL);
-
 	d3ddv->BeginScene();
 	m_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);//begin of the draw sprite
-
+	
 	// map 1.1
 	m_state->draw(m_SpriteHandler);
 	m_mario->draw(m_SpriteHandler);
 
+	// draw score
+	ScoreGame::getInstance()->draw(m_SpriteHandler);
+
+
 	m_SpriteHandler->End();//end action draw sprite
 	d3ddv->EndScene();
-
 	d3ddv->Present(NULL, NULL, NULL, NULL);//draw from buffer to screen
 }
 
@@ -220,12 +177,15 @@ Game::~Game()
 	if (m_mario)
 		delete m_mario;
 
-	if (ReSource::getInstance())
-		ReSource::getInstance()->clear();
-
 	if (SoundClass::getInstance())
 		SoundClass::getInstance()->shutdown();
 
 	delete keyboard;
 	delete m_state;
+
+	if (ReSource::getInstance())
+		ReSource::getInstance()->clear();
+
+	if (ScoreGame::getInstance())
+		ScoreGame::getInstance()->release();
 }
