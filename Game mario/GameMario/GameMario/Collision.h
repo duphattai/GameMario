@@ -8,8 +8,11 @@ class Collision
 {
 	float veclocity_vx;
 	float veclocity_vy;
-public:
+
+	static Collision* m_instance;
 	Collision();
+public:
+	static Collision* getInstance();
 	DIR isCollision(GameObject*, GameObject*);
 	Vector2	getVelocity();
 };

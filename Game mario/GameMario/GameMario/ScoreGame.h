@@ -3,6 +3,9 @@
 #include <vector>
 class ScoreGame
 {
+	int			m_width;
+	int			m_height;
+
 	Sprite*		m_sprite;
 	LPD3DXFONT	m_font;
 	int			m_currentFrame;

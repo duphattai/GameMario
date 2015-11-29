@@ -18,6 +18,7 @@ void BulletIdle::enter(Bullet* bullet)
 	bullet->setActive(false);
 	bullet->setExplode(false);
 	bullet->setCurrentFrame(0);
+	bullet->setVelocity(Vector2(0, 0));
 }
 
 void BulletIdle::execute(Bullet* bullet)

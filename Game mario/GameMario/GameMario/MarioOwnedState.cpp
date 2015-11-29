@@ -486,7 +486,7 @@ void Big::execute(Mario* mario)
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
 			int index = mario->getCurrentFrame();
-			if (abs(mario->getVelocity().x) < 2.5f)
+			if (abs(mario->getVelocity().x) <= 3.0f)
 			{
 				if (m_timeChangeSprite-- == 0)
 				{
@@ -654,7 +654,7 @@ void Fire::execute(Mario* mario)
 		{
 			// cập nhật animation theo vận tốc
 			int index = mario->getCurrentFrame();
-			if (abs(mario->getVelocity().x) < 2.5f)
+			if (abs(mario->getVelocity().x) <= 3.0f)
 			{
 				if (m_timeChangeSprite-- == 0)
 				{
@@ -680,6 +680,7 @@ void Fire::execute(Mario* mario)
 				mario->setCurrentFrame(MarioSheet::BIG_SUPER_JUMP);
 		}
 
+		keyboard->getState();
 		if (keyboard->isPressed(DIK_SPACE) && mario->getFSM() != FSM_Mario::SIT)
 		{
 			if (mario->getCurrentFrame() == MarioSheet::BIG_SUPER_STAND)

@@ -21,6 +21,8 @@ public:
 	Bullet();
 	~Bullet();
 
+	void						shoot(SpriteEffect flip, Vector2 position, Vector2 worldPosition);
+
 	void						setExplode(bool x){ m_isExplode = x; }
 	bool						isExplode(){ return m_isExplode; }
 
@@ -29,7 +31,7 @@ public:
 	StateMachine<Bullet>*		getStateMachine(){ return m_stateMachine; }
 
 	int							getCurrentFrame(){ return m_currentFrame; }
-	void						setCurrentFrame(int frame){ m_currentFrame = frame; }
+	void						setCurrentFrame(int frame);
 
 	int							getSizeOfFrameList(){ return m_frameList.size(); }
 

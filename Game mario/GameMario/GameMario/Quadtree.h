@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameObject.h"
 #include <map>
 #include <vector>
@@ -14,13 +14,21 @@ private:
 	Quadtree* m_AreaThree; // x < 0, y < 0
 	Quadtree* m_AreaFour;  // x > 0, y < 0
 
-	bool	IsContain(Box);
+	bool					IsContain(Box);
 	void					insert(GameObject*);
-public:
+
+	// lấy tất cả object hiện có trong quadtree
+	void					getAllObjects(vector<GameObject*> &list);
+
+	static Quadtree*		m_instance;
 	Quadtree();
+public:
 	~Quadtree();
+
+	static Quadtree*		getInstance();
+
 	void					insert(vector<GameObject*>, int, Box);
-	
+	void					release();
 	void					buildTree(map<int, vector<GameObject*>>, Box);
 	void					update(vector<GameObject*>, Box);
 	void					remove(GameObject*);

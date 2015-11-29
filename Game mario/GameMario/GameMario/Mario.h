@@ -29,9 +29,14 @@ private:
 
 	FSM_Mario	m_FSM_Mario;
 	Gun*		m_gun;
-public:
+
+	static Mario* m_instance;
 	Mario();
+public:
 	~Mario();
+	static Mario* getInstance();
+
+	void		initialize();
 
 	void		update();
 	void		updateVelocity();
@@ -72,7 +77,7 @@ public:
 	void		setFSM(FSM_Mario state){ m_FSM_Mario = state; }
 	FSM_Mario	getFSM(){ return m_FSM_Mario; }
 
-	void		setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(frameList[m_currentFrame].rect); }
+	void		setCurrentFrame(int frame);
 	int			getCurrentFrame(){ return m_currentFrame; }
 
 	Gun*		getGun(){ return m_gun; }

@@ -9,8 +9,11 @@ class Collision;
 class GameObject
 {
 protected:
-	Sprite*		m_sprite; // con tro luu anh
-	int			m_index; // rất cần thiết
+	Sprite*			m_sprite; // con tro luu anh
+	int				m_index; // rất cần thiết
+
+	int				m_width;
+	int				m_height;
 
 	wstring			m_text; // draw text
 
@@ -38,8 +41,6 @@ protected:
 	TypeObject		m_typeObject;
 
 	DIR				m_dirCollision;
-
-	Collision*		m_checkCollision;
 public:
 	GameObject();
 	virtual ~GameObject();
@@ -67,6 +68,8 @@ public:
 
 	virtual void	update(){};
 	virtual void	draw(LPD3DXSPRITE);
+
+	// tọa độ theo truc y hướng xuống, x sang ngang
 	virtual void	drawText(wstring text, Vector2 position);
 
 

@@ -12,6 +12,8 @@ ScoreGame::ScoreGame()
 	m_frameList.push_back(Frame(1, 160, 5, 8));
 	//m_frameList.push_back(Frame(9, 160, 5, 8));
 	//m_frameList.push_back(Frame(17, 160, 5, 8));
+	m_width = 5;
+	m_height = 8;
 
 	m_currentFrame = 0;
 	m_countCoin = 0;
@@ -64,7 +66,7 @@ void ScoreGame::draw(LPD3DXSPRITE spriteHandler)
 	}
 	
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
-	m_sprite->draw(spriteHandler, D3DXVECTOR2(89 + m_sprite->getWidth() / 2, 210 + m_sprite->getHeight() / 2), D3DXVECTOR2(1.0f, 1.0f), 0, VIEW_PORT_Y, D3DCOLOR_XRGB(255, 255, 255));
+	m_sprite->draw(spriteHandler, D3DXVECTOR2(89 + m_width / 2, 210 + m_height / 2), D3DXVECTOR2(1.0f, 1.0f), 0, VIEW_PORT_Y, D3DCOLOR_XRGB(255, 255, 255));
 
 	text = to_string(m_countCoin);
 	while (text.length() < 2)

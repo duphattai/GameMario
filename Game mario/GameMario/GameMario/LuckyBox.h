@@ -21,7 +21,7 @@ public:
 	LuckyBox(LuckyBoxsType, ItemTypes, int countCoin = 1);
 	~LuckyBox();
 
-	void					setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(m_frameList[m_currentFrame].rect); }
+	void					setCurrentFrame(int frame);
 	int						getCurrentFrame(){ return m_currentFrame; }
 
 	bool					isCollision(GameObject*);

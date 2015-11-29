@@ -25,16 +25,11 @@ Bullet::Bullet()
 	time = 0;
 	m_isExplode = false;
 	m_currentFrame = 0;
-
-	m_checkCollision = new Collision();
 }
-
 
 Bullet::~Bullet()
 {
-	delete m_checkCollision;
 }
-
 
 void Bullet::updateVelocity()
 {
@@ -61,10 +56,10 @@ bool Bullet::isCollision(GameObject* gameObject)
 	if (m_stateMachine->isInState(*BulletExplode::getInstance()))
 		return false;
 
-	DIR dir = m_checkCollision->isCollision(this, gameObject);
+	DIR dir = Collision::getInstance()->isCollision(this, gameObject);
 	if (dir != DIR::NONE) // xảy ra va chạm
 	{
-		m_velocity = m_checkCollision->getVelocity();
+		m_velocity = Collision::getInstance()->getVelocity();
 		if (gameObject->getTypeObject() == TypeObject::Moving_Enemy)
 		{
 			m_isExplode = true;
@@ -84,4 +79,21 @@ bool Bullet::isCollision(GameObject* gameObject)
 	}
 
 	return false;
+}
+
+void Bullet::shoot(SpriteEffect flip, Vector2 position, Vector2 worldPosition)
+{
+	m_flip = flip;
+	m_position.x = position.x;
+	m_position.y = position.y;
+	m_worldPosition = worldPosition;
+	m_stateMachine->changeState(BulletIdle::getInstance());
+	m_isActive = true;
+}
+
+void Bullet::setCurrentFrame(int frame)
+{
+	m_currentFrame = frame;
+	m_width = abs(m_frameList[m_currentFrame].rect.left - m_frameList[m_currentFrame].rect.right);
+	m_height = abs(m_frameList[m_currentFrame].rect.top - m_frameList[m_currentFrame].rect.bottom);
 }

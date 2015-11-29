@@ -17,9 +17,6 @@ class MapObject : public GameObject
 protected:
 	StateMachine<MapObject>*			m_stateMachine;
 
-	vector<GameObject*>					m_gameObjects; // quản lý các object trong game
-
-	Quadtree*							m_quadTree;
 	D3DXCOLOR							m_colorBackGround;
 
 	GameObject*							createGameObject(ObjectTittle object);
@@ -34,9 +31,6 @@ public:
 	// xây dựng quadtree
 	virtual void						init(IDMap);
 
-	// xóa quadtree
-	virtual void						release();
-
 
 	virtual	vector<GameObject*>			getListObjectOnCamera();
 	D3DXCOLOR							getColorBackGround(){ return m_colorBackGround; }
@@ -45,6 +39,6 @@ public:
 
 	void								draw(LPD3DXSPRITE SpriteHandler);
 	
-	void								update(Mario*);
+	void								update();
 };
 

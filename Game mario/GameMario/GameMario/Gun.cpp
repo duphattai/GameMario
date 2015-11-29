@@ -15,10 +15,7 @@ void Gun::shoot(int x, int y, float vpx, float vpy, SpriteEffect flip)
 {
 	for (std::vector<Bullet*>::iterator temp = m_gun.begin(); temp != m_gun.end(); temp++)
 	{
-		(*temp)->setFliping(flip);
-		(*temp)->setActive(true);
-		(*temp)->setPosition(x, y + 22);
-		(*temp)->setWorldPosition(Vector2(vpx, vpy));
+		(*temp)->shoot(flip, Vector2(x, y + 22), Vector2(vpx, vpy));
 		m_giveBullet.push_back(*temp);
 
 		m_gun.erase(temp);
@@ -68,6 +65,7 @@ void Gun::updateVelocity()
 			i--;
 		}
 	}
+
 }
 
 void Gun::update()

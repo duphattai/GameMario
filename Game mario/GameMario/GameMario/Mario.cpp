@@ -10,6 +10,8 @@
 
 using namespace std;
 
+Mario* Mario::m_instance = 0;
+
 Mario::Mario()
 {
 	ifstream file;
@@ -58,16 +60,58 @@ Mario::Mario()
 	m_effectBig = false;
 	m_effectFire = false;
 
-	m_stateMachine = new StateMachine<Mario>(this);
-	m_stateMachine->changeState(Falling::getInstance());
-
-	m_statusStateMachine = new StateMachine<Mario>(this);
-	m_statusStateMachine->changeState(Small::getInstance());
+	m_stateMachine = NULL;
+	m_statusStateMachine = NULL;
+	
 	m_effectSmall = false;
 
-	m_checkCollision = new Collision();
-
 	m_gun = new Gun(2);
+}
+
+Mario::~Mario()
+{
+	delete Falling::getInstance();
+	delete Running::getInstance();
+	delete Standing::getInstance();
+	delete Jumping::getInstance();
+	delete Sitting::getInstance();
+
+	delete Star::getInstance();
+	delete Small::getInstance();
+	delete Dead::getInstance();
+	delete Big::getInstance();
+	delete Fire::getInstance();
+
+	delete m_stateMachine;
+	delete m_statusStateMachine;
+}
+
+void Mario::initialize()
+{
+	m_lives = 3;
+	m_isBig = false;
+	m_canShoot = false;
+	m_isStar = false;
+
+	m_effectBig = false;
+	m_effectFire = false;
+
+	if (m_stateMachine == NULL)
+		m_stateMachine = new StateMachine<Mario>(this);
+	m_stateMachine->changeState(Falling::getInstance());
+
+	if (m_statusStateMachine == NULL)
+		m_statusStateMachine = new StateMachine<Mario>(this);
+	m_statusStateMachine->changeState(Small::getInstance());
+	m_effectSmall = false;
+}
+
+Mario* Mario::getInstance()
+{
+	if (m_instance == NULL)
+		m_instance = new Mario();
+
+	return m_instance;
 }
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
@@ -95,8 +139,6 @@ void Mario::update()
 	// update camera just move right
 	if (m_worldPosition.x < m_position.x - SCREEN_WIDTH / 2)
 		m_worldPosition.x = m_position.x - SCREEN_WIDTH / 2;
-
-	m_gun->update();
 }
 
 void Mario::updateVelocity()
@@ -106,7 +148,7 @@ void Mario::updateVelocity()
 	
 	m_statusStateMachine->update();
 	
-	m_gun->updateVelocity();
+	//m_gun->updateVelocity();
 	// 24/10 
 	// set default, dùng để xét va chạm di chuyển trên map
 	setDirCollision(DIR::NONE);
@@ -142,9 +184,9 @@ bool Mario::isCollision(GameObject* gameObject)
 			luckyBox->getItem()->getStatusOBject() == StatusObject::ALIVE && 
 			luckyBox->getTypeItem() != LuckyBoxsType::IT_COIN)
 		{
-			if (m_checkCollision->isCollision(this, luckyBox->getItem()) != DIR::NONE)
+			if (Collision::getInstance()->isCollision(this, luckyBox->getItem()) != DIR::NONE)
 			{
-				m_velocity = m_checkCollision->getVelocity();
+				m_velocity = Collision::getInstance()->getVelocity();
 				luckyBox->getItem()->setStatusObject(StatusObject::DEAD);
 
 				// update state for mario
@@ -162,13 +204,13 @@ bool Mario::isCollision(GameObject* gameObject)
 	}
 
 	// xét va chạm với enemy, standposition, item
-	DIR dir = m_checkCollision->isCollision(this, gameObject);
+	DIR dir = Collision::getInstance()->isCollision(this, gameObject);
 	if (dir != DIR::NONE)
 	{
 		//m_velocity = m_checkCollision->getVelocity();
 		if (type == TypeObject::Dynamic_StandPosition) // trường hợp với stand position
 		{
-			m_velocity = m_checkCollision->getVelocity();
+			m_velocity = Collision::getInstance()->getVelocity();
 			if ((getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) && dir == DIR::TOP) // fall gặp vật cản
 					setLocation(Location::LOC_ON_GROUND);
 
@@ -195,7 +237,7 @@ bool Mario::isCollision(GameObject* gameObject)
 			}
 			else if (luckyBox != nullptr)
 			{
-				m_velocity = m_checkCollision->getVelocity();
+				m_velocity = Collision::getInstance()->getVelocity();
 				if (dir == DIR::BOTTOM)
 				{
 					luckyBox->setMakeEffect(true);
@@ -208,7 +250,7 @@ bool Mario::isCollision(GameObject* gameObject)
 			}
 			else if (brick != nullptr)
 			{
-				m_velocity = m_checkCollision->getVelocity();
+				m_velocity = Collision::getInstance()->getVelocity();
 				if (dir == DIR::BOTTOM)
 				{
 					if (!m_isBig && !m_canShoot)
@@ -258,26 +300,15 @@ void Mario::setVelocity(Vector2 velocity)
 	
 }
 
-Mario::~Mario()
-{
-	delete Falling::getInstance();
-	delete Running::getInstance();
-	delete Standing::getInstance();
-	delete Jumping::getInstance();
-	delete Sitting::getInstance();
-
-	delete Star::getInstance();
-	delete Small::getInstance();
-	delete Dead::getInstance();
-	delete Big::getInstance();
-	delete Fire::getInstance();
-
-	delete m_stateMachine;
-	delete m_statusStateMachine;
-}
-
 Box Mario::getCamera()
 {
 	Box camera(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT);
 	return camera;
+}
+
+void Mario::setCurrentFrame(int frame)
+{
+	m_currentFrame = frame; 
+	m_width = abs(frameList[m_currentFrame].rect.left - frameList[m_currentFrame].rect.right);
+	m_height = abs(frameList[m_currentFrame].rect.top - frameList[m_currentFrame].rect.bottom);
 }

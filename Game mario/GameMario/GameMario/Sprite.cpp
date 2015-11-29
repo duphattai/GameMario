@@ -17,15 +17,6 @@ Sprite::Sprite(const Sprite &copy)
 	m_Width = copy.m_Width;
 }
 
-int Sprite::getHeight()
-{
-	return m_Height;
-}
-
-int Sprite::getWidth()
-{
-	return m_Width;
-}
 
 void Sprite::loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, LPCWSTR Path, int spriteperrow, int count, D3DXCOLOR color)
 {
@@ -101,12 +92,6 @@ void Sprite::loadImageFromPath(LPDIRECT3DDEVICE9 d3ddv, LPCWSTR Path, D3DXCOLOR 
 	}
 }
 
-void Sprite::next()
-{
-	m_Index++;
-	if (m_Index > m_Count - 1) m_Index = 0;
-}
-
 // dùng để xét kích thước sprite cụ thể
 void Sprite::setIndex(int value)
 {
@@ -180,4 +165,13 @@ int Sprite::getCurrentIndex()
 Sprite::~Sprite()
 {
 	m_Image->Release();
+}
+
+int Sprite::getWidth()
+{
+	return m_Width;
+}
+int Sprite::getHeight()
+{
+	return m_Height;
 }

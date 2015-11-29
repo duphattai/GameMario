@@ -59,11 +59,11 @@ Vector2 GameObject::getVelocity()
 
 int GameObject::getHeight()
 {
-	return m_sprite->getHeight();
+	return m_height;
 }
 int GameObject::getWidth()
 {
-	return m_sprite->getWidth();
+	return m_width;
 }
 
 
@@ -104,6 +104,8 @@ void GameObject::setIndexSprite(int index)
 {
 	m_index = index;
 	m_sprite->setIndex(index);
+	m_width = m_sprite->getWidth();
+	m_height = m_sprite->getHeight();
 }
 int GameObject::getIndexSprite()
 {
@@ -113,7 +115,7 @@ int GameObject::getIndexSprite()
 Box GameObject::getBouding()
 {
 	if (m_sprite != nullptr)
-		m_box = Box(m_position.x, m_position.y, m_sprite->getWidth(), m_sprite->getHeight(), m_velocity.x, m_velocity.y);
+		m_box = Box(m_position.x, m_position.y, m_width, m_height, m_velocity.x, m_velocity.y);
 	
 	return m_box;
 }
@@ -173,11 +175,11 @@ void GameObject::draw(LPD3DXSPRITE SpriteHandler)
 			else
 				m_scale = D3DXVECTOR2(1.0f, 1.0f);
 
-			m_sprite->draw(SpriteHandler, D3DXVECTOR2(m_position.x + m_sprite->getWidth() / 2, m_position.y + m_sprite->getHeight() / 2), m_scale, m_worldPosition.x, m_worldPosition.y, m_alpha);
+			m_sprite->draw(SpriteHandler, D3DXVECTOR2(m_position.x + m_width / 2, m_position.y + m_height / 2), m_scale, m_worldPosition.x, m_worldPosition.y, m_alpha);
 		}
 		else
 		{
-			drawText(m_text, Vector2(m_position.x - m_worldPosition.x, VIEW_PORT_Y - (m_position.y + m_sprite->getHeight())));
+			drawText(m_text, Vector2(m_position.x - m_worldPosition.x, VIEW_PORT_Y - (m_position.y + m_height)));
 		}
 	}
 }

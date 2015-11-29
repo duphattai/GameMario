@@ -6,7 +6,10 @@ Brick::Brick(Vector2 position)
 {
 	m_position.x = position.x;
 	m_position.y = position.y;
-	
+	m_width = 16;
+	m_height = 16;
+
+
 	//hard code
 	// tọa độ mini brick trong item sheet
 	for (int i = 0; i < 2; i++)
@@ -34,8 +37,6 @@ Brick::Brick(Vector2 position)
 	m_stateMachine = new StateMachine<Brick>(this);
 	m_stateMachine->changeState(BrickIdle::getInstance());
 }
-
-
 Brick::~Brick()
 {
 	delete m_stateMachine;

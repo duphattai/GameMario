@@ -22,7 +22,6 @@ MapObject::MapObject()
 
 MapObject::~MapObject()
 {
-	release();
 	delete m_stateMachine;
 }
 
@@ -149,16 +148,16 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 			if (temp != nullptr)
 			{
 				list.push_back(temp);
-				m_gameObjects.push_back(temp);
 			}
 		}
 		if (list.size() != 0) listGameObject.insert(pair<int, vector<GameObject*>>(it->first, list));
 	}
 
-	//build tree
-	m_quadTree = new Quadtree();
+	// build tree
 	// build từ những object không nằm trên biên
-	m_quadTree->buildTree(listGameObject, Box(0, 0, 3584, 3584));
+	Quadtree::getInstance()->release(); // xóa các node nếu có
+	Quadtree::getInstance()->buildTree(listGameObject, Box(0, 0, 3584, 3584));
+
 
 	// build object nằm trên biên
 	for each (ObjectTittle var in listObjectExist)
@@ -168,7 +167,6 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 		if (temp == nullptr)
 			continue;
 
-		m_gameObjects.push_back(temp);
 		list.push_back(createGameObject(var));
 		for (map<int, vector<ObjectTittle>>::iterator it = quadtreeNode.begin(); it != quadtreeNode.end(); it++)
 		{
@@ -176,7 +174,7 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 			{
 				if (var == it->second[i]) // nằm trên biên
 				{
-					m_quadTree->insert(list, it->first, Box(0, 0, 3584, 3584));
+					Quadtree::getInstance()->insert(list, it->first, Box(0, 0, 3584, 3584));
 					break;
 				}
 			}
@@ -187,26 +185,21 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 
 vector<GameObject*> MapObject::getListObjectOnCamera()
 {
-	vector<GameObject*> list;
-	if (m_quadTree != nullptr)
+	vector<GameObject*> list = Quadtree::getInstance()->getListObjects(Box(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT), list);
+	// các object nằm trên biên chỉ lấy 1 lần trong danh sách
+	for (int i = 0; i < list.size() - 1; i++)
 	{
-		list = m_quadTree->getListObjects(Box(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT), list);
-
-		// các object nằm trên biên chỉ lấy 1 lần trong danh sách
-		for (int i = 0; i < list.size() - 1; i++)
+		for (int j = i + 1; j < list.size(); j++)
 		{
-			for (int j = i + 1; j < list.size(); j++)
+			if (list[i] == list[j])
 			{
-				if (list[i] == list[j])
-				{
-					list.erase(list.begin() + j);
-					j--;
-				}
+				list.erase(list.begin() + j);
+				j--;
 			}
 		}
 	}
+	
 		
-
 	return list;
 }
 
@@ -301,7 +294,7 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	return temp;
 }
 
-void MapObject::update(Mario* mario)
+void MapObject::update()
 {
 	m_stateMachine->update();
 	// nếu đang ở state bros title thì không làm gì thêm
@@ -319,12 +312,12 @@ void MapObject::update(Mario* mario)
 			{
 				if (luckyBox->getTypeItem() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
 				{
-					if (mario->isBig() || mario->canShoot())
+					if (Mario::getInstance()->isBig() || Mario::getInstance()->canShoot())
 						luckyBox->changeItemsType(LuckyBoxsType::IT_GUN);
 				}
 				else if (luckyBox->getTypeItem() == LuckyBoxsType::IT_GUN)
 				{
-					if (!mario->isBig() && !mario->canShoot())
+					if (!Mario::getInstance()->isBig() && !Mario::getInstance()->canShoot())
 						luckyBox->changeItemsType(LuckyBoxsType::IT_MUSHROOM_BIGGER);
 				}
 			}
@@ -334,7 +327,9 @@ void MapObject::update(Mario* mario)
 
 
 	// <cập nhật vận tốc>
-	mario->updateVelocity();
+	Mario::getInstance()->getGun()->updateVelocity(); // đạn
+	Mario::getInstance()->updateVelocity(); // mario
+	// cập nhật cho object game
 	for each (GameObject* item in listObjectOnCamera)
 	{
 		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
@@ -354,10 +349,10 @@ void MapObject::update(Mario* mario)
 		}
 
 		// xét va chạm mario với object trong game
-		mario->isCollision(item);
+		Mario::getInstance()->isCollision(item);
 
 		// xét va chạm cho đạn
-		mario->getGun()->isCollision(item);
+		Mario::getInstance()->getGun()->isCollision(item);
 	}
 	//</>
 
@@ -369,33 +364,28 @@ void MapObject::update(Mario* mario)
 			|| item->getTypeObject() == TypeObject::Moving_Enemy)
 			item->update();
 	}
+	// cập nhật cho mario
+	Mario::getInstance()->update();
+	// <Gun>
+	// hủy đạn khi ra khỏi màn hình
+	for each (Bullet* bullet in Mario::getInstance()->getGun()->getBulletShooted())
+	{
+		if (bullet->isActive() && bullet->getPosition().x < Mario::getInstance()->getWorldPosition().x || bullet->getPosition().x > Mario::getInstance()->getWorldPosition().x + SCREEN_WIDTH)
+			bullet->setTimeToLive(0);
+	}
+	// cập nhật tọa độ
+	Mario::getInstance()->getGun()->update();
+	// </Gun>
 
-	mario->update();
-	setWorldPosition(mario->getWorldPosition());
+	// thiết lập view port
+	setWorldPosition(Mario::getInstance()->getWorldPosition());
 	// </>
 
-
 	// cập nhật quadtree
-	m_quadTree->update(listObjectOnCamera, mario->getCamera());
+	Quadtree::getInstance()->update(listObjectOnCamera, Mario::getInstance()->getCamera());
 }
 
 void MapObject::updateVelocity(Mario* mario)
 {
 	
-}
-
-void MapObject::release()
-{
-	if (m_quadTree != nullptr)
-	{
-		for (int i = 0; i < m_gameObjects.size(); i++)
-		{
-			m_quadTree->remove(m_gameObjects[i]);
-			delete m_gameObjects[i];
-			m_gameObjects.erase(m_gameObjects.begin() + i);
-			i--;
-		}
-
-		delete m_quadTree;
-	}	
 }

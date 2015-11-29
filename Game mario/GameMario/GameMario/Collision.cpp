@@ -1,5 +1,15 @@
 ﻿#include "Collision.h"
 
+Collision* Collision::m_instance = 0;
+
+Collision* Collision::getInstance()
+{
+	if (m_instance == NULL)
+		m_instance = new Collision();
+
+	return m_instance;
+}
+
 Collision::Collision()
 {
 }

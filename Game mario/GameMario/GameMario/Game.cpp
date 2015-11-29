@@ -8,7 +8,6 @@
 
 CKeyBoard *keyboard = NULL;
 MapObject *m_state;
-Mario *m_mario = NULL;
 LPD3DXFONT m_font;
 
 Game::Game(HINSTANCE hInstance)
@@ -124,15 +123,15 @@ void Game::initGame()//khởi tạo
 	// </key board>
 
 	// khởi tạo mario
-	m_mario = new Mario();
-	m_mario->setPosition(50, 50);
+	Mario::getInstance()->initialize();
+	Mario::getInstance()->setPosition(50, 50);
 
 	m_state = new MapObject();
 }
 
 void Game::update()
 {
-	m_state->update(m_mario);
+	m_state->update();
 }
 
 void Game::render()
@@ -143,11 +142,10 @@ void Game::render()
 	
 	// map 1.1
 	m_state->draw(m_SpriteHandler);
-	m_mario->draw(m_SpriteHandler);
+	Mario::getInstance()->draw(m_SpriteHandler);
 
 	// draw score
 	ScoreGame::getInstance()->draw(m_SpriteHandler);
-
 
 	m_SpriteHandler->End();//end action draw sprite
 	d3ddv->EndScene();
@@ -174,18 +172,21 @@ Game::~Game()
 	if (m_font != NULL)
 		m_font->Release();
 
-	if (m_mario)
-		delete m_mario;
-
-	if (SoundClass::getInstance())
-		SoundClass::getInstance()->shutdown();
-
 	delete keyboard;
 	delete m_state;
 
-	if (ReSource::getInstance())
-		ReSource::getInstance()->clear();
+	delete Mario::getInstance();
+	delete Collision::getInstance();
 
-	if (ScoreGame::getInstance())
-		ScoreGame::getInstance()->release();
+	Quadtree::getInstance()->release();
+	delete Quadtree::getInstance();
+
+	SoundClass::getInstance()->shutdown();
+	delete SoundClass::getInstance();
+
+	ReSource::getInstance()->clear();
+	delete ReSource::getInstance();
+
+	ScoreGame::getInstance()->release();
+	delete ScoreGame::getInstance();
 }

@@ -2,6 +2,8 @@
 #include <string>
 #include "LuckyBox.h"
 
+Quadtree* Quadtree::m_instance = 0;
+
 Quadtree::Quadtree()
 {
 	m_AreaOne = nullptr;
@@ -12,6 +14,18 @@ Quadtree::Quadtree()
 
 Quadtree::~Quadtree()
 {
+	m_AreaOne = nullptr;
+	m_AreaTwo = nullptr;
+	m_AreaThree = nullptr;
+	m_AreaFour = nullptr;
+}
+
+Quadtree* Quadtree::getInstance()
+{
+	if (m_instance == NULL)
+		m_instance = new Quadtree();
+
+	return m_instance;
 }
 
 bool Quadtree::IsContain(Box box)
@@ -201,5 +215,55 @@ void Quadtree::update(vector<GameObject*> list, Box camera)
 				luckybox->getItem()->setActive(false);
 			}
 		}
+	}
+}
+
+void Quadtree::getAllObjects(vector<GameObject*> &list)
+{
+	if (m_AreaOne != nullptr)
+	{
+		m_AreaOne->getAllObjects(list);
+		delete m_AreaOne;
+	}
+
+	if (m_AreaTwo != nullptr)
+	{
+		m_AreaTwo->getAllObjects(list);
+		delete m_AreaTwo;
+	}
+
+	if (m_AreaThree != nullptr)
+	{
+		m_AreaThree->getAllObjects(list);
+		delete m_AreaThree;
+	}
+
+	if (m_AreaFour != nullptr)
+	{
+		m_AreaFour->getAllObjects(list);
+		delete m_AreaFour;
+	}
+
+	// nếu là node lá thì thêm các object trong node lá vào list
+	list.insert(list.end(), m_listObject.begin(), m_listObject.end());
+	m_listObject.clear();
+}
+
+void Quadtree::release()
+{
+	vector<GameObject*> list;
+	this->getAllObjects(list);
+
+	for (int i = 0; i < list.size(); i++)
+	{
+		GameObject* current = list[i];
+		for (int j = i; j < list.size(); j++)
+		{
+			if (current == list[j])
+				list.erase(list.begin() + j--);
+				
+		}
+		i--;
+		delete current;
 	}
 }

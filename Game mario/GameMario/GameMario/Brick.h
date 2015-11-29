@@ -23,7 +23,7 @@ public:
 
 	StateMachine<Brick>*	getStateMachine(){ return m_stateMachine; }
 
-	void					setCurrentFrame(int frame){ m_currentFrame = frame; m_sprite->setRect(m_frameList[m_currentFrame].rect); }
+	void					setCurrentFrame(int frame){ m_currentFrame = frame; }
 	int						getCurrentFrame(){ return m_currentFrame; }
 
 	int						getSizeOfFrameList(){ return m_frameList.size(); }

@@ -121,7 +121,7 @@ bool CKeyBoard::isPressed(int Key)
 		if (KeyCode == Key)
 		{
 			if ((KeyState & 0x80) != 0)
-				return true;
+ 				return true;
 			else
 				return false;
 		}

@@ -75,7 +75,6 @@ ItemInBox::ItemInBox(LuckyBoxsType type)
 	m_isActive = false; // default
 	m_stateMachine = new StateMachine<ItemInBox>(this);
 	m_sprite = (ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET));
-	m_checkCollision = new Collision();
 	setItemsType(type);
 }
 
@@ -83,7 +82,6 @@ ItemInBox::ItemInBox(LuckyBoxsType type)
 ItemInBox::~ItemInBox()
 {
 	delete m_stateMachine;
-	delete m_checkCollision;
 }
 
 void ItemInBox::setItemsType(LuckyBoxsType type)
@@ -91,9 +89,9 @@ void ItemInBox::setItemsType(LuckyBoxsType type)
 	if (type == LuckyBoxsType::IT_STAR)
 		m_mathematical = &vanTocNemXien;
 
-	m_currentFrame = 0;
 	m_type = type;
 	m_frameList = getFrameAnimationBy(m_type);
+	setCurrentFrame(0);
 	m_stateMachine->changeState(ItemInLuckyBoxIdle::getInstance());
 }
 
@@ -141,9 +139,7 @@ void ItemInBox::update()
 Box ItemInBox::getBouding()
 {
 	m_box = GameObject::getBouding();
-	m_box.width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left);
-	m_box.height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top);
-
+	
 	m_box.x += 2;
 	m_box.width -= 4;
 
@@ -161,10 +157,10 @@ bool ItemInBox::isCollision(GameObject* gameObject)
 		|| m_type == LuckyBoxsType::IT_COIN || m_type == LuckyBoxsType::IT_GUN) // xét va chạm cho bigger, up, star
 		return false;
 
-	DIR dir = m_checkCollision->isCollision(this, gameObject);
+	DIR dir = Collision::getInstance()->isCollision(this, gameObject);
 	if (dir != DIR::NONE)
 	{
-		m_velocity = m_checkCollision->getVelocity();
+		m_velocity = Collision::getInstance()->getVelocity();
 		
 		if (dir == DIR::LEFT)
 			m_flip = SpriteEffect::Flip;
@@ -180,7 +176,6 @@ bool ItemInBox::isCollision(GameObject* gameObject)
 	return false;
 }
 
-
 void ItemInBox::draw(LPD3DXSPRITE SpriteHandler)
 {	
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
@@ -189,3 +184,9 @@ void ItemInBox::draw(LPD3DXSPRITE SpriteHandler)
 	m_dirCollision = DIR::NONE;
 }
 
+void ItemInBox::setCurrentFrame(int frame)
+{
+	m_currentFrame = frame;
+	m_width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left);
+	m_height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top);
+}

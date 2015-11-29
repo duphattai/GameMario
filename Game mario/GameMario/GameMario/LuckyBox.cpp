@@ -7,7 +7,6 @@ LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, int countCoin)
 	m_countItem = countCoin;
 	m_itemType = itemType;
 
-	m_currentFrame = 0;
 	// hard code, tọa độ của animation luckybox trong ItemSheet
 	for (int i = 0; i < 4; i++)
 	{
@@ -43,7 +42,8 @@ LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, int countCoin)
 		m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
 		m_stateMachine->changeState(IdleLuckyBox::getInstance());
 	}
-		
+
+	setCurrentFrame(0);
 }
 
 LuckyBox::~LuckyBox()
@@ -92,8 +92,13 @@ void LuckyBox::changeItemsType(LuckyBoxsType type)
 Box LuckyBox::getBouding()
 {
 	m_box = GameObject::getBouding();
-	m_box.width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left);
-	m_box.height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top);
 
 	return m_box;
+}
+
+void LuckyBox::setCurrentFrame(int frame)
+{
+	m_currentFrame = frame;
+	m_width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left);
+	m_height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top);
 }
