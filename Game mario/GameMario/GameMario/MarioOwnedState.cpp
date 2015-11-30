@@ -31,7 +31,6 @@ void Standing::execute(Mario* mario)
 	mario->setVelocity(Vector2(0, GRAVITATION));
 
 	keyboard->getState();
-	keyboard->clearKeyCode();
 	if (keyboard->isKeyDown(DIK_LEFT))
 	{
 		mario->setFliping(SpriteEffect::Flip);
@@ -149,7 +148,6 @@ void Sitting::execute(Mario* mario)
 	mario->setVelocity(velocity);
 
 	keyboard->getState();
-	keyboard->clearKeyCode();
 	if (keyboard->isKeyDown(DIK_UP))
 	{
 		mario->getStateMachine()->changeState(Jumping::getInstance());
@@ -208,7 +206,6 @@ void Jumping::execute(Mario* mario)
 	velocity.y += GRAVITATION;
 	// update velocity
 	keyboard->getState();
-	keyboard->clearKeyCode();
 	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0)
 		velocity.y += m_timeJump;
 
@@ -276,7 +273,6 @@ void Falling::execute(Mario* mario)
 	velocity.y += GRAVITATION * 1.5;
 
 	keyboard->getState();
-	keyboard->clearKeyCode();
 	// update velocity
 	if (keyboard->isKeyDown(DIK_RIGHT))
 	{
@@ -680,19 +676,22 @@ void Fire::execute(Mario* mario)
 				mario->setCurrentFrame(MarioSheet::BIG_SUPER_JUMP);
 		}
 
-		keyboard->getState();
+		// bắn súng
 		if (keyboard->isPressed(DIK_SPACE) && mario->getFSM() != FSM_Mario::SIT)
 		{
+			// thiết lập frame bắn súng
 			if (mario->getCurrentFrame() == MarioSheet::BIG_SUPER_STAND)
 				mario->setCurrentFrame(mario->getCurrentFrame() + 7);
 			else
 				mario->setCurrentFrame(mario->getCurrentFrame() + 6);
 
+			// xét tọa độ đạn hợp lý
 			Vector2 position = mario->getPosition();
 			if (mario->getFliping() == SpriteEffect::None)
 				position.x += mario->getWidth();
 			Vector2 camera = mario->getWorldPosition();
 
+			// bắn súng
 			mario->getGun()->shoot(position.x, position.y, camera.x, camera.y, mario->getFliping());
 		}
 
@@ -820,6 +819,19 @@ void Star::execute(Mario* mario)
 			else
 				mario->setCurrentFrame(MarioSheet::BIG_SUPER_JUMP);
 		}
+
+		// bắn súng
+		if (keyboard->isPressed(DIK_SPACE) && mario->getFSM() != FSM_Mario::SIT)
+		{
+			// xét tọa độ đạn hợp lý
+			Vector2 position = mario->getPosition();
+			if (mario->getFliping() == SpriteEffect::None)
+				position.x += mario->getWidth();
+			Vector2 camera = mario->getWorldPosition();
+
+			// bắn súng
+			mario->getGun()->shoot(position.x, position.y, camera.x, camera.y, mario->getFliping());
+		}
 	}
 	else
 	{
@@ -836,8 +848,10 @@ void Star::execute(Mario* mario)
 			mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
 	}
 
-	if (m_timeCount == 0)
+
+	if (m_timeCount-- <= 0) // hết thời gian hiệu ứng star
 	{
+		// chuyển về state trước đó
 		mario->getStatusStateMachine()->changeState(mario->getStatusStateMachine()->GetPreviousState());
 
 		// make not effect
@@ -848,7 +862,6 @@ void Star::execute(Mario* mario)
 	else
 	{
 		mario->setCurrentFrame(m_frameAnimation->at(m_currentIndex) + mario->getCurrentFrame());
-		m_timeCount--;
 		m_currentIndex = ++m_currentIndex >= m_frameAnimation->size() ? 0 : m_currentIndex;
 	}	
 }

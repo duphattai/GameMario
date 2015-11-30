@@ -57,25 +57,26 @@ void ScoreGame::draw(LPD3DXSPRITE spriteHandler)
 	drawText(L"WORLD", Vector2(144, 8));
 	drawText(L"TIME", Vector2(200, 8));
 	// dòng hai
+	// draw score
 	string text = to_string(m_score);
-	{
-		while (text.length() < 6)
-			text = "0" + text;
-
-		drawText(wstring(text.begin(), text.end()), Vector2(24, 18));
-	}
+	while (text.length() < 6)
+		text = "0" + text;
+	drawText(wstring(text.begin(), text.end()), Vector2(24, 18));
 	
+
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
 	m_sprite->draw(spriteHandler, D3DXVECTOR2(89 + m_width / 2, 210 + m_height / 2), D3DXVECTOR2(1.0f, 1.0f), 0, VIEW_PORT_Y, D3DCOLOR_XRGB(255, 255, 255));
 
+	// draw coin
 	text = to_string(m_countCoin);
 	while (text.length() < 2)
 		text = "0" + text;
 	text = "x" + text;
 	drawText(wstring(text.begin(), text.end()), Vector2(95, 18));
 	
+	// draw time of state
 	text = to_string(m_timeOfState);
-	drawText(wstring(text.begin(), text.end()), Vector2(200, 16));
+	drawText(wstring(text.begin(), text.end()), Vector2(200, 18));
 }
 
 void ScoreGame::release()

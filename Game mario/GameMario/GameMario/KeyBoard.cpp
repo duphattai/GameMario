@@ -93,15 +93,11 @@ int CKeyBoard::getKeyCode()
 	return KeyCode;
 }
 
-void CKeyBoard::clearKeyCode()
-{
-	KeyCode = -1;
-}
-
 void CKeyBoard::getState()
 {
-	HRESULT hr = m_Keyboard->GetDeviceState(sizeof(m_Keys), (LPVOID)&m_Keys);
+	memcpy(m_PreviousKeys, m_Keys, 256);
 
+	HRESULT hr = m_Keyboard->GetDeviceState(sizeof(m_Keys), (LPVOID)&m_Keys);
 	DWORD dwElements = KEYBOARD_BUFFER_SIZE;
 	m_Keyboard->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), m_KeyEvents, &dwElements, 0);
 
@@ -120,8 +116,10 @@ bool CKeyBoard::isPressed(int Key)
 
 		if (KeyCode == Key)
 		{
-			if ((KeyState & 0x80) != 0)
- 				return true;
+			if ((KeyState & 0x80) != 0 && (m_PreviousKeys[Key] & 0x80) == 0)
+			{
+				return true;
+			}
 			else
 				return false;
 		}
