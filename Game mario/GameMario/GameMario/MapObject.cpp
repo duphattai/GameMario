@@ -5,6 +5,8 @@
 #include "Coin.h"
 #include "MapOwnedState.h"
 #include "ReSource.h"
+#include "Camera.h"
+
 
 MapObject::MapObject()
 {
@@ -14,7 +16,6 @@ MapObject::MapObject()
 	m_typeObject = TypeObject::Dynamic_TiledMap;
 
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
-	m_worldPosition.y = VIEW_PORT_Y;
 
 	m_stateMachine = new StateMachine<MapObject>(this);
 	m_stateMachine->changeState(BrosTitle::getInstance());
@@ -67,7 +68,6 @@ void MapObject::init(IDMap map)
 	if (map == IDMap::MapOne)
 	{
 		FileMap = NodeTileMap_1;
-		//m_stateMachine->changeState(MapOne::getInstance());
 	}
 	else if (map == IDMap::MapTwo)
 	{
@@ -185,7 +185,7 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 
 vector<GameObject*> MapObject::getListObjectOnCamera()
 {
-	vector<GameObject*> list = Quadtree::getInstance()->getListObjects(Box(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT), list);
+	vector<GameObject*> list = Quadtree::getInstance()->getListObjects(Camera::getInstance()->getCamera(), list);
 	// các object nằm trên biên chỉ lấy 1 lần trong danh sách
 	for (int i = 0; i < list.size() - 1; i++)
 	{
@@ -205,6 +205,7 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 
 void MapObject::draw(LPD3DXSPRITE spriteHandler)
 {
+	m_worldPosition = Camera::getInstance()->getViewport();
 	vector<GameObject*> list = getListObjectOnCamera();
 	if (list.size() == 0) return;
 
@@ -214,7 +215,7 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 		if (var->getTypeObject() == TypeObject::Dynamic_TiledMap)
 		{
 			var->setIndexSprite(var->getIndexSprite());
-			var->setWorldPosition(getWorldPosition());
+			var->setWorldPosition(m_worldPosition);
 			var->draw(spriteHandler);
 		}
 	}
@@ -223,7 +224,7 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 	{
 		if (var->getTypeObject() == TypeObject::Dynamic_Item || var->getTypeObject() == TypeObject::Moving_Enemy)
 		{
-			var->setWorldPosition(getWorldPosition());
+			var->setWorldPosition(m_worldPosition);
 			var->draw(spriteHandler);
 		}
 	}
@@ -249,18 +250,24 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 		temp->setBox(Box(gameObject.m_X, gameObject.m_Y, gameObject.m_Width, gameObject.m_Height));
 		temp->setTypeObject(TypeObject::Dynamic_StandPosition);
 	}
-	else if (gameObject.m_Id == 25) // coin in luckybox
+	else if (gameObject.m_Id == 21) // item mushroom bigger
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::YellowLuckyBox);
+		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::YellowLuckyBox);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 21) // item mushroom bigger
+	else if (gameObject.m_Id == 24) // item coin
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::YellowLuckyBox);
+		temp = new Coin();
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for coin
+		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
+	else if (gameObject.m_Id == 25) // coin in luckybox
+	{
+		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::YellowLuckyBox);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
@@ -325,18 +332,6 @@ void MapObject::update()
 	}
 	// </>
 
-
-	// <cập nhật vận tốc>
-	Mario::getInstance()->getGun()->updateVelocity(); // đạn
-	Mario::getInstance()->updateVelocity(); // mario
-	// cập nhật cho object game
-	for each (GameObject* item in listObjectOnCamera)
-	{
-		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
-			item->updateVelocity();
-	}
-	// </>
-
 	// <xét va chạm>
 	for each (GameObject* item in listObjectOnCamera)
 	{
@@ -364,28 +359,37 @@ void MapObject::update()
 			|| item->getTypeObject() == TypeObject::Moving_Enemy)
 			item->update();
 	}
-	// cập nhật cho mario
-	Mario::getInstance()->update();
+	Mario::getInstance()->update(); // cập nhật cho mario
 	// <Gun>
 	// hủy đạn khi ra khỏi màn hình
 	for each (Bullet* bullet in Mario::getInstance()->getGun()->getBulletShooted())
 	{
-		if (bullet->isActive() && bullet->getPosition().x < Mario::getInstance()->getWorldPosition().x || bullet->getPosition().x > Mario::getInstance()->getWorldPosition().x + SCREEN_WIDTH)
+		if (bullet->isActive() && bullet->getPosition().x < Camera::getInstance()->getViewport().x
+			|| bullet->getPosition().x > Camera::getInstance()->getViewport().x + SCREEN_WIDTH)
 			bullet->setTimeToLive(0);
 	}
-	// cập nhật tọa độ
+	// cập nhật cho súng
 	Mario::getInstance()->getGun()->update();
-	// </Gun>
-
-	// thiết lập view port
-	setWorldPosition(Mario::getInstance()->getWorldPosition());
 	// </>
 
+
+	// thiết lập view port
+	Camera::getInstance()->update(Mario::getInstance()->getPosition()); // cập nhật lại viewport
+
 	// cập nhật quadtree
-	Quadtree::getInstance()->update(listObjectOnCamera, Mario::getInstance()->getCamera());
+	Quadtree::getInstance()->update(listObjectOnCamera, Camera::getInstance()->getCamera());
 }
 
-void MapObject::updateVelocity(Mario* mario)
+void MapObject::updateVelocity()
 {
-	
+	// <cập nhật vận tốc>
+	Mario::getInstance()->getGun()->updateVelocity(); // đạn
+	Mario::getInstance()->updateVelocity(); // mario
+	// cập nhật cho object game
+	for each (GameObject* item in getListObjectOnCamera())
+	{
+		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
+			item->updateVelocity();
+	}
+	// </>
 }

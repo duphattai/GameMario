@@ -1,6 +1,6 @@
 ﻿#include "Coin.h"
 #include "ReSource.h"
-
+#include "ScoreGame.h"
 Coin::Coin()
 {
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
@@ -13,6 +13,8 @@ Coin::Coin()
 	m_frameList.push_back(Frame(51, 98, 10, 14));
 
 	m_timeAnimation = 5;
+	m_width = 10;
+	m_height = 14;
 }
 
 
@@ -24,6 +26,7 @@ void Coin::update()
 {
 	if (m_status == StatusObject::DEAD && m_isActive)
 	{
+		ScoreGame::getInstance()->setCountOfCoin(ScoreGame::getInstance()->getCountOfCoin() + 1);
 		setActive(false);
 		PlaySound(L"Sounds/smb_coin.wav", NULL, SND_ASYNC);
 	}

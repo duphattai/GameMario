@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Game>
 	<Information>
-		<Description des="ID=1: TextBox&#xD;" />
 		<Description des="ID=0: tiles map&#xD;" />
 		<Description des="ID=25: item box&#xD;" />
 		<Description des="ID=27: item brick&#xD;" />

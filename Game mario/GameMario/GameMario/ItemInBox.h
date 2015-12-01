@@ -22,24 +22,24 @@ public:
 
 	bool					isCollision(GameObject*);
 
-	Box			getBouding();
+	Box				getBouding();
 
-	void		update();
-	void		updateVelocity();
-	void		draw(LPD3DXSPRITE SpriteHandler);
+	void			update();
+	void			updateVelocity();
+	void			draw(LPD3DXSPRITE SpriteHandler);
 
-	void		setCurrentFrame(int frame);
-	int			getCurrentFrame(){ return m_currentFrame; }
+	void			setCurrentFrame(int frame);
+	int				getCurrentFrame(){ return m_currentFrame; }
 
-	int			getSizeFrameList(){ return m_frameList.size(); }
+	int				getSizeFrameList(){ return m_frameList.size(); }
 
-	bool		finishAnimation(){ return m_finishAnimation; }
-	void		setFinishAnimation(bool x){ m_finishAnimation = x; }
+	bool			finishAnimation(){ return m_finishAnimation; }
+	void			setFinishAnimation(bool x){ m_finishAnimation = x; }
 
-	void		setItemsType(LuckyBoxsType type);
+	void			setItemsType(LuckyBoxsType type);
 	LuckyBoxsType	getItemsType(){ return m_type; }
 
-	int			m_time; // thời gian xác định vận tốc
-	Vector2(*m_mathematical)(int, float v, float alpha);// con trỏ hàm
+	int				m_time; // thời gian xác định vận tốc
+	Vector2			(*m_mathematical)(int, float v, float alpha);// con trỏ hàm
 };
 

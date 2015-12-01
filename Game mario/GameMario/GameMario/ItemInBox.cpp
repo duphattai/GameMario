@@ -78,7 +78,6 @@ ItemInBox::ItemInBox(LuckyBoxsType type)
 	setItemsType(type);
 }
 
-
 ItemInBox::~ItemInBox()
 {
 	delete m_stateMachine;

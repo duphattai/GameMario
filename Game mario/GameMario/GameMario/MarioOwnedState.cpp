@@ -2,12 +2,13 @@
 #include "MarioOwnedState.h"
 #include "KeyBoard.h"
 #include "SoundClass.h"
+#include "Camera.h"
 extern CKeyBoard *keyboard; // ý nghĩa là keyboard đã được đinh nghĩa ở đâu đó
 
 
 // action of mario
 #pragma region
-/////////////////////////////////////////////////////////////////////////////////
+
 //STANDING
 Standing* Standing::m_instance = 0;
 
@@ -31,7 +32,9 @@ void Standing::execute(Mario* mario)
 	mario->setVelocity(Vector2(0, GRAVITATION));
 
 	keyboard->getState();
-	if (keyboard->isKeyDown(DIK_LEFT))
+	if (keyboard->isPressed(DIK_UP))
+		mario->getStateMachine()->changeState(Jumping::getInstance());
+	else if (keyboard->isKeyDown(DIK_LEFT))
 	{
 		mario->setFliping(SpriteEffect::Flip);
 		mario->getStateMachine()->changeState(Running::getInstance());
@@ -41,10 +44,8 @@ void Standing::execute(Mario* mario)
 		mario->setFliping(SpriteEffect::None);
 		mario->getStateMachine()->changeState(Running::getInstance());
 	}
-	else if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
+	else if (keyboard->isKeyDown(DIK_DOWN))
 		mario->getStateMachine()->changeState(Sitting::getInstance());
-	else if (keyboard->isPressed(DIK_UP))
-		mario->getStateMachine()->changeState(Jumping::getInstance());
 }
 
 void Standing::exit(Mario* mario)
@@ -53,7 +54,7 @@ void Standing::exit(Mario* mario)
 }
 /////////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////////
+
 //RUNNING
 Running* Running::m_instance = 0;
 
@@ -78,7 +79,7 @@ void Running::execute(Mario* mario)
 
 	keyboard->getState();
 	// update velocity
-	if (keyboard->isKeyDown(DIK_DOWN) && (mario->isBig() || mario->canShoot()))
+	if (keyboard->isKeyDown(DIK_DOWN))
 	{
 		mario->getStateMachine()->changeState(Sitting::getInstance());
 		return;
@@ -105,8 +106,7 @@ void Running::execute(Mario* mario)
 			mario->getStateMachine()->changeState(Standing::getInstance());
 	}
 	mario->setVelocity(velocity);
-
-
+	
 	if (keyboard->isPressed(DIK_UP))
 		mario->getStateMachine()->changeState(Jumping::getInstance());
 	else if (mario->getLocation() == Location::LOC_IN_AIR)
@@ -120,7 +120,6 @@ void Running::exit(Mario* mario)
 
 
 
-/////////////////////////////////////////////////////////////////////////////////
 //SITTING
 Sitting* Sitting::m_instance = 0;
 
@@ -165,7 +164,6 @@ void Sitting::exit(Mario* mario)
 
 
 
-/////////////////////////////////////////////////////////////////////////////////
 //JUMPING
 Jumping* Jumping::m_instance = 0;
 
@@ -189,11 +187,11 @@ void Jumping::execute(Mario* mario)
 {
 	Vector2 velocity = mario->getVelocity();	
 
-	// solve if has coliision
+	// cập nhật va chạm
 	DIR dir = mario->getDirCollision();
-	if (dir != DIR::NONE) // iscollision
+	if (dir != DIR::NONE) // xảy ra va chạm
 	{
-		if (dir == DIR::BOTTOM) // left or right
+		if (dir == DIR::BOTTOM) // va chạm bottom thì rớt xuống
 			mario->getStateMachine()->changeState(Falling::getInstance());
 		else 
 			if (mario->getLocation() == Location::LOC_ON_GROUND)
@@ -231,7 +229,6 @@ void Jumping::execute(Mario* mario)
 	mario->setVelocity(velocity);
 	if (velocity.y <= 0) // nếu vận tốc theo y bằng 0 thì chuyển state
 		mario->getStateMachine()->changeState(Falling::getInstance());
-
 }
 
 void Jumping::exit(Mario* mario)
@@ -248,7 +245,6 @@ void Jumping::exit(Mario* mario)
 
 
 
-/////////////////////////////////////////////////////////////////////////////////
 //FALLING
 Falling* Falling::m_instance = 0;
 
@@ -270,7 +266,7 @@ void Falling::enter(Mario* mario)
 void Falling::execute(Mario* mario)
 {
 	Vector2 velocity = mario->getVelocity();
-	velocity.y += GRAVITATION * 1.5;
+	velocity.y += GRAVITATION * 2;
 
 	keyboard->getState();
 	// update velocity
@@ -308,6 +304,30 @@ void Falling::exit(Mario* mario)
 }
 /////////////////////////////////////////////////////////////////////////////////
 
+
+// Auto animation
+AutoAnimation* AutoAnimation::m_instance = 0;
+
+AutoAnimation* AutoAnimation::getInstance()
+{
+	if (!m_instance)
+		m_instance = new AutoAnimation();
+
+	return m_instance;
+}
+
+void AutoAnimation::enter(Mario* mario)
+{
+}
+
+void AutoAnimation::execute(Mario* mario)
+{
+	
+}
+
+void AutoAnimation::exit(Mario* mario)
+{
+}
 #pragma endregion
 
 
@@ -389,7 +409,7 @@ void Small::execute(Mario* mario)
 				mario->setCurrentFrame(index);
 			}
 		}
-		else if (mario->getFSM() == FSM_Mario::STAND)
+		else if (mario->getFSM() == FSM_Mario::STAND || mario->getFSM() == FSM_Mario::SIT)
 			mario->setCurrentFrame(MarioSheet::MARIO_STAND);
 		else if (mario->getFSM() == FSM_Mario::JUMP || mario->getFSM() == FSM_Mario::FALL)
 			mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
@@ -573,8 +593,7 @@ void Dead::execute(Mario* mario)
 
 	if (mario->getLives() > 0 && mario->getPosition().y < -10)
 	{
-		Vector2 position = mario->getWorldPosition();
-		mario->setPosition(position.x, 50);
+		mario->setPosition(Camera::getInstance()->getViewport().x, 50);
 
 		mario->getStatusStateMachine()->changeState(Small::getInstance());
 		mario->getStateMachine()->changeState(Falling::getInstance());
@@ -689,7 +708,7 @@ void Fire::execute(Mario* mario)
 			Vector2 position = mario->getPosition();
 			if (mario->getFliping() == SpriteEffect::None)
 				position.x += mario->getWidth();
-			Vector2 camera = mario->getWorldPosition();
+			Vector2 camera = Camera::getInstance()->getViewport();
 
 			// bắn súng
 			mario->getGun()->shoot(position.x, position.y, camera.x, camera.y, mario->getFliping());
@@ -827,7 +846,7 @@ void Star::execute(Mario* mario)
 			Vector2 position = mario->getPosition();
 			if (mario->getFliping() == SpriteEffect::None)
 				position.x += mario->getWidth();
-			Vector2 camera = mario->getWorldPosition();
+			Vector2 camera = Camera::getInstance()->getViewport();
 
 			// bắn súng
 			mario->getGun()->shoot(position.x, position.y, camera.x, camera.y, mario->getFliping());

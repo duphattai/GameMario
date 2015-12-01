@@ -6,7 +6,7 @@
 #include "LuckyBox.h"
 #include "Brick.h"
 #include "Coin.h"
-
+#include "Camera.h"
 
 using namespace std;
 
@@ -51,7 +51,7 @@ Mario::Mario()
 	m_MinVelocity = Vector2(-4.0f, -10.0f);
 
 
-	m_worldPosition = Vector2(0, VIEW_PORT_Y);
+	//m_worldPosition = Vector2(0, VIEW_PORT_Y);
 	m_lives = 3;
 	m_isBig = false;
 	m_canShoot = false;
@@ -116,6 +116,8 @@ Mario* Mario::getInstance()
 
 void Mario::draw(LPD3DXSPRITE SpriteHandler)
 {
+	setWorldPosition(Camera::getInstance()->getViewport());
+
 	m_sprite->setRect(frameList[m_currentFrame].rect);
 	GameObject::draw(SpriteHandler);
 
@@ -132,13 +134,9 @@ void Mario::update()
 	}
 	
 
-	// make mario not move off camera
-	if (m_position.x < m_worldPosition.x)
-		m_position.x = m_worldPosition.x;
-
-	// update camera just move right
-	if (m_worldPosition.x < m_position.x - SCREEN_WIDTH / 2)
-		m_worldPosition.x = m_position.x - SCREEN_WIDTH / 2;
+	// mario không thể di chuyển khỏi camera
+	if (m_position.x < Camera::getInstance()->getViewport().x)
+		m_position.x = Camera::getInstance()->getViewport().x;
 }
 
 void Mario::updateVelocity()
@@ -148,7 +146,6 @@ void Mario::updateVelocity()
 	
 	m_statusStateMachine->update();
 	
-	//m_gun->updateVelocity();
 	// 24/10 
 	// set default, dùng để xét va chạm di chuyển trên map
 	setDirCollision(DIR::NONE);
@@ -223,9 +220,6 @@ bool Mario::isCollision(GameObject* gameObject)
 		}
 		else if (type == TypeObject::Dynamic_Item) // va chạm với item
 		{
-			if (getDirCollision() == DIR::NONE)
-				setDirCollision(dir);
-
 			Coin* coin = dynamic_cast<Coin*>(gameObject);
 			LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
 			Brick* brick = dynamic_cast<Brick*>(gameObject);
@@ -237,6 +231,9 @@ bool Mario::isCollision(GameObject* gameObject)
 			}
 			else if (luckyBox != nullptr)
 			{
+				if (getDirCollision() == DIR::NONE)
+					setDirCollision(dir);
+
 				m_velocity = Collision::getInstance()->getVelocity();
 				if (dir == DIR::BOTTOM)
 				{
@@ -250,6 +247,9 @@ bool Mario::isCollision(GameObject* gameObject)
 			}
 			else if (brick != nullptr)
 			{
+				if (getDirCollision() == DIR::NONE)
+					setDirCollision(dir);
+
 				m_velocity = Collision::getInstance()->getVelocity();
 				if (dir == DIR::BOTTOM)
 				{
@@ -300,11 +300,6 @@ void Mario::setVelocity(Vector2 velocity)
 	
 }
 
-Box Mario::getCamera()
-{
-	Box camera(m_worldPosition.x, m_worldPosition.y - VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT);
-	return camera;
-}
 
 void Mario::setCurrentFrame(int frame)
 {

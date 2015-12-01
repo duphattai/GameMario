@@ -5,7 +5,7 @@
 class Mario;
 
 #pragma region action mario
-////////////////////////////////////////////////////////////////////
+
 //STANDING
 class Standing : public State < Mario >
 {
@@ -24,8 +24,6 @@ public:
 ////////////////////////////////////////////////////////////////////
 
 
-
-////////////////////////////////////////////////////////////////////
 //RUNNING
 class Running : public State < Mario >
 {
@@ -44,8 +42,6 @@ public:
 ////////////////////////////////////////////////////////////////////
 
 
-
-////////////////////////////////////////////////////////////////////
 //SITTING
 class Sitting : public State < Mario >
 {
@@ -65,7 +61,6 @@ public:
 
 
 
-////////////////////////////////////////////////////////////////////
 //JUMPING
 class Jumping : public State < Mario >
 {
@@ -86,7 +81,6 @@ public:
 
 
 
-////////////////////////////////////////////////////////////////////
 //FALLING
 class Falling : public State < Mario >
 {
@@ -104,6 +98,23 @@ public:
 };
 ////////////////////////////////////////////////////////////////////
 
+
+
+// AUTO ANIMATION
+class AutoAnimation : public State < Mario >
+{
+private:
+	static AutoAnimation*	m_instance;
+public:
+	AutoAnimation(){}
+	virtual ~AutoAnimation(){}
+
+	static AutoAnimation*	getInstance();
+
+	virtual void		enter(Mario* mario);
+	virtual void		execute(Mario* mario);
+	virtual void		exit(Mario* mario);
+};
 #pragma endregion
 
 

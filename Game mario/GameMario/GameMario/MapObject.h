@@ -23,7 +23,7 @@ protected:
 	map<int, vector<ObjectTittle>>		readQuadTreeFromFile(TiXmlElement *nodeParent);
 	void								buildQuadTree(map<int, vector<ObjectTittle>>);
 
-	void								updateVelocity(Mario*);
+	
 public:
 	MapObject();
 	virtual ~MapObject();
@@ -33,12 +33,15 @@ public:
 
 
 	virtual	vector<GameObject*>			getListObjectOnCamera();
+
+	void								setColorBackGround(D3DXCOLOR color){ m_colorBackGround = color; }
 	D3DXCOLOR							getColorBackGround(){ return m_colorBackGround; }
 	
 	StateMachine<MapObject>*			getStateMachine(){ return m_stateMachine; }
 
 	void								draw(LPD3DXSPRITE SpriteHandler);
 	
+	void								updateVelocity();
 	void								update();
 };
 

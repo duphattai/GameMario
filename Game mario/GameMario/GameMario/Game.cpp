@@ -122,15 +122,16 @@ void Game::initGame()//khởi tạo
 	keyboard->initialize(hWnd);
 	// </key board>
 
+	m_state = new MapObject();
+
 	// khởi tạo mario
 	Mario::getInstance()->initialize();
 	Mario::getInstance()->setPosition(50, 50);
-
-	m_state = new MapObject();
 }
 
 void Game::update()
 {
+	m_state->updateVelocity();
 	m_state->update();
 }
 

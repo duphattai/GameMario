@@ -51,11 +51,10 @@ void Gun::updateVelocity()
 {
 	// cập nhật vận tốc
 	for (std::vector<Bullet*>::iterator temp = m_giveBullet.begin(); temp != m_giveBullet.end(); temp++)
-	{
 		(*temp)->updateVelocity();
-	}
 
-	// cập nhật kho đạn
+
+	// cập nhật kho đạn: lấy những viên đạn trạng thái disactive vào kho đạn
 	for (int i = 0; i < m_giveBullet.size(); i++)
 	{
 		if (!m_giveBullet[i]->isActive())

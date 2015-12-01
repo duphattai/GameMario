@@ -1,5 +1,5 @@
 #include "GameObject.h"
-
+#include "Camera.h"
 extern LPD3DXFONT m_font;
 
 GameObject::GameObject()
@@ -7,7 +7,6 @@ GameObject::GameObject()
 	m_flip = SpriteEffect::None;
 	m_scale = D3DXVECTOR2(1.0f, 1.0f);
 
-	m_worldPosition.x = m_worldPosition.y = 0;
 	m_velocity = Vector2(0, 0);
 	m_alpha = D3DCOLOR_XRGB(255, 255, 255);
 	m_isActive = true;
@@ -24,15 +23,6 @@ void GameObject::setAlphaColor(D3DXCOLOR alpha)
 D3DXCOLOR GameObject::getAlphaColor()
 {
 	return m_alpha;
-}
-
-void GameObject::setWorldPosition(Vector2 vector)
-{
-	m_worldPosition = vector;
-}
-Vector2 GameObject::getWorldPosition()
-{
-	return m_worldPosition;
 }
 
 
@@ -148,6 +138,11 @@ bool GameObject::isActive()
 	return m_isActive;
 }
 
+
+void GameObject::setWorldPosition(Vector2 viewPort)
+{
+	m_worldPosition = viewPort;
+}
 
 void GameObject::setTypeObject(TypeObject type)
 {

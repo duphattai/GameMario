@@ -57,7 +57,6 @@ public:
 
 	// set camera
 	void			setWorldPosition(Vector2);
-	Vector2			getWorldPosition();
 
 	void			setVelocity(Vector2);
 	Vector2			getVelocity();
@@ -71,7 +70,6 @@ public:
 
 	// tọa độ theo truc y hướng xuống, x sang ngang
 	virtual void	drawText(wstring text, Vector2 position);
-
 
 	int				getHeight();
 	int				getWidth();

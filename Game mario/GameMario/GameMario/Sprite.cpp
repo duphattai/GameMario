@@ -152,10 +152,6 @@ int Sprite::getCount()
 {
 	return m_Count;
 }
-void Sprite::reset()
-{
-	m_Index = 0;
-}
 
 int Sprite::getCurrentIndex()
 {

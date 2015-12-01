@@ -145,6 +145,12 @@
     <Filter Include="Source Files\GameObject\Object\Score">
       <UniqueIdentifier>{ace29c5c-2c33-4f4b-8aa4-2c6b548e1ddc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\FrameWork\Camera">
+      <UniqueIdentifier>{e1d803b8-e5bb-4052-bb9b-9761d294db4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FrameWork\Camera">
+      <UniqueIdentifier>{7739924f-3e1a-4559-9d13-503679297389}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -227,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="ScoreGame.cpp">
       <Filter>Source Files\GameObject\Object\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\FrameWork\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="ScoreGame.h">
       <Filter>Header Files\GameObject\Object\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\FrameWork\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

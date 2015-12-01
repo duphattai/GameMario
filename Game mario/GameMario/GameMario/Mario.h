@@ -72,8 +72,6 @@ public:
 
 	void		setVelocity(Vector2);
 
-	Box			getCamera();
-
 	void		setFSM(FSM_Mario state){ m_FSM_Mario = state; }
 	FSM_Mario	getFSM(){ return m_FSM_Mario; }
 
