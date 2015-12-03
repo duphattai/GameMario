@@ -16,21 +16,19 @@ class MapObject : public GameObject
 {
 protected:
 	StateMachine<MapObject>*			m_stateMachine;
-
 	D3DXCOLOR							m_colorBackGround;
+
+	Vector2								m_checkPoint; // tọa độ nơi nếu mario đi vượt quá sẽ hồi sinh hoặc trở lại từ đầu
 
 	GameObject*							createGameObject(ObjectTittle object);
 	map<int, vector<ObjectTittle>>		readQuadTreeFromFile(TiXmlElement *nodeParent);
 	void								buildQuadTree(map<int, vector<ObjectTittle>>);
-
-	
 public:
 	MapObject();
 	virtual ~MapObject();
 	
-	// xây dựng quadtree
+	// xây dựng quadtree, tự hủy cây
 	virtual void						init(IDMap);
-
 
 	virtual	vector<GameObject*>			getListObjectOnCamera();
 
@@ -40,8 +38,10 @@ public:
 	StateMachine<MapObject>*			getStateMachine(){ return m_stateMachine; }
 
 	void								draw(LPD3DXSPRITE SpriteHandler);
-	
 	void								updateVelocity();
 	void								update();
+
+	void								setCheckPoin(Vector2 checkPoint){ m_checkPoint = checkPoint; }
+	Vector2								getCheckPoint(){ return m_checkPoint; }
 };
 

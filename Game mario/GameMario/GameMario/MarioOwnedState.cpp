@@ -233,8 +233,6 @@ void Jumping::execute(Mario* mario)
 
 void Jumping::exit(Mario* mario)
 {
-	m_timeJump = 4;
-
 	//Tài: 9/11 play sound
 	if (mario->isBig())
 		SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Jump_Super);
@@ -487,12 +485,10 @@ void Big::enter(Mario* mario)
 
 void Big::execute(Mario* mario)
 {
-	if (mario->m_effectBig)
+	if (mario->m_effectBig) // hiệu ứng small -> bigger
 	{
-		if (m_currentIndex == m_frameAnimation.size())
-		{
+		if (m_currentIndex == m_frameAnimation.size()) // kết thúc hiêu ứng
 			mario->m_effectBig = false;
-		}
 		else
 			mario->setCurrentFrame(m_frameAnimation[m_currentIndex++]);
 	}
@@ -502,7 +498,7 @@ void Big::execute(Mario* mario)
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
 			int index = mario->getCurrentFrame();
-			if (abs(mario->getVelocity().x) <= 3.0f)
+			if (abs(mario->getVelocity().x) <= 3.0f) // khi v <= 3.0 => thời gian chuyển đỗi mỗi frame là 1s
 			{
 				if (m_timeChangeSprite-- == 0)
 				{
@@ -510,7 +506,7 @@ void Big::execute(Mario* mario)
 					m_timeChangeSprite = 1; // set time change
 				}
 			}
-			else index++;
+			else index++; // => thời gian chuyển đỗi mỗi frame là 0s
 			
 
 			// cap nhật lại index big mario
@@ -589,27 +585,15 @@ void Dead::execute(Mario* mario)
 	velocity.x = 0;
 	velocity.y--;
 	mario->setVelocity(velocity);
-
-
-	if (mario->getLives() > 0 && mario->getPosition().y < -10)
-	{
-		mario->setPosition(Camera::getInstance()->getViewport().x, 50);
-
-		mario->getStatusStateMachine()->changeState(Small::getInstance());
-		mario->getStateMachine()->changeState(Falling::getInstance());
-
-
-		mario->m_effectSmall = false;
-	}
 }
 
 void Dead::exit(Mario* mario)
 {
 	mario->setFSM(FSM_Mario::FALL);
-	mario->setDead(false);
 	mario->setIsBig(false);
 	mario->setCanShoot(false);
 	mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
+	mario->m_effectSmall = false;
 }
 
 /////////////////////////////////////Fire
@@ -669,7 +653,7 @@ void Fire::execute(Mario* mario)
 		{
 			// cập nhật animation theo vận tốc
 			int index = mario->getCurrentFrame();
-			if (abs(mario->getVelocity().x) <= 3.0f)
+			if (abs(mario->getVelocity().x) <= 3.0f) // khi v <= 3.0 => thời gian chuyển đỗi mỗi frame là 1s
 			{
 				if (m_timeChangeSprite-- == 0)
 				{
@@ -871,7 +855,12 @@ void Star::execute(Mario* mario)
 	if (m_timeCount-- <= 0) // hết thời gian hiệu ứng star
 	{
 		// chuyển về state trước đó
-		mario->getStatusStateMachine()->changeState(mario->getStatusStateMachine()->GetPreviousState());
+		if (mario->isBig())
+			mario->getStatusStateMachine()->changeState(Big::getInstance());
+		else if (mario->canShoot())
+			mario->getStatusStateMachine()->changeState(Fire::getInstance());
+		else
+			mario->getStatusStateMachine()->changeState(Small::getInstance());
 
 		// make not effect
 		mario->m_effectBig = false;

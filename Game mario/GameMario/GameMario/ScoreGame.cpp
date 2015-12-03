@@ -1,6 +1,6 @@
 ﻿#include "ScoreGame.h"
 #include "ReSource.h"
-
+#include "GameTime.h"
 ScoreGame* ScoreGame::m_instance = 0;
 
 ScoreGame::ScoreGame()
@@ -10,8 +10,6 @@ ScoreGame::ScoreGame()
 
 	// xác định frameList cho count coin
 	m_frameList.push_back(Frame(1, 160, 5, 8));
-	//m_frameList.push_back(Frame(9, 160, 5, 8));
-	//m_frameList.push_back(Frame(17, 160, 5, 8));
 	m_width = 5;
 	m_height = 8;
 
@@ -67,7 +65,7 @@ void ScoreGame::draw(LPD3DXSPRITE spriteHandler)
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
 	m_sprite->draw(spriteHandler, D3DXVECTOR2(89 + m_width / 2, 210 + m_height / 2), D3DXVECTOR2(1.0f, 1.0f), 0, VIEW_PORT_Y, D3DCOLOR_XRGB(255, 255, 255));
 
-	// draw coin
+	// draw score coin
 	text = to_string(m_countCoin);
 	while (text.length() < 2)
 		text = "0" + text;
@@ -82,4 +80,14 @@ void ScoreGame::draw(LPD3DXSPRITE spriteHandler)
 void ScoreGame::release()
 {
 	m_font->Release();
+}
+
+void ScoreGame::update()
+{
+	// thời gian trong game
+	if (GameTime::getInstance()->getSumTime() >= 400)
+	{
+		ScoreGame::getInstance()->setTimeOfState(ScoreGame::getInstance()->getTimeOfState() - 1);
+		GameTime::getInstance()->setSumTime(0);
+	}
 }

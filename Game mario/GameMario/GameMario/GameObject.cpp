@@ -109,14 +109,9 @@ Box GameObject::getBouding()
 	
 	return m_box;
 }
-
 void GameObject::setBox(Box box)
 {
 	m_box = box;
-}
-Box GameObject::getBox()
-{
-	return m_box;
 }
 
 

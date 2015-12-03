@@ -88,7 +88,6 @@ Mario::~Mario()
 
 void Mario::initialize()
 {
-	m_lives = 3;
 	m_isBig = false;
 	m_canShoot = false;
 	m_isStar = false;
@@ -189,11 +188,17 @@ bool Mario::isCollision(GameObject* gameObject)
 				// update state for mario
 				int typeItem = luckyBox->getTypeItem();
 				if (typeItem == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+				{
+					m_canShoot = false;
 					m_isBig = true;
+				}	
 				else if (typeItem == LuckyBoxsType::IT_STAR)
 					m_isStar = true;
 				else if (typeItem == LuckyBoxsType::IT_GUN)
+				{
 					m_canShoot = true;
+					m_isBig = false;
+				}
 				else if (typeItem == LuckyBoxsType::IT_MUSHROOM_UP)
 					m_lives++;
 			}

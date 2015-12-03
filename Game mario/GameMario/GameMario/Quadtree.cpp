@@ -224,24 +224,28 @@ void Quadtree::getAllObjects(vector<GameObject*> &list)
 	{
 		m_AreaOne->getAllObjects(list);
 		delete m_AreaOne;
+		m_AreaOne = nullptr;
 	}
 
 	if (m_AreaTwo != nullptr)
 	{
 		m_AreaTwo->getAllObjects(list);
 		delete m_AreaTwo;
+		m_AreaTwo = nullptr;
 	}
 
 	if (m_AreaThree != nullptr)
 	{
 		m_AreaThree->getAllObjects(list);
 		delete m_AreaThree;
+		m_AreaThree = nullptr;
 	}
 
 	if (m_AreaFour != nullptr)
 	{
 		m_AreaFour->getAllObjects(list);
 		delete m_AreaFour;
+		m_AreaFour = nullptr;
 	}
 
 	// nếu là node lá thì thêm các object trong node lá vào list
@@ -260,8 +264,7 @@ void Quadtree::release()
 		for (int j = i; j < list.size(); j++)
 		{
 			if (current == list[j])
-				list.erase(list.begin() + j--);
-				
+				list.erase(list.begin() + j--);	
 		}
 		i--;
 		delete current;

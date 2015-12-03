@@ -85,6 +85,8 @@ public:
 	void			setFliping(SpriteEffect);
 	SpriteEffect	getFliping();
 
+
+	void			setBox(Box);
 	virtual Box		getBouding();
 
 	void			setTypeObject(TypeObject);
@@ -93,8 +95,6 @@ public:
 	void			setStatusObject(StatusObject);
 	StatusObject	getStatusOBject();
 
-	Box				getBox();
-	void			setBox(Box);
 
 	void			setText(wstring);
 

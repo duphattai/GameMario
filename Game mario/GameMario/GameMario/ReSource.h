@@ -5,6 +5,7 @@ class ReSource
 	Sprite *m_TileMap;
 	Sprite *m_MarioSheet;
 	Sprite *m_ItemSheet;
+	Sprite *m_Menu;
 
 	ReSource();
 	static ReSource *m_Instance;

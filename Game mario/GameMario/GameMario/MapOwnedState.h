@@ -18,6 +18,24 @@ public:
 	virtual void		draw(MapObject*, LPD3DXSPRITE);
 };
 
+class ChangeMap : public State < MapObject >
+{
+private:
+	static ChangeMap*	m_instance;
+	int					m_countTime;
+public:
+	ChangeMap(){}
+	virtual ~ChangeMap(){}
+
+	static ChangeMap*	getInstance();
+
+	virtual void		enter(MapObject*);
+	virtual void		execute(MapObject*);
+	virtual void		exit(MapObject*);
+	virtual void		draw(MapObject*, LPD3DXSPRITE);
+};
+
+
 
 class MapOne : public State < MapObject >
 {
@@ -33,3 +51,4 @@ public:
 	virtual void		execute(MapObject*);
 	virtual void		exit(MapObject*);
 };
+

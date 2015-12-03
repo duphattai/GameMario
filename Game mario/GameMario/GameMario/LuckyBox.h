@@ -38,7 +38,6 @@ public:
 	int						getSizeFrameList(){ return m_frameList.size(); }
 	void					setFrameList(vector<Frame> list){ m_frameList = list; }
 
-
 	ItemInBox*				getItem(){ return m_item; }
 
 	void					changeItemsType(LuckyBoxsType type);

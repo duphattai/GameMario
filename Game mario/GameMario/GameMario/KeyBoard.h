@@ -11,7 +11,6 @@ protected:
 	int			KeyCode;
 
 	BYTE m_Keys[256];
-	DIDEVICEOBJECTDATA m_KeyEvents[KEYBOARD_BUFFER_SIZE];
 
 	bool initInput();
 	bool initKeyBoard(HWND);

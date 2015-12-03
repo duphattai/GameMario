@@ -5,7 +5,8 @@ enum IDImage
 {
 	IMG_MARIOSHEET = 0,
 	IMG_TILEMAP,
-	IMG_ITEMSHEET
+	IMG_ITEMSHEET,
+	IMG_MENU
 };
 
 enum SpriteEffect

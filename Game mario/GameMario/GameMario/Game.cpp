@@ -143,7 +143,6 @@ void Game::render()
 	
 	// map 1.1
 	m_state->draw(m_SpriteHandler);
-	Mario::getInstance()->draw(m_SpriteHandler);
 
 	// draw score
 	ScoreGame::getInstance()->draw(m_SpriteHandler);

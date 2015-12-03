@@ -28,6 +28,8 @@ public:
 
 	virtual void	drawText(wstring text, Vector2 position);
 
+	void			update();
+
 	int		getTimeOfState(){ return m_timeOfState; }
 	void	setTimeOfState(int time){ m_timeOfState = time; }
 

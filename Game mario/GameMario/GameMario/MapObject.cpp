@@ -6,7 +6,8 @@
 #include "MapOwnedState.h"
 #include "ReSource.h"
 #include "Camera.h"
-
+#include "ScoreGame.h"
+#include "MarioOwnedState.h"
 
 MapObject::MapObject()
 {
@@ -68,6 +69,7 @@ void MapObject::init(IDMap map)
 	if (map == IDMap::MapOne)
 	{
 		FileMap = NodeTileMap_1;
+		m_checkPoint = Vector2(1280, 32);
 	}
 	else if (map == IDMap::MapTwo)
 	{
@@ -87,13 +89,22 @@ void MapObject::init(IDMap map)
 	}
 	std::map<int, vector<ObjectTittle>> quadtreeNode = readQuadTreeFromFile(doc.RootElement());
 	// end
+
+
 	// build tree
 	buildQuadTree(quadtreeNode);
 
+	// set color background
 	m_colorBackGround = D3DCOLOR_XRGB(146, 144, 255);
+
+	// set time
+	ScoreGame::getInstance()->setTimeOfState(400);
 }
 
+
+
 // <build tree>
+
 // kiểm tra node có nằm ở trên biên
 bool checkExist(ObjectTittle temp, map<int, vector<ObjectTittle>> &treeNode)
 {
@@ -155,7 +166,7 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 
 	// build tree
 	// build từ những object không nằm trên biên
-	Quadtree::getInstance()->release(); // xóa các node nếu có
+ 	Quadtree::getInstance()->release(); // xóa các node nếu có
 	Quadtree::getInstance()->buildTree(listGameObject, Box(0, 0, 3584, 3584));
 
 
@@ -205,28 +216,32 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 
 void MapObject::draw(LPD3DXSPRITE spriteHandler)
 {
-	m_worldPosition = Camera::getInstance()->getViewport();
-	vector<GameObject*> list = getListObjectOnCamera();
-	if (list.size() == 0) return;
+	if (!m_stateMachine->isInState(*ChangeMap::getInstance()) && !m_stateMachine->isInState(*BrosTitle::getInstance()))
+	{
+		m_worldPosition = Camera::getInstance()->getViewport();
+		vector<GameObject*> list = getListObjectOnCamera();
 
-	// vẽ tiled map trước
-	for each (GameObject* var in list)
-	{
-		if (var->getTypeObject() == TypeObject::Dynamic_TiledMap)
+		// vẽ tiled map trước
+		for each (GameObject* var in list)
 		{
-			var->setIndexSprite(var->getIndexSprite());
-			var->setWorldPosition(m_worldPosition);
-			var->draw(spriteHandler);
+			if (var->getTypeObject() == TypeObject::Dynamic_TiledMap)
+			{
+				var->setIndexSprite(var->getIndexSprite());
+				var->setWorldPosition(m_worldPosition);
+				var->draw(spriteHandler);
+			}
 		}
-	}
-	// vẽ item và enemy sau
-	for each (GameObject* var in list)
-	{
-		if (var->getTypeObject() == TypeObject::Dynamic_Item || var->getTypeObject() == TypeObject::Moving_Enemy)
+		// vẽ item và enemy sau
+		for each (GameObject* var in list)
 		{
-			var->setWorldPosition(m_worldPosition);
-			var->draw(spriteHandler);
+			if (var->getTypeObject() == TypeObject::Dynamic_Item || var->getTypeObject() == TypeObject::Moving_Enemy)
+			{
+				var->setWorldPosition(m_worldPosition);
+				var->draw(spriteHandler);
+			}
 		}
+
+		Mario::getInstance()->draw(spriteHandler);
 	}
 
 	m_stateMachine->GetCurrentState()->draw(this, spriteHandler);
@@ -303,9 +318,8 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 void MapObject::update()
 {
-	m_stateMachine->update();
 	// nếu đang ở state bros title thì không làm gì thêm
-	if (m_stateMachine->isInState(*BrosTitle::getInstance())) 
+	if (m_stateMachine->isInState(*BrosTitle::getInstance()) || m_stateMachine->isInState(*ChangeMap::getInstance()))
 		return;
 
 	// <cập nhật loại item bigger, nếu mario trong trạng thái to thì bigger -> gun>
@@ -378,10 +392,18 @@ void MapObject::update()
 
 	// cập nhật quadtree
 	Quadtree::getInstance()->update(listObjectOnCamera, Camera::getInstance()->getCamera());
+
+	// cập nhật scoreGame
+	ScoreGame::getInstance()->update();
 }
 
 void MapObject::updateVelocity()
 {
+	m_stateMachine->update();
+	// nếu đang ở state bros title thì không làm gì thêm
+	if (m_stateMachine->isInState(*BrosTitle::getInstance()) || m_stateMachine->isInState(*ChangeMap::getInstance()))
+		return;
+
 	// <cập nhật vận tốc>
 	Mario::getInstance()->getGun()->updateVelocity(); // đạn
 	Mario::getInstance()->updateVelocity(); // mario

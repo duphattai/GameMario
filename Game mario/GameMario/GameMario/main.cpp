@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "KeyBoard.h"
 #include "stdafx.h"
+#include "GameTime.h"
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -11,10 +12,10 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	game->initGame();
 	MSG msg;
 
-	DWORD lasttime = GetTickCount();
+	GameTime::getInstance()->setTime(); // set time for lasttime
 	while (true)
 	{
-		DWORD currentime = GetTickCount();
+		GameTime::getInstance()->setTime(); // set time for current time
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
@@ -28,9 +29,9 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 			}
 		}
 
-		if (currentime - lasttime > (float)1000 / FPS)
+		if (GameTime::getInstance()->getElapsedTime() > (float)1000 / FPS)
 		{
-			lasttime = currentime;
+			GameTime::getInstance()->update();
 			game->gameRun();
 		}
 	}

@@ -15,6 +15,9 @@ void ReSource::init(LPDIRECT3DDEVICE9 d3ddv)
 
 	m_ItemSheet = new Sprite();
 	m_ItemSheet->loadImageFromPath(d3ddv, L"Resources//items.png", D3DCOLOR_XRGB(255, 0, 255));
+
+	m_Menu = new Sprite();
+	m_Menu->loadImageFromPath(d3ddv, L"Resources//supper-mario-bros-title.png", 1, 1, D3DCOLOR_XRGB(255, 0, 255));
 }
 
 Sprite* ReSource::getSprite(int Id)
@@ -27,6 +30,8 @@ Sprite* ReSource::getSprite(int Id)
 			return m_MarioSheet;
 		case IDImage::IMG_ITEMSHEET:
 			return m_ItemSheet;
+		case IDImage::IMG_MENU:
+			return m_Menu;
 	}
 }
 
@@ -43,6 +48,7 @@ void ReSource::clear()
 	delete m_TileMap;
 	delete m_MarioSheet;
 	delete m_ItemSheet;
+	delete m_Menu;
 }
 
 ReSource::~ReSource()
