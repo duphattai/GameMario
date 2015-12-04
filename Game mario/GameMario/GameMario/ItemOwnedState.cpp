@@ -128,6 +128,8 @@ void LuckyBoxEffect::execute(LuckyBox* item)
 void LuckyBoxEffect::exit(LuckyBox* item)
 {
 	item->setVelocity(Vector2(0, 0));
+	// thiết lập alpha 
+	item->setAlphaColor(D3DCOLOR_RGBA(255, 255, 255, 255));
 }
 
 

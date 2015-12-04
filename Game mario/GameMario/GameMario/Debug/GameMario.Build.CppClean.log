@@ -6,7 +6,6 @@ c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\itemownedst
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\keyboard.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\luckybox.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\main.obj
-c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\mapobject.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\mapownedstate.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\mario.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\marioownedstate.obj
@@ -26,8 +25,10 @@ c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\bulletowned
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\camera.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\coin.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\collision.obj
+c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\flag.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\game.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\gametime.obj
+c:\users\tai\desktop\new folder\game mario\gamemario\gamemario\debug\mapobject.obj
 c:\users\tai\desktop\new folder\game mario\gamemario\debug\gamemario.ilk
 c:\users\tai\desktop\new folder\game mario\gamemario\debug\gamemario.exe
 c:\users\tai\desktop\new folder\game mario\gamemario\debug\gamemario.pdb

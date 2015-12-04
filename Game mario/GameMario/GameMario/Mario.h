@@ -18,6 +18,7 @@ private:
 	bool		m_isStar;
 
 	bool		m_isBoost;
+	bool		m_finishAutoAnimation;
 
 	bool		m_isDead;
 
@@ -71,6 +72,9 @@ public:
 	void		setLives(int x){ m_lives = x; }
 
 	void		setVelocity(Vector2);
+
+	void		setFinishAutoAnimation(bool x){ m_finishAutoAnimation = x; }
+	bool		isFinishAutoAnimation(){ return m_finishAutoAnimation; }
 
 	void		setFSM(FSM_Mario state){ m_FSM_Mario = state; }
 	FSM_Mario	getFSM(){ return m_FSM_Mario; }

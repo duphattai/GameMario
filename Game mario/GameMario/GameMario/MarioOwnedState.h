@@ -101,6 +101,14 @@ public:
 
 
 // AUTO ANIMATION
+enum class AutoAnimationType
+{
+	AutoAnimationMoveOnGroundIntoPipe,
+	AutoAnimationMoveOnGroundIntoCastle,
+	AutoAnimationMoveDownPipe,
+};
+
+
 class AutoAnimation : public State < Mario >
 {
 private:
@@ -114,6 +122,9 @@ public:
 	virtual void		enter(Mario* mario);
 	virtual void		execute(Mario* mario);
 	virtual void		exit(Mario* mario);
+
+	AutoAnimationType		m_type;
+	Vector2					m_endPosition;
 };
 #pragma endregion
 

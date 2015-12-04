@@ -17,11 +17,10 @@ class MapObject : public GameObject
 protected:
 	StateMachine<MapObject>*			m_stateMachine;
 	D3DXCOLOR							m_colorBackGround;
-
 	Vector2								m_checkPoint; // tọa độ nơi nếu mario đi vượt quá sẽ hồi sinh hoặc trở lại từ đầu
 
 	GameObject*							createGameObject(ObjectTittle object);
-	map<int, vector<ObjectTittle>>		readQuadTreeFromFile(TiXmlElement *nodeParent);
+	map<int, vector<ObjectTittle>>		readQuadTreeFromFile(char*);
 	void								buildQuadTree(map<int, vector<ObjectTittle>>);
 public:
 	MapObject();

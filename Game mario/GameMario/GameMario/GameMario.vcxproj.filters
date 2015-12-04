@@ -151,6 +151,12 @@
     <Filter Include="Source Files\FrameWork\Camera">
       <UniqueIdentifier>{7739924f-3e1a-4559-9d13-503679297389}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject\Object\Flag">
+      <UniqueIdentifier>{745171a3-119e-4fc7-b7f8-4e8ec3443014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Flag">
+      <UniqueIdentifier>{0775d29a-b2f9-4f34-844e-26aff31079b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -236,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\FrameWork\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Flag.cpp">
+      <Filter>Source Files\GameObject\Object\Flag</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\FrameWork\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Flag.h">
+      <Filter>Header Files\GameObject\Object\Flag</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

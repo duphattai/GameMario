@@ -80,6 +80,18 @@ void ChangeMap::draw(MapObject* map, LPD3DXSPRITE spriteHandle)
 /////////////////////////////////////////////////////////////////////////////////
 MapOne* MapOne::m_instance = 0;
 
+MapOne::MapOne()
+{
+	// hard code
+	m_boxStartMap = Box(0, 64, 16, 16);
+	m_boxEndMap = Box(3264, 32, 16, 16);
+
+	m_boxStartSubMap = Box(3355, 208, 16, 16);
+	m_boxEndSubMap = Box(3535, 32, 16, 16);
+	m_boxGoInSubMap = Box(920, 82, 16, 16);
+	m_boxGoOutSubMap = Box(2608, 64, 16, 16);
+}
+
 MapOne* MapOne::getInstance()
 {
 	if (!m_instance)
@@ -99,30 +111,63 @@ void MapOne::enter(MapObject* map)
 	}
 	else
 	{
-		Mario::getInstance()->setPosition(0, 50);
+		Mario::getInstance()->setPosition(m_boxStartMap.x, m_boxStartMap.y);
 		Camera::getInstance()->setViewPort(0, Camera::getInstance()->getViewport().y);
 	}
 }
 
 void MapOne::execute(MapObject* map)
 {
-	// 912, 82, 32, 15
+	// 920, 66, 16, 32
 	if (Mario::getInstance()->getFSM() == FSM_Mario::SIT && 
-		AABB(Mario::getInstance()->getBouding(), Box(912, 82, 32, 15)) != DIR::NONE) // hard code, tọa độ xuống submap
+		AABB(Mario::getInstance()->getBouding(), m_boxGoInSubMap) != DIR::NONE) // hard code, tọa độ xuống submap
 	{
-		Mario::getInstance()->setPosition(3355, 208);
-		Mario::getInstance()->getStateMachine()->changeState(Falling::getInstance());
-		
-		Camera::getInstance()->setViewPort(3328, VIEW_PORT_Y);
-		map->setColorBackGround(D3DCOLOR_XRGB(0, 0, 0));
-	}
-	else if (AABB(Mario::getInstance()->getBouding(), Box(3535, 32, 32, 15)) != DIR::NONE) // hard code, tọa độ lên map chính
-	{
-		Mario::getInstance()->setPosition(2608, 64);
-		Mario::getInstance()->getStateMachine()->changeState(Standing::getInstance());
+		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance())) // nếu chưa nằm trang thái auto animation 
+		{
+			AutoAnimation::getInstance()->m_type = AutoAnimationType::AutoAnimationMoveDownPipe; // thiết lập loại auto
+			AutoAnimation::getInstance()->m_endPosition = Vector2(m_boxGoInSubMap.x, m_boxGoInSubMap.y); // tọa độ end auto animation
+			Mario::getInstance()->getStateMachine()->changeState(AutoAnimation::getInstance());
+		}
+		else // trong trạng thái auto animation
+		{
+			if (Mario::getInstance()->isFinishAutoAnimation())
+			{
+				Mario::getInstance()->setPosition(m_boxStartSubMap.x, m_boxStartSubMap.y); // tọa độ mario xuất hiện trong submap
+				Mario::getInstance()->getStateMachine()->changeState(Falling::getInstance());
 
-		Camera::getInstance()->setViewPort(2608 - SCREEN_WIDTH / 2, VIEW_PORT_Y);
-		map->setColorBackGround(D3DCOLOR_XRGB(146, 144, 255));
+				Camera::getInstance()->setViewPort(map->getWidth() - SCREEN_WIDTH, VIEW_PORT_Y);
+				map->setColorBackGround(D3DCOLOR_XRGB(0, 0, 0));
+			}
+		}
+	}
+	else if (AABB(Mario::getInstance()->getBouding(), m_boxEndSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::RUN) // tọa độ end sub map
+	{
+		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()))
+		{
+			AutoAnimation::getInstance()->m_type = AutoAnimationType::AutoAnimationMoveOnGroundIntoPipe; // thiết lập loại auto
+			AutoAnimation::getInstance()->m_endPosition = Vector2(m_boxEndSubMap.x, m_boxEndSubMap.y); // tọa độ end auto animation
+			Mario::getInstance()->getStateMachine()->changeState(AutoAnimation::getInstance());
+		}
+		else // trong trạng thái auto animation
+		{
+			if (Mario::getInstance()->isFinishAutoAnimation()) // kết thúc auto animation
+			{
+				Mario::getInstance()->setPosition(m_boxGoOutSubMap.x, m_boxGoOutSubMap.y);
+				Mario::getInstance()->getStateMachine()->changeState(Standing::getInstance());
+
+				Camera::getInstance()->setViewPort(m_boxGoOutSubMap.x - SCREEN_WIDTH / 2, VIEW_PORT_Y);
+				map->setColorBackGround(D3DCOLOR_XRGB(146, 144, 255));
+			}
+		}
+	}
+	// qua màn
+	else if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) && AutoAnimation::getInstance()->m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
+	{
+		AutoAnimation::getInstance()->m_endPosition = Vector2(m_boxEndMap.x, m_boxEndMap.y);
+		if (Mario::getInstance()->isFinishAutoAnimation())
+		{
+			map->getStateMachine()->changeState(ChangeMap::getInstance());
+		}
 	}
 
 	// không qua màn

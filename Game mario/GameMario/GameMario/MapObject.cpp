@@ -8,14 +8,12 @@
 #include "Camera.h"
 #include "ScoreGame.h"
 #include "MarioOwnedState.h"
-
+#include "Flag.h"
 MapObject::MapObject()
 {
 	m_flip = SpriteEffect::None;
 	m_sprite = NULL;
-
 	m_typeObject = TypeObject::Dynamic_TiledMap;
-
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
 
 	m_stateMachine = new StateMachine<MapObject>(this);
@@ -27,20 +25,28 @@ MapObject::~MapObject()
 	delete m_stateMachine;
 }
 
-map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(TiXmlElement *nodeParent)
+map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(char* path)
 {
-	nodeParent = nodeParent->FirstChildElement()->NextSiblingElement(); // trỏ tới node có tên quadtree
-	TiXmlElement* node = nodeParent->FirstChildElement(); // get first node
-	map<int, vector<ObjectTittle>> list;
+	TiXmlDocument doc(path);
+	if (!doc.LoadFile())
+	{
+		printf("%s", doc.ErrorDesc());
+		exit(0);
+	}
+	TiXmlElement* node = doc.RootElement()->FirstChildElement()->NextSiblingElement(); // get first node
+	node->QueryIntAttribute("mapwidth", &m_width);
+	m_height = 240;
 
+	node = node->FirstChildElement();
+	map<int, vector<ObjectTittle>> list;
 	while (node != nullptr)
 	{
 		int id;
 		node->QueryIntAttribute("id", &id);
 
 		vector<ObjectTittle> listObject;
-		TiXmlElement* object = node->FirstChildElement(); // get first object in node
-		while (object != nullptr) // get all objects in child node
+		TiXmlElement* object = node->FirstChildElement(); // lấy object con của node
+		while (object != nullptr) // tồn tại object con
 		{
 			ObjectTittle temp;
 			object->QueryIntAttribute("id", &temp.m_Id);
@@ -51,7 +57,7 @@ map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(TiXmlElement *nod
 			object->QueryIntAttribute("height", &temp.m_Height);
 
 			listObject.push_back(temp);
-			object = object->NextSiblingElement(); // get next object
+			object = object->NextSiblingElement(); // lấy object con kế tiếp
 		}
 
 		// insert list object
@@ -81,16 +87,7 @@ void MapObject::init(IDMap map)
 
 
 	// đọc quadtree từ file xml
-	TiXmlDocument doc(FileMap);
-	if (!doc.LoadFile())
-	{
-		printf("%s", doc.ErrorDesc());
-		return;
-	}
-	std::map<int, vector<ObjectTittle>> quadtreeNode = readQuadTreeFromFile(doc.RootElement());
-	// end
-
-
+	std::map<int, vector<ObjectTittle>> quadtreeNode = readQuadTreeFromFile(FileMap);
 	// build tree
 	buildQuadTree(quadtreeNode);
 
@@ -157,9 +154,7 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 			// chỉ tạo object nào không nằm trên biên
 			GameObject*	temp = createGameObject(it->second[i]);
 			if (temp != nullptr)
-			{
 				list.push_back(temp);
-			}
 		}
 		if (list.size() != 0) listGameObject.insert(pair<int, vector<GameObject*>>(it->first, list));
 	}
@@ -240,8 +235,6 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 				var->draw(spriteHandler);
 			}
 		}
-
-		Mario::getInstance()->draw(spriteHandler);
 	}
 
 	m_stateMachine->GetCurrentState()->draw(this, spriteHandler);
@@ -274,6 +267,16 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
+	else if (gameObject.m_Id == 22) // mushroom up hidden
+	{
+		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::YellowLuckyBox);
+
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+
+		temp->setAlphaColor(D3DCOLOR_RGBA(255, 255, 255, 0));
+		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
 	else if (gameObject.m_Id == 24) // item coin
 	{
 		temp = new Coin();
@@ -302,6 +305,11 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
 
+		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
+	else if (gameObject.m_Id == 33) // item flag
+	{
+		temp = new Flag(Vector2(gameObject.m_X, gameObject.m_Y));
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
 	else if (gameObject.m_Id == 30) // star in brick
@@ -387,8 +395,10 @@ void MapObject::update()
 	// </>
 
 
-	// thiết lập view port
-	Camera::getInstance()->update(Mario::getInstance()->getPosition()); // cập nhật lại viewport
+	// chỉ cập nhật viewport khi mario khong trong trạng thái auto animation
+	if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()))
+		Camera::getInstance()->update(Mario::getInstance()->getPosition()); // cập nhật lại viewport
+	
 
 	// cập nhật quadtree
 	Quadtree::getInstance()->update(listObjectOnCamera, Camera::getInstance()->getCamera());

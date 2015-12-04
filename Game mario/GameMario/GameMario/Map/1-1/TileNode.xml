@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Game>
 	<Information>
-		<Description des="ID=0: tiles map&#xD;" />
-		<Description des="ID=25: item box&#xD;" />
-		<Description des="ID=27: item brick&#xD;" />
+		<Description des="ID=0: tiles map;" />
+		<Description des="ID=25: item box;" />
+		<Description des="ID=27: item brick;" />
 		<Description des="ID=20: item mushroom bigger;" />
 		<Description des="ID=10: enemy mushroom;" />
 		<Description des="ID=21: item mushroom bigger;" />
+		<Description des="ID=22: item mushroom up hidden;" />
+		<Description des="ID=33: item flag;" />
 		<Description des="ID=30: star brick;" />
 		<Description des="ID=14: enemy turle;" />
 		<Description des="ID=24: item coin;" />
@@ -264,6 +266,7 @@
 			<Object id="1" index="0" x="736" y="32" width="32" height="64" />
 		</Node>
 		<Node id="3433">
+			<Object id="22" index="0" x="1024" y="96" width="16" height="16" />
 			<Object id="0" index="0" x="1088" y="16" width="16" height="16" />
 			<Object id="0" index="0" x="1072" y="16" width="16" height="16" />
 			<Object id="0" index="0" x="1056" y="16" width="16" height="16" />
@@ -975,6 +978,7 @@
 			<Object id="1" index="0" x="3008" y="32" width="16" height="128" />
 		</Node>
 		<Node id="4443">
+			<Object id="33" index="0" x="3168" y="176" width="16" height="16" />
 			<Object id="1" index="0" x="2480" y="0" width="848" height="32" />
 			<Object id="0" index="0" x="3296" y="16" width="16" height="16" />
 			<Object id="0" index="0" x="3296" y="0" width="16" height="16" />
@@ -1002,13 +1006,6 @@
 			<Object id="0" index="0" x="3120" y="16" width="16" height="16" />
 			<Object id="0" index="274" x="3120" y="32" width="16" height="16" />
 			<Object id="0" index="33" x="3152" y="32" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="48" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="64" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="80" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="96" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="112" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="128" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="144" width="16" height="16" />
 			<Object id="0" index="2" x="3216" y="32" width="16" height="16" />
 			<Object id="0" index="2" x="3216" y="48" width="16" height="16" />
 			<Object id="0" index="11" x="3216" y="64" width="16" height="16" />
@@ -1057,8 +1054,6 @@
 			<Object id="0" index="68" x="3328" y="176" width="16" height="16" />
 			<Object id="0" index="68" x="3328" y="192" width="16" height="16" />
 			<Object id="1" index="0" x="3152" y="32" width="16" height="16" />
-			<Object id="0" index="313" x="3152" y="160" width="16" height="16" />
-			<Object id="1" index="0" x="3152" y="48" width="16" height="144" />
 			<Object id="1" index="0" x="3328" y="48" width="16" height="160" />
 			<Object id="1" index="0" x="3328" y="0" width="256" height="32" />
 		</Node>

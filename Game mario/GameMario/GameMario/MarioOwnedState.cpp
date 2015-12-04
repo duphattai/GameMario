@@ -316,11 +316,46 @@ AutoAnimation* AutoAnimation::getInstance()
 
 void AutoAnimation::enter(Mario* mario)
 {
+	mario->setFinishAutoAnimation(false);
 }
 
 void AutoAnimation::execute(Mario* mario)
 {
-	
+	if (m_type == AutoAnimationType::AutoAnimationMoveDownPipe)
+	{
+		if (mario->getPosition().y < m_endPosition.y)
+			mario->setFinishAutoAnimation(true);
+		else
+			mario->setVelocity(Vector2(0, -1));
+
+		mario->setFSM(FSM_Mario::SIT);
+	}
+	else if (m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoPipe)
+	{
+		if (mario->getPosition().x > m_endPosition.x)
+			mario->setFinishAutoAnimation(true);
+		else
+			mario->setVelocity(Vector2(1, 0));
+
+		mario->setFSM(FSM_Mario::RUN);
+	}
+	else if (m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
+	{
+		if (Mario::getInstance()->getPosition().y > m_endPosition.y)
+		{
+			mario->setVelocity(Vector2(0, -2));
+			mario->setFSM(FSM_Mario::FALL);
+		}
+		else
+		{
+			mario->setPosition(mario->getPosition().x, m_endPosition.y);
+			mario->setVelocity(Vector2(2, 0));
+			mario->setFSM(FSM_Mario::RUN);
+
+			if (mario->getPosition().x > m_endPosition.x)
+				mario->setFinishAutoAnimation(true);
+		}
+	}
 }
 
 void AutoAnimation::exit(Mario* mario)

@@ -7,6 +7,7 @@
 #include "Brick.h"
 #include "Coin.h"
 #include "Camera.h"
+#include "Flag.h"
 
 using namespace std;
 
@@ -167,7 +168,9 @@ Box Mario::getBouding()
 bool Mario::isCollision(GameObject* gameObject)
 {
 	int type = gameObject->getTypeObject();
-	if (type == TypeObject::Dynamic_TiledMap || gameObject->getStatusOBject() == StatusObject::DEAD || !gameObject->isActive()) // không xét va cham với tiled map 
+	if (type == TypeObject::Dynamic_TiledMap   // không xét va cham với tiled map 
+		|| gameObject->getStatusOBject() == StatusObject::DEAD || !gameObject->isActive()
+		|| m_stateMachine->isInState(*AutoAnimation::getInstance())) 
 		return false;
 
 
@@ -228,8 +231,16 @@ bool Mario::isCollision(GameObject* gameObject)
 			Coin* coin = dynamic_cast<Coin*>(gameObject);
 			LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
 			Brick* brick = dynamic_cast<Brick*>(gameObject);
+			Flag* flag = dynamic_cast<Flag*>(gameObject);
 
-			if (coin != nullptr)
+			if (flag != nullptr)
+			{
+				m_velocity = Collision::getInstance()->getVelocity();
+				flag->setMakeEffect(true);
+				AutoAnimation::getInstance()->m_type = AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle;
+				m_stateMachine->changeState(AutoAnimation::getInstance());
+			}
+			else if (coin != nullptr)
 			{
 				coin->setStatusObject(StatusObject::DEAD);
 				return true;
