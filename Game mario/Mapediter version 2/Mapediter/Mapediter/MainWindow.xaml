@@ -78,25 +78,25 @@
                             <ImageBrush ImageSource="Enemies/17.png"/>
                         </Button.Background>
                     </Button>
-                    <Button Width="32" Height="32" Grid.Column="8" x:Name="Enemy_18" Click="enemy_18_Click">
-                        <Button.Background>
-                            <ImageBrush ImageSource="Enemies/18.png"/>
-                        </Button.Background>
-                    </Button>
                 </Grid>
             </TabItem>
             <TabItem Header="Items" HorizontalAlignment="Right" Width="61">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="64*" />
-                        <ColumnDefinition Width="192*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
+                        <ColumnDefinition Width="48*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*" />
@@ -141,13 +141,43 @@
                             <ImageBrush ImageSource="Items/27.png"/>
                         </Button.Background>
                     </Button>
+                    <Button Width="32" Height="32" Grid.Column="8" x:Name="Item_28" Click="item_28_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Items/28.png"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="32" Height="32" Grid.Column="9" x:Name="Item_29" Click="item_29_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Items/29.png"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="32" Height="32" Grid.Column="10" x:Name="Item_30" Click="item_30_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Items/30.png"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="32" Height="32" Grid.Column="11" x:Name="Item_31" Click="item_31_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Items/31.png"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="32" Height="32" Grid.Column="12" x:Name="Item_32" Click="item_32_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Items/32.png"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="32" Height="32" Grid.Column="13" x:Name="Item_33" Click="item_33_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Items/33.png"/>
+                        </Button.Background>
+                    </Button>
                 </Grid>
             </TabItem>
         </TabControl>
         <Label Content="ID" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.591,0.577" Height="26" Width="22"/>
-        <TextBox IsReadOnly="True" x:Name="InputID" HorizontalAlignment="Left" Margin="37,123,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Height="22" Width="52"/>
+        <TextBox x:Name="InputID" HorizontalAlignment="Left" Margin="37,123,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Height="22" Width="52"/>
         <Label Content="Description" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Width="90" Height="26" Grid.Column="1"/>
-        <TextBox IsReadOnly="True" x:Name="InputInfor" HorizontalAlignment="Left" Height="23" Margin="90,123,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="151" Grid.Column="1"/>
+        <TextBox x:Name="InputInfor" HorizontalAlignment="Left" Height="23" Margin="90,123,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="151" Grid.Column="1"/>
         <CheckBox x:Name="checkGrid" Content="Grid" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Height="16" Width="49" Checked="checkBoxDrawGrid_Checked" Unchecked="checkBoxDrawGrid_Checked"/>
 
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFD6D6D6" Margin="10,186,10,0" Grid.Column="1">

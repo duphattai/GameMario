@@ -277,7 +277,7 @@ namespace Mapediter
         {
             this.Close();
         }
-        
+
         private void enemy_10_Click(object sender, RoutedEventArgs e)
         {
             selected_image.Fill = Enemy_10.Background;
@@ -290,7 +290,7 @@ namespace Mapediter
         {
             selected_image.Fill = Enemy_11.Background;
             InputID.Text = "11";
-            InputInfor.Text = "enemy mushroom blue";
+            InputInfor.Text = "enemy flower down";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
@@ -298,7 +298,7 @@ namespace Mapediter
         {
             selected_image.Fill = Enemy_12.Background;
             InputID.Text = "12";
-            InputInfor.Text = "enemy flower";
+            InputInfor.Text = "enemy flower up";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
@@ -306,7 +306,7 @@ namespace Mapediter
         {
             selected_image.Fill = Enemy_13.Background;
             InputID.Text = "13";
-            InputInfor.Text = "enemy flower blue";
+            InputInfor.Text = "enemy rocket";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
@@ -322,7 +322,7 @@ namespace Mapediter
         {
             selected_image.Fill = Enemy_15.Background;
             InputID.Text = "15";
-            InputInfor.Text = "enemy turle red";
+            InputInfor.Text = "enemy cloud";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
@@ -330,7 +330,7 @@ namespace Mapediter
         {
             selected_image.Fill = Enemy_16.Background;
             InputID.Text = "16";
-            InputInfor.Text = "enemy turle blue";
+            InputInfor.Text = "enemy boss";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
@@ -342,20 +342,12 @@ namespace Mapediter
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
-        private void enemy_18_Click(object sender, RoutedEventArgs e)
-        {
-            selected_image.Fill = Enemy_18.Background;
-            InputID.Text = "18";
-            InputInfor.Text = "enemy turle fly red";
-            drawRectangle.IsChecked = false;
-            currentIndex = 0;
-        }
-        
+
         private void item_20_Click(object sender, RoutedEventArgs e)
         {
             selected_image.Fill = Item_20.Background;
             InputID.Text = "20";
-            InputInfor.Text = "item mushroom bigger";
+            InputInfor.Text = "item mushroom up";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
@@ -371,7 +363,7 @@ namespace Mapediter
         {
             selected_image.Fill = Item_22.Background;
             InputID.Text = "22";
-            InputInfor.Text = "item star";
+            InputInfor.Text = "item mushroom up hidden";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }
@@ -412,6 +404,55 @@ namespace Mapediter
             selected_image.Fill = Item_27.Background;
             InputID.Text = "27";
             InputInfor.Text = "item brick";
+            drawRectangle.IsChecked = false;
+            currentIndex = 0;
+        }
+        private void item_28_Click(object sender, RoutedEventArgs e)
+        {
+            selected_image.Fill = Item_28.Background;
+            InputID.Text = "28";
+            InputInfor.Text = "mushroom up brick";
+            drawRectangle.IsChecked = false;
+            currentIndex = 0;
+        }
+        private void item_29_Click(object sender, RoutedEventArgs e)
+        {
+            selected_image.Fill = Item_29.Background;
+            InputID.Text = "29";
+            InputInfor.Text = "mushroom bigger brick";
+            drawRectangle.IsChecked = false;
+            currentIndex = 0;
+        }
+        private void item_30_Click(object sender, RoutedEventArgs e)
+        {
+            selected_image.Fill = Item_30.Background;
+            InputID.Text = "30";
+            InputInfor.Text = "star brick";
+            drawRectangle.IsChecked = false;
+            currentIndex = 0;
+        }
+        private void item_31_Click(object sender, RoutedEventArgs e)
+        {
+            selected_image.Fill = Item_31.Background;
+            InputID.Text = "31";
+            InputInfor.Text = "gun brick";
+            drawRectangle.IsChecked = false;
+            currentIndex = 0;
+        }
+        private void item_32_Click(object sender, RoutedEventArgs e)
+        {
+            selected_image.Fill = Item_32.Background;
+            InputID.Text = "32";
+            InputInfor.Text = "coin brick";
+            drawRectangle.IsChecked = false;
+            currentIndex = 0;
+        }
+
+        private void item_33_Click(object sender, RoutedEventArgs e)
+        {
+            selected_image.Fill = Item_33.Background;
+            InputID.Text = "33";
+            InputInfor.Text = "item flag";
             drawRectangle.IsChecked = false;
             currentIndex = 0;
         }

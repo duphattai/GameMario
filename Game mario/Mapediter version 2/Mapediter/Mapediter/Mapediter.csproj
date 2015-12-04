@@ -104,24 +104,29 @@
     <Resource Include="Enemies\13.png" />
     <Resource Include="Enemies\14.png" />
     <Resource Include="Items\20.png" />
-    <Resource Include="Items\rectangle.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Items\21.png" />
     <Resource Include="Items\22.png" />
     <Resource Include="Items\23.png" />
     <Resource Include="Items\24.png" />
     <Resource Include="Items\25.png" />
     <Resource Include="Items\26.png" />
+    <Resource Include="Items\27.png" />
+    <Resource Include="Items\rectangle.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Enemies\15.png" />
     <Resource Include="Enemies\16.png" />
     <Resource Include="Enemies\17.png" />
-    <Resource Include="Enemies\18.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Items\27.png" />
+    <Resource Include="Items\28.png" />
+    <Resource Include="Items\29.png" />
+    <Resource Include="Items\30.png" />
+    <Resource Include="Items\31.png" />
+    <Resource Include="Items\32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Items\33.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
