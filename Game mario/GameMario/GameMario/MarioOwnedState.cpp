@@ -205,7 +205,7 @@ void Jumping::execute(Mario* mario)
 	// update velocity
 	keyboard->getState();
 	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0)
-		velocity.y += m_timeJump;
+		velocity.y += 2;
 
 	if (keyboard->isKeyDown(DIK_RIGHT))
 	{
@@ -480,8 +480,6 @@ void Small::execute(Mario* mario)
 void Small::exit(Mario* mario)
 {
 	m_frameAnimation.clear();
-	m_currentIndex = 0;
-	m_countTime = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////

@@ -156,6 +156,7 @@ vector<GameObject*> Quadtree::getListObjects(Box camera, vector<GameObject*> lis
 		vector<GameObject*> listObjectOnCamera;
 		for each (GameObject* var in m_listObject)
 		{
+			Box temp = var->getBouding();
 			if (AABB(var->getBouding(), camera) != DIR::NONE)
 			{
 				listObjectOnCamera.push_back(var);

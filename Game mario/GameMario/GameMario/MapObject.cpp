@@ -71,6 +71,7 @@ map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(char* path)
 void MapObject::init(IDMap map)
 {
 	char *FileMap = nullptr;
+	m_idMap = map;
 	// thiết lập đường dẫn
 	if (map == IDMap::MapOne)
 	{
@@ -79,6 +80,8 @@ void MapObject::init(IDMap map)
 	}
 	else if (map == IDMap::MapTwo)
 	{
+		FileMap = "Map//1-2//TileNode.xml";
+		m_checkPoint = Vector2(1280, 32);
 	}
 	else if (map == IDMap::MapThree)
 	{
@@ -97,7 +100,6 @@ void MapObject::init(IDMap map)
 	// set time
 	ScoreGame::getInstance()->setTimeOfState(400);
 }
-
 
 
 // <build tree>
@@ -162,7 +164,7 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 	// build tree
 	// build từ những object không nằm trên biên
  	Quadtree::getInstance()->release(); // xóa các node nếu có
-	Quadtree::getInstance()->buildTree(listGameObject, Box(0, 0, 3584, 3584));
+	Quadtree::getInstance()->buildTree(listGameObject, Box(0, 0, m_width, m_width));
 
 
 	// build object nằm trên biên
@@ -180,7 +182,7 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 			{
 				if (var == it->second[i]) // nằm trên biên
 				{
-					Quadtree::getInstance()->insert(list, it->first, Box(0, 0, 3584, 3584));
+					Quadtree::getInstance()->insert(list, it->first, Box(0, 0, m_width, m_width));
 					break;
 				}
 			}
@@ -260,7 +262,7 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	}
 	else if (gameObject.m_Id == 21) // item mushroom bigger
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::YellowLuckyBox);
+		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::YellowLuckyBox, m_idMap);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
@@ -269,7 +271,7 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	}
 	else if (gameObject.m_Id == 22) // mushroom up hidden
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::YellowLuckyBox);
+		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::YellowLuckyBox, m_idMap);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
@@ -279,13 +281,13 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	}
 	else if (gameObject.m_Id == 24) // item coin
 	{
-		temp = new Coin();
+		temp = new Coin(m_idMap);
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for coin
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
 	else if (gameObject.m_Id == 25) // coin in luckybox
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::YellowLuckyBox);
+		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::YellowLuckyBox, m_idMap);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
@@ -295,12 +297,12 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	else if (gameObject.m_Id == 27) // brick
 	{
 		Vector2 position(gameObject.m_X, gameObject.m_Y);
-		temp = new Brick(position);
+		temp = new Brick(position, m_idMap);
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
 	else if (gameObject.m_Id == 32) // coin in brick
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::BrickLuckyBox, 4);
+		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::BrickLuckyBox, m_idMap, 4);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
@@ -314,7 +316,7 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	}
 	else if (gameObject.m_Id == 30) // star in brick
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_STAR, ItemTypes::BrickLuckyBox);
+		temp = new LuckyBox(LuckyBoxsType::IT_STAR, ItemTypes::BrickLuckyBox, m_idMap);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
@@ -396,7 +398,7 @@ void MapObject::update()
 
 
 	// chỉ cập nhật viewport khi mario khong trong trạng thái auto animation
-	if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()))
+	if (m_isScrollMap)
 		Camera::getInstance()->update(Mario::getInstance()->getPosition()); // cập nhật lại viewport
 	
 

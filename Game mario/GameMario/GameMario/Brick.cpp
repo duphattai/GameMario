@@ -2,7 +2,7 @@
 #include "ReSource.h"
 #include "ItemOwnedState.h"
 
-Brick::Brick(Vector2 position)
+Brick::Brick(Vector2 position, IDMap idMap)
 {
 	m_position.x = position.x;
 	m_position.y = position.y;
@@ -10,17 +10,10 @@ Brick::Brick(Vector2 position)
 	m_height = 16;
 
 
-	//hard code
-	// tọa độ mini brick trong item sheet
+	// hard code
+	// tọa độ mini brick trong items.png
 	for (int i = 0; i < 2; i++)
-	{
-		RECT rect;
-		rect.left = 68;
-		rect.top = 20 + 16 * i;
-		rect.right = rect.left + 8;
-		rect.bottom = rect.top + 8;
-		m_frameList.push_back(Frame(0, rect));
-	}
+		m_frameList.push_back(Frame(68 + (int)idMap * 144, 20 + 16 * i, 8, 8));
 
 
 	m_framePosition.push_back(Vector2(position.x, position.y));
@@ -31,11 +24,12 @@ Brick::Brick(Vector2 position)
 
 	m_isBreak = false;
 	m_velocity = Vector2(0, 0);
-	//m_type = LuckyBoxsType::IT_BRICK;
 	m_timeAnimation = 3;
 	m_currentFrame = 0;
 	m_stateMachine = new StateMachine<Brick>(this);
 	m_stateMachine->changeState(BrickIdle::getInstance());
+
+	m_index = 1 + 66 * (int)idMap;
 }
 Brick::~Brick()
 {
@@ -61,7 +55,7 @@ void Brick::draw(LPD3DXSPRITE SpriteHandler)
 	if (!m_isBreak)
 	{
 		m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
-		m_sprite->setIndex(1);
+		m_sprite->setIndex(m_index);
 		GameObject::draw(SpriteHandler);
 	}
 	else

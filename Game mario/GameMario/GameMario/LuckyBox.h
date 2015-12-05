@@ -18,7 +18,7 @@ class LuckyBox : public GameObject
 
 	bool						m_makeEffect;
 public:
-	LuckyBox(LuckyBoxsType, ItemTypes, int countCoin = 1);
+	LuckyBox(LuckyBoxsType, ItemTypes, IDMap, int countCoin = 1);
 	~LuckyBox();
 
 	void					setCurrentFrame(int frame);

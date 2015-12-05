@@ -316,7 +316,6 @@ void Mario::setVelocity(Vector2 velocity)
 	
 }
 
-
 void Mario::setCurrentFrame(int frame)
 {
 	m_currentFrame = frame; 

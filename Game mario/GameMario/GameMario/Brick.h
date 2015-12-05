@@ -18,7 +18,7 @@ class Brick : public GameObject
 	
 	bool						m_makeEffect;
 public:
-	Brick(Vector2);
+	Brick(Vector2, IDMap);
 	~Brick();
 
 	StateMachine<Brick>*	getStateMachine(){ return m_stateMachine; }

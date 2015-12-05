@@ -1,16 +1,16 @@
 ﻿#include "Coin.h"
 #include "ReSource.h"
 #include "ScoreGame.h"
-Coin::Coin()
+Coin::Coin(IDMap idMap)
 {
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
 	m_currentFrame = 0;
 
 	// hard code, tọa độ sprite aniamtion của coin trong items.png
-	m_frameList.push_back(Frame(3, 98, 10, 14));
-	m_frameList.push_back(Frame(19, 98, 10, 14));
-	m_frameList.push_back(Frame(35, 98, 10, 14));
-	m_frameList.push_back(Frame(51, 98, 10, 14));
+	m_frameList.push_back(Frame(3  + 144 * (int)idMap, 98, 10, 14));
+	m_frameList.push_back(Frame(19 + 144 * (int)idMap, 98, 10, 14));
+	m_frameList.push_back(Frame(35 + 144 * (int)idMap, 98, 10, 14));
+	m_frameList.push_back(Frame(51 + 144 * (int)idMap, 98, 10, 14));
 
 	m_timeAnimation = 5;
 	m_width = 10;

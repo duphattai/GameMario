@@ -76,7 +76,7 @@ int	Camera::getWorldWidth()
 void Camera::update(Vector2 position)
 {
 	// update camera just move right
-	if (m_viewPortX < position.x - SCREEN_WIDTH / 2 && m_viewPortX + m_screenWidth < m_worldWidth)
+	if (position.x - m_viewPortX  > SCREEN_WIDTH / 2 && m_viewPortX + m_screenWidth < m_worldWidth)
 		m_viewPortX = position.x - SCREEN_WIDTH / 2;
 }
 

@@ -18,6 +18,9 @@ protected:
 	StateMachine<MapObject>*			m_stateMachine;
 	D3DXCOLOR							m_colorBackGround;
 	Vector2								m_checkPoint; // tọa độ nơi nếu mario đi vượt quá sẽ hồi sinh hoặc trở lại từ đầu
+	IDMap								m_idMap;
+	bool								m_isScrollMap;
+
 
 	GameObject*							createGameObject(ObjectTittle object);
 	map<int, vector<ObjectTittle>>		readQuadTreeFromFile(char*);
@@ -39,6 +42,9 @@ public:
 	void								draw(LPD3DXSPRITE SpriteHandler);
 	void								updateVelocity();
 	void								update();
+
+	bool								isScrollMap(){ return m_isScrollMap; }
+	void								setScrollMap(bool x){ m_isScrollMap = x; }
 
 	void								setCheckPoin(Vector2 checkPoint){ m_checkPoint = checkPoint; }
 	Vector2								getCheckPoint(){ return m_checkPoint; }

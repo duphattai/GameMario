@@ -159,7 +159,8 @@ void IdleBrickItem::execute(LuckyBox* item)
 {
 	if (item->getCountItem() > 0)
 	{
-		item->setIndexSprite(1);
+		item->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP));
+		item->setCurrentFrame(0);// hard code
 	}
 
 	// change state make effect
@@ -197,7 +198,9 @@ void BrickItemEffect::execute(LuckyBox* item)
 {
 	if (item->getCountItem() == 0)
 	{
-		item->setIndexSprite(3);//hard code
+		item->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP));
+		item->setCurrentFrame(item->getSizeFrameList() - 1);// hard code
+		//item->setIndexSprite(3);//hard code
 	}
 
 	// update position
@@ -615,7 +618,7 @@ BrickIdle* BrickIdle::getInstance()
 void BrickIdle::enter(Brick* brick)
 {
 	brick->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP));
-	brick->setIndexSprite(1); // hard code
+	brick->setIndexSprite(brick->getIndexSprite()); // hard code
 	brick->setVelocity(Vector2(0, 0));
 }
 
@@ -654,7 +657,7 @@ BrickEffect* BrickEffect::getInstance()
 void BrickEffect::enter(Brick* brick)
 {
 	brick->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP));
-	brick->setIndexSprite(1); // hard code
+	brick->setIndexSprite(brick->getIndexSprite()); // hard code
 	brick->setVelocity(Vector2(0, 3));
 	brick->setMakeEffect(false);
 

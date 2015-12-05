@@ -10,7 +10,7 @@ class Coin : public GameObject
 	int							m_currentFrame;
 	vector<Frame>				m_frameList;
 public:
-	Coin();
+	Coin(IDMap);
 	~Coin();
 
 	void					update();

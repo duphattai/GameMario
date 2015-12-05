@@ -80,7 +80,7 @@ enum MarioSheet
 
 enum class IDMap
 {
-	MapOne,
+	MapOne = 0,
 	MapTwo,
 	MapThree
 };

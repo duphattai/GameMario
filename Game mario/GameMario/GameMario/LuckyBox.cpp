@@ -2,34 +2,26 @@
 #include "ReSource.h"
 #include "ItemOwnedState.h"
 
-LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, int countCoin)
+LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, IDMap idMap, int countCoin)
 {
 	m_countItem = countCoin;
 	m_itemType = itemType;
 
-	// hard code, tọa độ của animation luckybox trong ItemSheet
-	for (int i = 0; i < 4; i++)
+	// hard code, tọa độ của animation luckybox trong items.png
+	if (itemType == ItemTypes::YellowLuckyBox)
 	{
-		RECT rect;
-		// frame i
-		rect.left = 0 + 16 * i;
-		rect.right = rect.left + 16; 
-		rect.top = 80; 
-		rect.bottom = rect.top + 16;
-		
-		m_frameList.push_back(Frame(0, rect));
+		for (int i = 0; i < 4; i++)
+			m_frameList.push_back(Frame(16 * i + (int)idMap * 144, 80, 16, 16));
 	}
-	// tọa độ của sprite luckybox 2
-	RECT rect;
-	rect.left = 48;
-	rect.right = 64;
-	rect.top = 0;
-	rect.bottom = 16;
-	m_frameList.push_back(Frame(0, rect));
+	else if (itemType == ItemTypes::BrickLuckyBox)
+	{
+		m_frameList.push_back(Frame(16, 32 * (int)idMap, 16, 16));
+	}
+	// tọa độ của luckybox (không còn item) trong tileset.png
+	m_frameList.push_back(Frame(48, 32 * (int)idMap, 16, 16));
 
 	//end
 	m_item = new ItemInBox(type);
-	
 
 	m_stateMachine = new StateMachine<LuckyBox>(this);
 	if (itemType == ItemTypes::BrickLuckyBox)
@@ -76,11 +68,7 @@ void LuckyBox::draw(LPD3DXSPRITE SpriteHandler)
 	m_item->setWorldPosition(m_worldPosition);
 	m_item->draw(SpriteHandler);
 
-	if (m_itemType == ItemTypes::YellowLuckyBox)
-		m_sprite->setRect(m_frameList[m_currentFrame].rect);
-	else if (m_itemType == ItemTypes::BrickLuckyBox)
-		m_sprite->setIndex(m_index);
-
+	m_sprite->setRect(m_frameList[m_currentFrame].rect);
 	GameObject::draw(SpriteHandler);
 }
 
