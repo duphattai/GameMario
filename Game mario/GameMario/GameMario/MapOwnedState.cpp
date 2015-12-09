@@ -20,14 +20,13 @@ BrosTitle* BrosTitle::getInstance()
 
 void BrosTitle::enter(MapObject* map)
 {
-	Camera::getInstance()->initialize(0, VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT, 3584, 240);
 }
 
 void BrosTitle::execute(MapObject* map)
 {
 	keyboard->getState();
 	if (keyboard->isKeyDown(DIK_SPACE))
-		map->getStateMachine()->changeState(MapOne::getInstance());
+		map->getStateMachine()->changeState(MapThree::getInstance());
 }
 
 void BrosTitle::exit(MapObject* map)
@@ -90,7 +89,7 @@ MapOne::MapOne()
 {
 	// hard code
 	m_boxStartMap = Box(0, 64, 16, 16);
-	m_boxEndMap = Box(3264, 32, 16, 16);
+	m_boxEndMap = Box(3248, 32, 16, 16);
 
 	m_boxStartSubMap = Box(3355, 208, 16, 16);
 	m_boxEndSubMap = Box(3535, 32, 16, 16);
@@ -109,6 +108,7 @@ MapOne* MapOne::getInstance()
 void MapOne::enter(MapObject* map)
 {
 	map->init(IDMap::MapOne);
+	Camera::getInstance()->initialize(0, VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT, map->getWidth(), map->getHeight());
 	Mario::getInstance()->initialize();
 	map->setScrollMap(true);
 	if (Mario::getInstance()->getPosition().x > map->getCheckPoint().x)
@@ -208,7 +208,7 @@ MapTwo::MapTwo()
 	m_boxEndMap = Box(3760, 32, 16, 16);
 
 	m_subMap.boxStartSubMap = Box(288, 128, 16, 16);
-	m_subMap.boxEndSubMap = Box(2912, 80, 16, 16);
+	m_subMap.boxEndSubMap = Box(2910, 32, 16, 16);
 	m_subMap.boxGoInSubMap = Box(160, 32, 16, 16);
 	m_subMap.boxGoOutSubMap = Box(3360, 64, 16, 16);
 
@@ -229,6 +229,7 @@ MapTwo* MapTwo::getInstance()
 void MapTwo::enter(MapObject* map)
 {
 	map->init(IDMap::MapTwo);
+	Camera::getInstance()->initialize(0, VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT, map->getWidth(), map->getHeight());
 	if (Mario::getInstance()->getPosition().x > map->getCheckPoint().x)
 	{
 		Mario::getInstance()->setPosition(map->getCheckPoint().x, map->getCheckPoint().y);
@@ -283,10 +284,11 @@ void MapTwo::execute(MapObject* map)
 		{
 			if (Mario::getInstance()->isFinishAutoAnimation()) // kết thúc auto animation
 			{
+				map->setScrollMap(true);
 				Mario::getInstance()->setPosition(m_subMap.boxGoOutSubMap.x, m_subMap.boxGoOutSubMap.y);
-				Mario::getInstance()->getStateMachine()->changeState(Standing::getInstance());
+				Mario::getInstance()->getStateMachine()->changeState(Falling::getInstance());
 
-				Camera::getInstance()->setViewPort(3312, VIEW_PORT_Y); // hard code, dựa vào image để xác định
+				Camera::getInstance()->setViewPort(3328, VIEW_PORT_Y); // hard code, dựa vào image để xác định
 				map->setColorBackGround(D3DCOLOR_XRGB(146, 144, 255));
 			}
 		}
@@ -359,3 +361,63 @@ void MapTwo::exit(MapObject* map)
 {
 }
 /////////////////////////////////////////////////////////////////////////////////
+
+MapThree* MapThree::m_instance = 0;
+
+MapThree::MapThree()
+{
+	// hard code
+	m_boxStartMap = Box(32, 64, 16, 16);
+	m_boxEndMap = Box(2544, 32, 16, 16);
+}
+
+MapThree* MapThree::getInstance()
+{
+	if (!m_instance)
+		m_instance = new MapThree();
+
+	return m_instance;
+}
+
+void MapThree::enter(MapObject* map)
+{
+	map->init(IDMap::MapThree);
+	Camera::getInstance()->initialize(0, VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT, map->getWidth(), map->getHeight());
+	Mario::getInstance()->initialize();
+	map->setScrollMap(true);
+	if (Mario::getInstance()->getPosition().x > map->getCheckPoint().x)
+	{
+		Mario::getInstance()->setPosition(map->getCheckPoint().x, map->getCheckPoint().y);
+		Camera::getInstance()->setViewPort(map->getCheckPoint().x, Camera::getInstance()->getViewport().y);
+	}
+	else
+	{
+		Mario::getInstance()->setPosition(m_boxStartMap.x, m_boxStartMap.y);
+		Camera::getInstance()->setViewPort(0, Camera::getInstance()->getViewport().y);
+	}
+}
+
+void MapThree::execute(MapObject* map)
+{
+	if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) && AutoAnimation::getInstance()->m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
+	{
+		map->setScrollMap(false);
+		AutoAnimation::getInstance()->m_endPosition = Vector2(m_boxEndMap.x, m_boxEndMap.y);
+		if (Mario::getInstance()->isFinishAutoAnimation())
+		{
+			map->getStateMachine()->changeState(ChangeMap::getInstance());
+		}
+	}
+
+	// không qua màn
+	if (Mario::getInstance()->getPosition().y + Mario::getInstance()->getHeight() < 0 // mario ra khỏi màn hình
+		|| ScoreGame::getInstance()->getTimeOfState() <= 0) // hết thời gian
+	{
+		map->getStateMachine()->changeState(ChangeMap::getInstance());
+		Mario::getInstance()->setLives(Mario::getInstance()->getLives() - 1);
+	}
+}
+
+void MapThree::exit(MapObject* map)
+{
+}

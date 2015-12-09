@@ -2,20 +2,19 @@
 <Game>
 	<Information>
 		<Description des="ID=0: tiles map;" />
-		<Description des="ID=21: item mushroom bigger;" />
-		<Description des="ID=25: item box;" />
+		<Description des="ID=21: Super Mushroom in LuckyBox;" />
+		<Description des="ID=25: Lucky Box;" />
 		<Description des="ID=10: enemy mushroom;" />
-		<Description des="ID=27: item brick;" />
-		<Description des="ID=30: star brick;" />
-		<Description des="ID=24: item coin;" />
+		<Description des="ID=27: Brick;" />
+		<Description des="ID=30: Super Star in Brick;" />
+		<Description des="ID=24: Coin;" />
 		<Description des="ID=14: enemy turle;" />
-		<Description des="ID=28: mushroom up brick;" />
-		<Description des="ID=20: item mushroom up;" />
+		<Description des="ID=20: 1-Up Mushroom in LuckyBox;" />
 		<Description des="ID=12: enemy flower up;" />
-		<Description des="ID=29: mushroom bigger brick;" />
-		<Description des="ID=26: item move;" />
-		<Description des="ID=32: coin brick;" />
-		<Description des="ID=33: item flag;" />
+		<Description des="ID=29: Super Mushroom in Brick;" />
+		<Description des="ID=26: Floating Bar;" />
+		<Description des="ID=32: Coin in Brick;" />
+		<Description des="ID=33: item Flag;" />
 		<Description des="ID=1: where mario can stand;" />
 		<Description des="" />
 	</Information>
@@ -478,7 +477,7 @@
 			<Object id="27" index="0" x="1328" y="80" width="16" height="16" />
 			<Object id="27" index="0" x="1344" y="80" width="16" height="16" />
 			<Object id="27" index="0" x="1360" y="80" width="16" height="16" />
-			<Object id="28" index="0" x="1360" y="96" width="16" height="16" />
+			<Object id="29" index="0" x="1360" y="96" width="16" height="16" />
 			<Object id="24" index="0" x="1344" y="96" width="16" height="16" />
 			<Object id="27" index="0" x="1344" y="160" width="16" height="16" />
 			<Object id="27" index="0" x="1360" y="160" width="16" height="16" />
@@ -825,8 +824,8 @@
 			<Object id="27" index="0" x="2592" y="96" width="16" height="16" />
 			<Object id="27" index="0" x="2608" y="96" width="16" height="16" />
 			<Object id="27" index="0" x="2624" y="96" width="16" height="16" />
-			<Object id="26" index="0" x="2496" y="64" width="16" height="16" />
-			<Object id="26" index="0" x="2496" y="144" width="16" height="16" />
+			<Object id="26" index="1" x="2496" y="64" width="16" height="16" />
+			<Object id="26" index="1" x="2496" y="144" width="16" height="16" />
 			<Object id="1" index="0" x="2272" y="0" width="192" height="32" />
 			<Object id="1" index="0" x="2384" y="32" width="16" height="16" />
 			<Object id="1" index="0" x="2400" y="32" width="16" height="32" />
@@ -1297,7 +1296,7 @@
 			<Object id="0" index="11" x="3760" y="96" width="16" height="16" />
 			<Object id="0" index="11" x="3776" y="96" width="16" height="16" />
 			<Object id="0" index="33" x="3664" y="32" width="16" height="16" />
-			<Object id="33" index="0" x="3664" y="192" width="16" height="16" />
+			<Object id="33" index="0" x="3664" y="48" width="16" height="16" />
 			<Object id="0" index="660" x="3712" y="208" width="16" height="16" />
 			<Object id="0" index="661" x="3728" y="208" width="16" height="16" />
 			<Object id="0" index="662" x="3744" y="208" width="16" height="16" />

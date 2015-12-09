@@ -29,7 +29,7 @@ void Standing::enter(Mario* mario)
 
 void Standing::execute(Mario* mario)
 {
-	mario->setVelocity(Vector2(0, GRAVITATION));
+	mario->setVelocity(Vector2(0, 2 * GRAVITATION));
 
 	keyboard->getState();
 	if (keyboard->isPressed(DIK_UP))
@@ -75,7 +75,7 @@ void Running::enter(Mario* mario)
 void Running::execute(Mario* mario)
 {
 	Vector2 velocity = mario->getVelocity();
-	velocity.y = GRAVITATION; // gravity
+	velocity.y = 2 * GRAVITATION; // gravity
 
 	keyboard->getState();
 	// update velocity
@@ -324,7 +324,10 @@ void AutoAnimation::execute(Mario* mario)
 	if (m_type == AutoAnimationType::AutoAnimationMoveDownPipe)
 	{
 		if (mario->getPosition().y < m_endPosition.y)
+		{
 			mario->setFinishAutoAnimation(true);
+			mario->setVelocity(Vector2(0, 0));
+		}
 		else
 			mario->setVelocity(Vector2(0, -1));
 
@@ -333,7 +336,10 @@ void AutoAnimation::execute(Mario* mario)
 	else if (m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoPipe)
 	{
 		if (mario->getPosition().x > m_endPosition.x)
+		{
 			mario->setFinishAutoAnimation(true);
+			mario->setVelocity(Vector2(0, 0));
+		}
 		else
 			mario->setVelocity(Vector2(1, 0));
 
@@ -353,7 +359,10 @@ void AutoAnimation::execute(Mario* mario)
 			mario->setFSM(FSM_Mario::RUN);
 
 			if (mario->getPosition().x > m_endPosition.x)
+			{
 				mario->setFinishAutoAnimation(true);
+				mario->setVelocity(Vector2(0, 0));
+			}	
 		}
 	}
 }

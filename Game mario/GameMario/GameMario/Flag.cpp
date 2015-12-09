@@ -12,10 +12,10 @@ Flag::Flag(Vector2 position)
 	m_finishAnimation = false;
 	m_velocity = Vector2(0, 0);
 
-	m_position.x = position.x - 8; // hard code
-	m_position.y = position.y - m_height;
-	m_flagPosition.x = position.x - 8;
-	m_flagPosition.y = position.y;
+	m_position.x = position.x; // hard code
+	m_position.y = position.y;
+	m_flagPosition.x = position.x;
+	m_flagPosition.y = position.y + m_height;
 
 	// thiết lập framelist 
 	m_frameList.push_back(Frame(128, 32, 16, 16)); // tọa độ lá cờ

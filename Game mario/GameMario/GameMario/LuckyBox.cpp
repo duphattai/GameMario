@@ -11,14 +11,14 @@ LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, IDMap idMap, int coun
 	if (itemType == ItemTypes::YellowLuckyBox)
 	{
 		for (int i = 0; i < 4; i++)
-			m_frameList.push_back(Frame(16 * i + (int)idMap * 144, 80, 16, 16));
+			m_frameList.push_back(Frame(16 * i + ((int)idMap % 2) * 144, 80, 16, 16));
 	}
 	else if (itemType == ItemTypes::BrickLuckyBox)
 	{
-		m_frameList.push_back(Frame(16, 32 * (int)idMap, 16, 16));
+		m_frameList.push_back(Frame(32, 32 * (int)idMap, 16, 16));
 	}
 	// tọa độ của luckybox (không còn item) trong tileset.png
-	m_frameList.push_back(Frame(48, 32 * (int)idMap, 16, 16));
+	m_frameList.push_back(Frame(48, 32 * (int)idMap % 2, 16, 16));
 
 	//end
 	m_item = new ItemInBox(type);

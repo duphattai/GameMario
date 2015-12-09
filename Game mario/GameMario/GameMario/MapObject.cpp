@@ -9,6 +9,10 @@
 #include "ScoreGame.h"
 #include "MarioOwnedState.h"
 #include "Flag.h"
+#include "FloatingBar.h"
+
+
+
 MapObject::MapObject()
 {
 	m_flip = SpriteEffect::None;
@@ -81,11 +85,12 @@ void MapObject::init(IDMap map)
 	else if (map == IDMap::MapTwo)
 	{
 		FileMap = "Map//1-2//TileNode.xml";
-		m_checkPoint = Vector2(1280, 32);
+		m_checkPoint = Vector2(1872, 32);
 	}
 	else if (map == IDMap::MapThree)
 	{
-
+		FileMap = "Map//1-3//TileNode.xml";
+		m_checkPoint = Vector2(1056, 32);
 	}
 
 
@@ -260,7 +265,16 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 		temp->setBox(Box(gameObject.m_X, gameObject.m_Y, gameObject.m_Width, gameObject.m_Height));
 		temp->setTypeObject(TypeObject::Dynamic_StandPosition);
 	}
-	else if (gameObject.m_Id == 21) // item mushroom bigger
+	else if (gameObject.m_Id == 20) // 1-Up Mushroom in LuckyBox
+	{
+		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::YellowLuckyBox, m_idMap);
+
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+
+		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
+	else if (gameObject.m_Id == 21) // Super Mushroom in LuckyBox
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::YellowLuckyBox, m_idMap);
 
@@ -269,7 +283,7 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 22) // mushroom up hidden
+	else if (gameObject.m_Id == 22) // 1-Up Mushroom Hidden
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::YellowLuckyBox, m_idMap);
 
@@ -279,13 +293,13 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 		temp->setAlphaColor(D3DCOLOR_RGBA(255, 255, 255, 0));
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 24) // item coin
+	else if (gameObject.m_Id == 24) // Coin
 	{
 		temp = new Coin(m_idMap);
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for coin
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 25) // coin in luckybox
+	else if (gameObject.m_Id == 25) // Luckybox
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::YellowLuckyBox, m_idMap);
 
@@ -294,27 +308,41 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 27) // brick
+	else if (gameObject.m_Id == 26) // Floating Bar
+	{
+		// các giá trị index tự quy ước
+		if (gameObject.m_Index == 1)
+			temp = new FloatingBar(FloatingBarMove::MoveUp);
+		else if (gameObject.m_Index == 0)
+			temp = new FloatingBar(FloatingBarMove::MoveDown);
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
+		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
+	else if (gameObject.m_Id == 27) // Brick
 	{
 		Vector2 position(gameObject.m_X, gameObject.m_Y);
 		temp = new Brick(position, m_idMap);
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 32) // coin in brick
+	else if (gameObject.m_Id == 28) // 1-Up Mushroom in Brick
 	{
-		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::BrickLuckyBox, m_idMap, 4);
+		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::BrickLuckyBox, m_idMap);
 
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
 		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 33) // item flag
+	else if (gameObject.m_Id == 29) // Super Mushroom in Brick
 	{
-		temp = new Flag(Vector2(gameObject.m_X, gameObject.m_Y));
+		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::BrickLuckyBox, m_idMap);
+
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 30) // star in brick
+	else if (gameObject.m_Id == 30) // Super Star in Brick
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_STAR, ItemTypes::BrickLuckyBox, m_idMap);
 
@@ -323,6 +351,21 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
+	else if (gameObject.m_Id == 32) // Coin in Brick
+	{
+		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::BrickLuckyBox, m_idMap, 4);
+
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+
+		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
+	else if (gameObject.m_Id == 33) // item Flag
+	{
+		temp = new Flag(Vector2(gameObject.m_X, gameObject.m_Y));
+		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
+	
 	return temp;
 }
 

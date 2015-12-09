@@ -8,7 +8,7 @@
 #include "Coin.h"
 #include "Camera.h"
 #include "Flag.h"
-
+#include "FloatingBar.h"
 using namespace std;
 
 Mario* Mario::m_instance = 0;
@@ -156,9 +156,8 @@ Box Mario::getBouding()
 {
 	GameObject::getBouding();
 
-	//hard code
-	m_box.x += 4;
-	m_box.width = 8;
+	m_box.x += 3;
+	m_box.width -= 6;
 	m_box.y += 2;
 	m_box.height -= 4;
 
@@ -232,8 +231,32 @@ bool Mario::isCollision(GameObject* gameObject)
 			LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(gameObject);
 			Brick* brick = dynamic_cast<Brick*>(gameObject);
 			Flag* flag = dynamic_cast<Flag*>(gameObject);
+			FloatingBar *bar = dynamic_cast<FloatingBar*>(gameObject);
 
-			if (flag != nullptr)
+			if (bar != nullptr)
+			{
+				if (getDirCollision() == DIR::NONE)
+					setDirCollision(dir);
+
+				m_velocity = Collision::getInstance()->getVelocity();
+				if (dir == DIR::TOP)
+				{
+					//// thiết lập vận tốc
+					switch (bar->getTypeFloatingBar())
+					{
+					case FloatingBarMove::MoveUp:case FloatingBarMove::MoveDown:
+						m_velocity.y += bar->getVelocity().y;
+						break;
+					case FloatingBarMove::MoveLeft: case FloatingBarMove::MoveRight:
+						m_velocity.x += bar->getVelocity().x;
+						break;
+					}
+					
+					if (getFSM() == FSM_Mario::FALL || getFSM() == FSM_Mario::RUN) // fall gặp vật cản
+						setLocation(Location::LOC_ON_GROUND);
+				}
+			}
+			else if (flag != nullptr)
 			{
 				m_velocity = Collision::getInstance()->getVelocity();
 				flag->setMakeEffect(true);

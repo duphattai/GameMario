@@ -2,19 +2,17 @@
 <Game>
 	<Information>
 		<Description des="ID=0: tiles map;" />
-		<Description des="ID=25: item box;" />
-		<Description des="ID=27: item brick;" />
-		<Description des="ID=20: item mushroom bigger;" />
-		<Description des="ID=10: enemy mushroom;" />
-		<Description des="ID=21: item mushroom bigger;" />
-		<Description des="ID=22: item mushroom up hidden;" />
-		<Description des="ID=33: item flag;" />
-		<Description des="ID=30: star brick;" />
-		<Description des="ID=14: enemy turle;" />
-		<Description des="ID=24: item coin;" />
-		<Description des="ID=32: coin brick;" />
+		<Description des="ID=25: Lucky Box;" />
+		<Description des="ID=27: Brick;" />
+		<Description des="ID=10: enemy Goomba;" />
+		<Description des="ID=21: Super Mushroom in LuckyBox;" />
+		<Description des="ID=22: 1-UP Mushroom hidden;" />
+		<Description des="ID=33: Flag;" />
+		<Description des="ID=30: Super Star in Brick;" />
+		<Description des="ID=14: enemy Koopa Troopa;" />
+		<Description des="ID=24: Coin;" />
+		<Description des="ID=32: Coin in Brick;" />
 		<Description des="ID=1: where mario can stand;" />
-		<Description des="" />
 	</Information>
 	<Quadtree mapwidth="3584" minwidth="256">
 		<Node id="3333">
@@ -318,7 +316,6 @@
 			<Object id="0" index="274" x="1056" y="32" width="16" height="16" />
 			<Object id="0" index="273" x="1040" y="48" width="16" height="16" />
 			<Object id="0" index="307" x="1040" y="32" width="16" height="16" />
-			<Object id="20" index="0" x="1024" y="96" width="16" height="16" />
 			<Object id="0" index="660" x="1072" y="192" width="16" height="16" />
 			<Object id="0" index="661" x="1088" y="192" width="16" height="16" />
 			<Object id="0" index="662" x="1104" y="192" width="16" height="16" />
@@ -978,7 +975,7 @@
 			<Object id="1" index="0" x="3008" y="32" width="16" height="128" />
 		</Node>
 		<Node id="4443">
-			<Object id="33" index="0" x="3168" y="176" width="16" height="16" />
+			<Object id="33" index="0" x="3152" y="48" width="16" height="16" />
 			<Object id="1" index="0" x="2480" y="0" width="848" height="32" />
 			<Object id="0" index="0" x="3296" y="16" width="16" height="16" />
 			<Object id="0" index="0" x="3296" y="0" width="16" height="16" />

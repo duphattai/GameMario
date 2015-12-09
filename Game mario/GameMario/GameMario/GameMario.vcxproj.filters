@@ -157,6 +157,12 @@
     <Filter Include="Source Files\GameObject\Object\Flag">
       <UniqueIdentifier>{0775d29a-b2f9-4f34-844e-26aff31079b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject\Object\FloatingBar">
+      <UniqueIdentifier>{dea2fc17-b8ac-4f9f-a85a-6acb9cb0c0e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\FloatingBar">
+      <UniqueIdentifier>{7df29276-6f5a-41c8-a54a-24920ed19ee2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -245,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="Flag.cpp">
       <Filter>Source Files\GameObject\Object\Flag</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatingBar.cpp">
+      <Filter>Source Files\GameObject\Object\FloatingBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="Flag.h">
       <Filter>Header Files\GameObject\Object\Flag</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatingBar.h">
+      <Filter>Header Files\GameObject\Object\FloatingBar</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

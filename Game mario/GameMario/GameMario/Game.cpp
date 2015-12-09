@@ -6,6 +6,8 @@
 #include "SoundClass.h"
 #include "ScoreGame.h"
 #include "MarioOwnedState.h"
+#include "MapOwnedState.h"
+
 CKeyBoard *keyboard = NULL;
 MapObject *m_state;
 LPD3DXFONT m_font;
@@ -146,13 +148,15 @@ void Game::render()
 	if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) 
 		&& AutoAnimation::getInstance()->m_type != AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
 	{
-		Mario::getInstance()->draw(m_SpriteHandler);
+		if (!m_state->getStateMachine()->isInState(*ChangeMap::getInstance()))
+			Mario::getInstance()->draw(m_SpriteHandler);
 		m_state->draw(m_SpriteHandler);
 	}
 	else
 	{
 		m_state->draw(m_SpriteHandler);
-		Mario::getInstance()->draw(m_SpriteHandler);
+		if (!m_state->getStateMachine()->isInState(*ChangeMap::getInstance()))
+			Mario::getInstance()->draw(m_SpriteHandler);
 	}
 
 	// draw score

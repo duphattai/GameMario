@@ -90,3 +90,23 @@ public:
 	virtual void		execute(MapObject*);
 	virtual void		exit(MapObject*);
 };
+
+class MapThree : public State < MapObject >
+{
+private:
+	Box m_boxStartMap; // toa độ mario xuất hiện
+	Box m_boxEndMap; // tọa độ kết thúc map
+
+	static MapThree*	m_instance;
+public:
+	MapThree();
+	virtual ~MapThree(){}
+
+	static MapThree*	getInstance();
+
+	virtual void		enter(MapObject*);
+	virtual void		execute(MapObject*);
+	virtual void		exit(MapObject*);
+};
+
+
