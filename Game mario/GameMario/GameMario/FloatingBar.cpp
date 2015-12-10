@@ -1,22 +1,22 @@
 #include "FloatingBar.h"
 #include "ReSource.h"
-
+#include "Mario.h"
 FloatingBar::FloatingBar(FloatingBarMove move)
 {
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
 	m_typeMove = move;
 	m_width = 48;
-	m_height = 8;
+	m_height = 7;
 
 	m_frameList.push_back(Frame(64, 129, 16, 8));
 	m_currentFrame = 0;
 
 	if (move == FloatingBarMove::MoveUp)
-		m_velocity = Vector2(0, 1);
+		m_velocity = Vector2(0, 2);
 	else if(move == FloatingBarMove::MoveDown)
-		m_velocity = Vector2(0, -1);
+		m_velocity = Vector2(0, -1.0f);
 	else if (move == FloatingBarMove::MoveLeft || move == FloatingBarMove::MoveRight)
-		m_velocity = Vector2(1, 0);
+		m_velocity = Vector2(2, 0);
 }
 FloatingBar::~FloatingBar()
 {
@@ -57,4 +57,3 @@ Box FloatingBar::getBouding()
 {
 	return GameObject::getBouding();
 }
-

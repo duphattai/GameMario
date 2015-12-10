@@ -179,6 +179,10 @@ struct Vector2
 		this->x = x;
 		this->y = y;
 	}
+	Vector2 operator+(const Vector2& temp)
+	{
+		return Vector2(this->x + temp.x, this->y + temp.y);
+	}
 };
 
 struct ObjectTittle

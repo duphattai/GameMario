@@ -156,11 +156,20 @@ Box Mario::getBouding()
 {
 	GameObject::getBouding();
 
-	m_box.x += 3;
-	m_box.width -= 6;
-	m_box.y += 2;
-	m_box.height -= 4;
-
+	if (m_isBig || m_canShoot)
+	{
+		m_box.x += 2;
+		m_box.width -= 4;
+		m_box.y += 2;
+		m_box.height -= 4;
+	}
+	else
+	{
+		m_box.x += 1;
+		m_box.width -= 2;
+		m_box.y += 1;
+		m_box.height -= 2;
+	}
 	return m_box;
 }
 
@@ -244,7 +253,7 @@ bool Mario::isCollision(GameObject* gameObject)
 					//// thiết lập vận tốc
 					switch (bar->getTypeFloatingBar())
 					{
-					case FloatingBarMove::MoveUp:case FloatingBarMove::MoveDown:
+					case FloatingBarMove::MoveUp:
 						m_velocity.y += bar->getVelocity().y;
 						break;
 					case FloatingBarMove::MoveLeft: case FloatingBarMove::MoveRight:

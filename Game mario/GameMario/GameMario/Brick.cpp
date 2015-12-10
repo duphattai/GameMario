@@ -13,7 +13,7 @@ Brick::Brick(Vector2 position, IDMap idMap)
 	// hard code
 	// tọa độ mini brick trong items.png
 	for (int i = 0; i < 2; i++)
-		m_frameList.push_back(Frame(68 + (int)idMap % 2 * 144, 20 + 16 * i, 8, 8));
+		m_frameList.push_back(Frame(68 + ((int)idMap % 2) * 144, 20 + 16 * i, 8, 8));
 
 
 	m_framePosition.push_back(Vector2(position.x, position.y));
@@ -29,7 +29,7 @@ Brick::Brick(Vector2 position, IDMap idMap)
 	m_stateMachine = new StateMachine<Brick>(this);
 	m_stateMachine->changeState(BrickIdle::getInstance());
 
-	m_index = 2 + 66 * (int)idMap % 2;
+	m_index = 2 + 66 * ((int)idMap % 2);
 }
 Brick::~Brick()
 {

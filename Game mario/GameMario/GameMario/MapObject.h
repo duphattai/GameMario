@@ -48,5 +48,7 @@ public:
 
 	void								setCheckPoin(Vector2 checkPoint){ m_checkPoint = checkPoint; }
 	Vector2								getCheckPoint(){ return m_checkPoint; }
+
+	IDMap								getIDMap(){ return m_idMap; }
 };
 

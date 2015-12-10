@@ -72,6 +72,10 @@ void ScoreGame::draw(LPD3DXSPRITE spriteHandler)
 	text = "x" + text;
 	drawText(wstring(text.begin(), text.end()), Vector2(95, 18));
 	
+	// draw state
+	drawText(wstring(m_state.begin(), m_state.end()), Vector2(144, 18));
+
+
 	// draw time of state
 	text = to_string(m_timeOfState);
 	drawText(wstring(text.begin(), text.end()), Vector2(200, 18));

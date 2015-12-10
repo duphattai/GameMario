@@ -15,6 +15,7 @@ class ScoreGame
 	int			m_timeOfState;
 	int			m_countCoin;
 	int			m_score;
+	string		m_state;
 
 	ScoreGame();
 	static ScoreGame* m_instance;
@@ -32,6 +33,8 @@ public:
 
 	int		getTimeOfState(){ return m_timeOfState; }
 	void	setTimeOfState(int time){ m_timeOfState = time; }
+
+	void	setState(string x){ m_state = x; }
 
 	int		getCountOfCoin(){ return m_countCoin; }
 	void	setCountOfCoin(int coin){ m_countCoin = coin; }

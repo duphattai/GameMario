@@ -32,8 +32,10 @@ DIR Collision::isCollision(GameObject *moveObject, GameObject* dynamicObject)
 	if (dir == DIR::NONE)
 	{
 		// make dynamicBox not move
-		moveBox.vx -= dynamicBox.vx;
-		moveBox.vy -= dynamicBox.vy;
+		//moveBox.vx -= dynamicBox.vx;
+		//moveBox.vy -= dynamicBox.vy;
+		dynamicBox.x += dynamicBox.vx;
+		dynamicBox.y += dynamicBox.vy;
 		dynamicBox.vx = dynamicBox.vy = 0;
 
 		// vật nằm trong không gian của đối tượng 
@@ -83,6 +85,7 @@ DIR Collision::isCollision(GameObject *moveObject, GameObject* dynamicObject)
 		
 	else // xảy ra va chạm
 	{
+		moveObject->setVelocity(Vector2(0, 0));
 		if (dir == TOP) // top
 		{
 			moveBox.y = dynamicBox.y + dynamicBox.height + 1;

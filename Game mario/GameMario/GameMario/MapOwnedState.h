@@ -49,11 +49,7 @@ struct InformationSubMap
 class MapOne : public State < MapObject >
 {
 private:
-	Box m_boxGoInSubMap; // nơi vào submap từ map chính
-	Box m_boxGoOutSubMap; // tọa độ map chính khi ra khỏi submap
-
-	Box	m_boxStartSubMap; // tọa độ mario trong submap
-	Box m_boxEndSubMap; // toa độ ra khỏi submap
+	InformationSubMap			m_subMap;
 
 	Box m_boxStartMap; // toa độ mario xuất hiện
 	Box m_boxEndMap; // tọa độ kết thúc map
