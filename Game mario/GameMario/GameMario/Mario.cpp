@@ -155,21 +155,12 @@ void Mario::updateVelocity()
 Box Mario::getBouding()
 {
 	GameObject::getBouding();
-
-	if (m_isBig || m_canShoot)
-	{
-		m_box.x += 2;
-		m_box.width -= 4;
-		m_box.y += 2;
-		m_box.height -= 4;
-	}
-	else
-	{
-		m_box.x += 1;
-		m_box.width -= 2;
-		m_box.y += 1;
-		m_box.height -= 2;
-	}
+	
+	m_box.x += 2;
+	m_box.width -= 4;
+	m_box.y += 1;
+	m_box.height -= 2;
+	
 	return m_box;
 }
 

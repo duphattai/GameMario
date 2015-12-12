@@ -189,16 +189,17 @@ void Jumping::execute(Mario* mario)
 
 	// cập nhật va chạm
 	DIR dir = mario->getDirCollision();
-	if (dir != DIR::NONE) // xảy ra va chạm
+	if (dir == DIR::BOTTOM) // va chạm bottom thì rớt xuống
 	{
-		if (dir == DIR::BOTTOM) // va chạm bottom thì rớt xuống
-			mario->getStateMachine()->changeState(Falling::getInstance());
-		else 
-			if (mario->getLocation() == Location::LOC_ON_GROUND)
-				mario->getStateMachine()->changeState(Standing::getInstance());
-
+		mario->getStateMachine()->changeState(Falling::getInstance());
 		return;
 	}
+	else if (mario->getLocation() == Location::LOC_ON_GROUND)
+	{
+		mario->getStateMachine()->changeState(Standing::getInstance());
+		return;
+	}
+
 
 
 	velocity.y += GRAVITATION;
