@@ -26,7 +26,7 @@ void BrosTitle::execute(MapObject* map)
 {
 	keyboard->getState();
 	if (keyboard->isKeyDown(DIK_SPACE))
-		map->getStateMachine()->changeState(MapTwo::getInstance());
+		map->getStateMachine()->changeState(MapOne::getInstance());
 }
 
 void BrosTitle::exit(MapObject* map)

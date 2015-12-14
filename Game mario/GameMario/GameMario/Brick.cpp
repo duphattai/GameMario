@@ -1,6 +1,7 @@
 ﻿#include "Brick.h"
 #include "ReSource.h"
 #include "ItemOwnedState.h"
+#include "Mario.h"
 
 Brick::Brick(Vector2 position, IDMap idMap)
 {
@@ -45,6 +46,41 @@ void Brick::updateVelocity()
 {
 	if (m_isActive)
 		m_stateMachine->update();
+}
+
+bool Brick::isCollision(GameObject* gameObject)
+{
+	if (m_isBreak) return false;
+
+	Mario* mario = dynamic_cast<Mario*>(gameObject);
+	if (mario != nullptr)
+	{
+		DIR dir = Collision::getInstance()->isCollision(mario, this);
+		if (dir != DIR::NONE)
+		{
+			if (mario->getDirCollision() == DIR::NONE)
+				mario->setDirCollision(dir);
+
+			mario->setVelocity(Collision::getInstance()->getVelocity());
+			if (dir == DIR::BOTTOM)
+			{
+				if (!mario->isBig() && !mario->canShoot())
+					m_makeEffect = true;
+				else
+				{
+					m_status = StatusObject::DEAD;
+					m_isBreak = true;
+				}
+			}
+			else if (dir == DIR::TOP)
+			{
+				if (mario->getFSM() == FSM_Mario::FALL || mario->getFSM() == FSM_Mario::RUN) // fall gặp vật cản
+					mario->setLocation(Location::LOC_ON_GROUND);
+			}
+		}	
+	}
+
+	return false;
 }
 
 

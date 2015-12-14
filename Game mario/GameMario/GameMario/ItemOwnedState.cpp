@@ -2,7 +2,7 @@
 #include "ReSource.h"
 #include "SoundClass.h"
 #include "ScoreGame.h"
-// hiệu ứng di chuyển lên xuống luckybox
+// Hiệu ứng di chuyển lên xuống luckybox
 #pragma region Yellow LuckyBox
 
 IdleLuckyBox* IdleLuckyBox::m_instance = 0;
@@ -32,7 +32,7 @@ void IdleLuckyBox::enter(LuckyBox* item)
 
 void IdleLuckyBox::execute(LuckyBox* item)
 {
-	// animation
+	// Animation
 	int time = item->getTimeAnimation();
 	if (item->getTimeAnimation() == 0 && item->getCountItem() > 0)
 	{
@@ -45,7 +45,7 @@ void IdleLuckyBox::execute(LuckyBox* item)
 	}
 	item->setTimeAnimation(item->getTimeAnimation() - 1);
 
-	// change state make effect
+	// Chuyển trang thái
 	if (item->getMakeEffect() && item->getCountItem() > 0)
 	{
 		item->getStateMachine()->changeState(LuckyBoxEffect::getInstance());
@@ -60,7 +60,7 @@ void IdleLuckyBox::exit(LuckyBox* item)
 
 
 
-///// effect when box is collided
+// Hiệu ứng khi va chạm
 LuckyBoxEffect* LuckyBoxEffect::m_instance = 0;
 
 LuckyBoxEffect* LuckyBoxEffect::getInstance()
@@ -86,7 +86,7 @@ void LuckyBoxEffect::execute(LuckyBox* item)
 	}
 	else
 	{
-		// animation
+		// Animation
 		if (item->getTimeAnimation() == 0 && item->getCountItem() > 0)
 		{
 			int index = item->getCurrentFrame() + 1;
@@ -99,25 +99,28 @@ void LuckyBoxEffect::execute(LuckyBox* item)
 		item->setTimeAnimation(item->getTimeAnimation() - 1);
 	}
 
-	// update position
+	// Cập nhật vận tốc
 	Vector2 velocity = item->getVelocity();
 	velocity.y -= 1;
 	item->setVelocity(velocity);
 
+	// Hiêu ứng kết thúc 
 	if (velocity.y < -3)
-		item->getStateMachine()->changeState(IdleLuckyBox::getInstance());
+		item->getStateMachine()->changeState(IdleLuckyBox::getInstance()); 
 	else if (velocity.y == 0)
 	{
+		ItemInBox* itemInBox = item->getItem();
+
+		// Active item in luckybox
 		// fix dành cho nhiều coin trong box
-		if (item->getItem()->getItemsType() == LuckyBoxsType::IT_COIN)
-			item->getItem()->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
+		if (itemInBox->getItemType() == LuckyBoxsType::IT_COIN)
+			itemInBox->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
 
-		item->getItem()->setActive(true);
-		item->getItem()->setPosition(item->getPosition().x, item->getPosition().y);
+		itemInBox->setActive(true);
+		itemInBox->setPosition(item->getPosition().x, item->getPosition().y);
 
-		// playsound
-		//Tài: 9/11 play sound
-		int type = item->getTypeItem();
+		// Playsound
+		int type = itemInBox->getItemType();
 		if (type == LuckyBoxsType::IT_COIN)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Coin);
 		else
@@ -135,7 +138,7 @@ void LuckyBoxEffect::exit(LuckyBox* item)
 
 #pragma endregion
 
-// hiệu ứng di chuyển lên xuống brick luckybox
+// Hiệu ứng di chuyển lên xuống brick luckybox
 #pragma region Brick LuckyBox
 
 IdleBrickItem* IdleBrickItem::m_instance = 0;
@@ -203,7 +206,7 @@ void BrickItemEffect::execute(LuckyBox* item)
 		//item->setIndexSprite(3);//hard code
 	}
 
-	// update position
+	// Cập nhật vận tốc
 	Vector2 velocity = item->getVelocity();
 	velocity.y -= 1;
 	item->setVelocity(velocity);
@@ -212,20 +215,21 @@ void BrickItemEffect::execute(LuckyBox* item)
 		item->getStateMachine()->changeState(IdleBrickItem::getInstance());
 	else if (velocity.y == 0)
 	{
+		ItemInBox* itemInBox = item->getItem();
 		// fix dành cho nhiều coin trong box
-		if (item->getItem()->getItemsType() == LuckyBoxsType::IT_COIN)
-			item->getItem()->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
+		if (itemInBox->getItemType() == LuckyBoxsType::IT_COIN)
+			itemInBox->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
 
-		item->getItem()->setActive(true);
-		item->getItem()->setPosition(item->getPosition().x, item->getPosition().y);
+		itemInBox->setActive(true);
+		itemInBox->setPosition(item->getPosition().x, item->getPosition().y);
 
 		// playsound
 		//Tài: 9/11 play sound
-		if (item->getTypeItem() == LuckyBoxsType::IT_COIN)
+		if (itemInBox->getItemType() == LuckyBoxsType::IT_COIN)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Coin);
-		else if (item->getTypeItem() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+		else if (itemInBox->getItemType() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
-		else if (item->getTypeItem() == LuckyBoxsType::IT_MUSHROOM_UP)
+		else if (itemInBox->getItemType() == LuckyBoxsType::IT_MUSHROOM_UP)
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_PowerUp_Appears);
 	}
 }
@@ -236,10 +240,10 @@ void BrickItemEffect::exit(LuckyBox* item)
 }
 #pragma endregion
 
-// hiệu ứng item đi lên và show ra số điểm
+// Hiệu ứng item đi lên và hiển thị số điểm
 #pragma region Item in luckybox
-//////////// item in luckybox move up
 
+//////////// item in luckybox move up
 ItemInLuckyBoxIdle* ItemInLuckyBoxIdle::m_instance = 0;
 
 ItemInLuckyBoxIdle* ItemInLuckyBoxIdle::getInstance()
@@ -254,36 +258,37 @@ ItemInLuckyBoxIdle* ItemInLuckyBoxIdle::getInstance()
 
 void ItemInLuckyBoxIdle::enter(ItemInBox* item)
 {
+	item->setActive(false);
 	item->setTimeAnimation(5);
 	item->setVelocity(Vector2(0, 5));
 }
 
-void ItemInLuckyBoxIdle::execute(ItemInBox* item)
+void ItemInLuckyBoxIdle::execute(ItemInBox* itemInBox)
 {
-	if (item->isActive())
+	if (itemInBox->isActive())
 	{
-		Vector2 velocity = item->getVelocity();
+		Vector2 velocity = itemInBox->getVelocity();
 		velocity.y--;
-		item->setVelocity(velocity);
+		itemInBox->setVelocity(velocity);
 
 		if (velocity.y <= 0)
 		{
-			switch (item->getItemsType())
+			switch (itemInBox->getItemType())
 			{
 				case LuckyBoxsType::IT_COIN:
-						item->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
+					itemInBox->getStateMachine()->changeState(CoinInLuckyBox::getInstance());
 						break;
 				case LuckyBoxsType::IT_GUN:
-						item->getStateMachine()->changeState(FlowerGun::getInstance());
+					itemInBox->getStateMachine()->changeState(FlowerGun::getInstance());
 						break;
 				case LuckyBoxsType::IT_MUSHROOM_BIGGER:
-						item->getStateMachine()->changeState(MoveMushroomItem::getInstance());
+					itemInBox->getStateMachine()->changeState(MoveMushroomItem::getInstance());
 						break;
 				case LuckyBoxsType::IT_MUSHROOM_UP:
-						item->getStateMachine()->changeState(MoveMushroomItem::getInstance());
+					itemInBox->getStateMachine()->changeState(MoveMushroomItem::getInstance());
 						break;
 				case LuckyBoxsType::IT_STAR:
-						item->getStateMachine()->changeState(StarItem::getInstance());
+					itemInBox->getStateMachine()->changeState(StarItem::getInstance());
 						break;
 			}
 		}
@@ -295,7 +300,6 @@ void ItemInLuckyBoxIdle::exit(ItemInBox* item)
 }
 
 ///////////////////////// item in luckybox score
-
 ItemInLuckyBoxScore* ItemInLuckyBoxScore::m_instance = 0;
 
 ItemInLuckyBoxScore* ItemInLuckyBoxScore::getInstance()
@@ -312,7 +316,7 @@ void ItemInLuckyBoxScore::enter(ItemInBox* item)
 {
 	item->setVelocity(Vector2(0, 5));
 
-	switch (item->getItemsType())
+	switch (item->getItemType())
 	{
 	case LuckyBoxsType::IT_COIN:
 		item->setText(L"200");
@@ -389,13 +393,13 @@ void FlowerGun::execute(ItemInBox* item)
 {
 	if (item->isActive())
 	{
+		// Item chưa bị mario ăn
 		if (item->getStatusOBject() == StatusObject::ALIVE)
 		{
-			// update velocity
+			// Animation
 			item->setTimeAnimation(item->getTimeAnimation() - 1);
 			if (item->getTimeAnimation() <= 0)
 			{
-				// update animation gun
 				int currentIndex = item->getCurrentFrame() + 1;
 				if (currentIndex == item->getSizeFrameList())
 					currentIndex = 0;
@@ -440,22 +444,24 @@ void MoveMushroomItem::execute(ItemInBox* item)
 {
 	if (item->isActive())
 	{
-		// update velocity
 		Vector2 velocity = item->getVelocity();
+		// Item bị mario ăn
 		if (item->getStatusOBject() == StatusObject::DEAD)
 		{
 			item->getStateMachine()->changeState(ItemInLuckyBoxScore::getInstance());
 			return;
 		}
+		// Chưa bị ăn
 		else
 		{
+			// Cập nhật vận tốc
 			velocity.y += GRAVITATION;
 			if (velocity.y <= -10)
 				velocity.y = -10;
-
-			if (item->getFliping() == SpriteEffect::None)
+			// Xác định hướng đi
+			if (item->getFliping() == SpriteEffect::None) // Không lật hình => đi sang phải
 				velocity.x = 2;
-			else
+			else // Lật hình => đi sang trái
 				velocity.x = -2;
 
 			item->setVelocity(velocity);
@@ -548,14 +554,17 @@ StarItem* StarItem::getInstance()
 
 void StarItem::enter(ItemInBox* item)
 {
-	alpha = alpha = 3.14 / 3;
+	// Thiết lập góc ném
+	alpha = 3.14 / 3;
+	// Vận tốc ban đầu
 	v = 6;
+	// Thời gian
+	item->m_time = 0;
+
 
 	item->setCurrentFrame(0);
 	item->setTimeAnimation(5);
 	item->setVelocity(Vector2(0, 0));
-
-	item->m_time = 0;
 }
 
 void StarItem::execute(ItemInBox* item)
@@ -563,21 +572,25 @@ void StarItem::execute(ItemInBox* item)
 	if (item->isActive())
 	{
 		Vector2 velocity = item->getVelocity();
+		// Item bị mario ăn
 		if (item->getStatusOBject() == StatusObject::DEAD)
 		{
 			item->getStateMachine()->changeState(ItemInLuckyBoxScore::getInstance());
 			return;
 		}
+		// Item chưa bị ăn
 		else
 		{
-			// update velocity, tạo hiệu ứng của coin
+			// Cập nhật vận tốc theo phương trình ném xiên
 			velocity = item->m_mathematical(item->m_time++, v, alpha);
 			if (velocity.y <= -10)
 				velocity.y = -10;
+			// Thông số lật hình để xác định hướng đi
 			if (item->getFliping() == SpriteEffect::Flip)
 				velocity.x *= -1;
+			item->setVelocity(velocity);
 
-			// animation coin
+			// Animation
 			item->setTimeAnimation(item->getTimeAnimation() - 1);
 			if (item->getTimeAnimation() <= 0)
 			{
@@ -588,8 +601,6 @@ void StarItem::execute(ItemInBox* item)
 
 				item->setTimeAnimation(5);
 			}
-			
-			item->setVelocity(velocity);
 		}
 	}
 }
@@ -641,7 +652,7 @@ void BrickIdle::exit(Brick* brick)
 {
 }
 
-///////////////////// brick effect
+///////////////////// Hiệu ứng đi lên xuống
 BrickEffect* BrickEffect::m_instance = 0;
 
 BrickEffect* BrickEffect::getInstance()
@@ -683,7 +694,7 @@ void BrickEffect::exit(Brick* brick)
 {
 }
 
-/////////////////////// brick broken
+/////////////////////// Hiệu ứng vỡ
 BrickBroken* BrickBroken::m_instance = 0;
 
 BrickBroken* BrickBroken::getInstance()

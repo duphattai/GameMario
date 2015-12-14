@@ -23,11 +23,11 @@ MapObject::MapObject()
 	m_stateMachine = new StateMachine<MapObject>(this);
 	m_stateMachine->changeState(BrosTitle::getInstance());
 }
-
 MapObject::~MapObject()
 {
 	delete m_stateMachine;
 }
+
 
 map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(char* path)
 {
@@ -72,6 +72,7 @@ map<int, vector<ObjectTittle>> MapObject::readQuadTreeFromFile(char* path)
 	return list;
 }
 
+
 void MapObject::init(IDMap map)
 {
 	char *FileMap = nullptr;
@@ -94,7 +95,7 @@ void MapObject::init(IDMap map)
 	}
 
 
-	// đọc quadtree từ file xml
+	// Đọc quadtree từ file xml
 	std::map<int, vector<ObjectTittle>> quadtreeNode = readQuadTreeFromFile(FileMap);
 	// build tree
 	buildQuadTree(quadtreeNode);
@@ -107,8 +108,7 @@ void MapObject::init(IDMap map)
 }
 
 
-// <build tree>
-
+// < BUILD TREE>
 // kiểm tra node có nằm ở trên biên
 bool checkExist(ObjectTittle temp, map<int, vector<ObjectTittle>> &treeNode)
 {
@@ -128,7 +128,6 @@ bool checkExist(ObjectTittle temp, map<int, vector<ObjectTittle>> &treeNode)
 	if (count > 1) return true; // nếu count > 1 nghĩa là tồn tại node nằm trên biên
 	return false;
 }
-
 void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 {
 	vector<ObjectTittle> listObjectExist; // chứa danh sách object nằm trên biên
@@ -161,7 +160,14 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 			// chỉ tạo object nào không nằm trên biên
 			GameObject*	temp = createGameObject(it->second[i]);
 			if (temp != nullptr)
+			{
 				list.push_back(temp);
+				// Nếu là LuckyBox thì thêm item vào quadtree
+				LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(temp);
+				if (luckyBox != nullptr)
+					list.push_back(luckyBox->getItem());
+			}
+				
 		}
 		if (list.size() != 0) listGameObject.insert(pair<int, vector<GameObject*>>(it->first, list));
 	}
@@ -175,12 +181,17 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 	// build object nằm trên biên
 	for each (ObjectTittle var in listObjectExist)
 	{
-		vector<GameObject*> list;
 		GameObject* temp = createGameObject(var);
 		if (temp == nullptr)
 			continue;
 
+		vector<GameObject*> list;
 		list.push_back(createGameObject(var));
+		// Nếu là LuckyBox thì thêm item vào quadtree
+		LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(temp);
+		if (luckyBox != nullptr)
+			list.push_back(luckyBox->getItem());
+	
 		for (map<int, vector<ObjectTittle>>::iterator it = quadtreeNode.begin(); it != quadtreeNode.end(); it++)
 		{
 			for (int i = 0; i < it->second.size(); i++)
@@ -194,16 +205,18 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 		}
 	}
 }
-// </build tree>
+// </BUILD TREE>
+
 
 vector<GameObject*> MapObject::getListObjectOnCamera()
 {
 	vector<GameObject*> list = Quadtree::getInstance()->getListObjects(Camera::getInstance()->getCamera(), list);
-	// các object nằm trên biên chỉ lấy 1 lần trong danh sách
+	// Các object nằm trên biên chỉ lấy 1 lần trong danh sách
 	for (int i = 0; i < list.size() - 1; i++)
 	{
 		for (int j = i + 1; j < list.size(); j++)
 		{
+			// Các object cùng địa chỉ
 			if (list[i] == list[j])
 			{
 				list.erase(list.begin() + j);
@@ -216,6 +229,7 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 	return list;
 }
 
+
 void MapObject::draw(LPD3DXSPRITE spriteHandler)
 {
 	if (!m_stateMachine->isInState(*ChangeMap::getInstance()) && !m_stateMachine->isInState(*BrosTitle::getInstance()))
@@ -223,7 +237,7 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 		m_worldPosition = Camera::getInstance()->getViewport();
 		vector<GameObject*> list = getListObjectOnCamera();
 
-		// vẽ tiled map trước
+		// Tiled map
 		for each (GameObject* var in list)
 		{
 			if (var->getTypeObject() == TypeObject::Dynamic_TiledMap)
@@ -233,10 +247,11 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 				var->draw(spriteHandler);
 			}
 		}
-		// vẽ item và enemy sau
+		// Item, Enemy
 		for each (GameObject* var in list)
 		{
-			if (var->getTypeObject() == TypeObject::Dynamic_Item || var->getTypeObject() == TypeObject::Moving_Enemy)
+			if (var->getTypeObject() == TypeObject::Dynamic_Item || var->getTypeObject() == TypeObject::Moving_Item 
+				|| var->getTypeObject() == TypeObject::Moving_Enemy)
 			{
 				var->setWorldPosition(m_worldPosition);
 				var->draw(spriteHandler);
@@ -247,10 +262,12 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 	m_stateMachine->GetCurrentState()->draw(this, spriteHandler);
 }
 
+
 GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 {
 	GameObject*	temp = nullptr;
-	if (gameObject.m_Id == 0) // tile map
+	// Tile map
+	if (gameObject.m_Id == 0) 
 	{
 		temp = new GameObject();
 		temp->setSpriteSheet(ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP));
@@ -258,14 +275,18 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 		temp->setPosition(gameObject.m_X, gameObject.m_Y);
 		temp->setTypeObject(TypeObject::Dynamic_TiledMap);
 	}
-	else if (gameObject.m_Id == 1) // stand position
+
+	// Stand position
+	else if (gameObject.m_Id == 1) 
 	{
 		temp = new GameObject();
 		temp->setPosition(gameObject.m_X, gameObject.m_Y);
 		temp->setBox(Box(gameObject.m_X, gameObject.m_Y, gameObject.m_Width, gameObject.m_Height));
 		temp->setTypeObject(TypeObject::Dynamic_StandPosition);
 	}
-	else if (gameObject.m_Id == 20) // 1-Up Mushroom in LuckyBox
+
+	// 1-Up Mushroom in LuckyBox
+	else if (gameObject.m_Id == 20) 
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::YellowLuckyBox, m_idMap);
 
@@ -274,7 +295,9 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 21) // Super Mushroom in LuckyBox
+
+	// Super Mushroom in LuckyBox
+	else if (gameObject.m_Id == 21)
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::YellowLuckyBox, m_idMap);
 
@@ -283,84 +306,105 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 22) // 1-Up Mushroom Hidden
+
+	// 1-Up Mushroom Hidden
+	else if (gameObject.m_Id == 22) 
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::YellowLuckyBox, m_idMap);
-
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
-		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // item inside
 
 		temp->setAlphaColor(D3DCOLOR_RGBA(255, 255, 255, 0));
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 24) // Coin
+
+	// Coin
+	else if (gameObject.m_Id == 24)
 	{
 		temp = new Coin(m_idMap);
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for coin
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y);
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 25) // Luckybox
+
+	// Luckybox
+	else if (gameObject.m_Id == 25) 
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::YellowLuckyBox, m_idMap);
-
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
-		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // Luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // Item inside
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 26) // Floating Bar
+
+	// Floating Bar
+	else if (gameObject.m_Id == 26) 
 	{
-		// các giá trị index tự quy ước
+		// Giá trị index tự quy ước
 		if (gameObject.m_Index == 1)
 			temp = new FloatingBar(FloatingBarMove::MoveUp);
 		else if (gameObject.m_Index == 0)
 			temp = new FloatingBar(FloatingBarMove::MoveDown);
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y);
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 27) // Brick
+
+	// Brick
+	else if (gameObject.m_Id == 27) 
 	{
-		Vector2 position(gameObject.m_X, gameObject.m_Y);
-		temp = new Brick(position, m_idMap);
+		temp = new Brick(Vector2(gameObject.m_X, gameObject.m_Y), m_idMap);
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 28) // 1-Up Mushroom in Brick
+
+	// 1-Up Mushroom in Brick
+	else if (gameObject.m_Id == 28) 
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_UP, ItemTypes::BrickLuckyBox, m_idMap);
-
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
-		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // Item inside
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 29) // Super Mushroom in Brick
+
+	// Super Mushroom in Brick
+	else if (gameObject.m_Id == 29) 
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_MUSHROOM_BIGGER, ItemTypes::BrickLuckyBox, m_idMap);
-
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
-		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // item inside
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 30) // Super Star in Brick
+
+	// Super Star in Brick
+	else if (gameObject.m_Id == 30) 
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_STAR, ItemTypes::BrickLuckyBox, m_idMap);
-
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
-		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // item inside
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 32) // Coin in Brick
+
+	// Coin in Brick
+	else if (gameObject.m_Id == 32) 
 	{
 		temp = new LuckyBox(LuckyBoxsType::IT_COIN, ItemTypes::BrickLuckyBox, m_idMap, 4);
-
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for luckybox
-		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // set position for item in box
+		// Thiết lập tọa độ
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // luckybox
+		static_cast<LuckyBox*>(temp)->getItem()->setPosition(gameObject.m_X, gameObject.m_Y); // item inside
 
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
-	else if (gameObject.m_Id == 33) // item Flag
+
+	// Item Flag
+	else if (gameObject.m_Id == 33)
 	{
 		temp = new Flag(Vector2(gameObject.m_X, gameObject.m_Y));
 		temp->setTypeObject(TypeObject::Dynamic_Item);
@@ -369,103 +413,121 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	return temp;
 }
 
+
 void MapObject::update()
 {
-	// nếu đang ở state bros title thì không làm gì thêm
-	if (m_stateMachine->isInState(*BrosTitle::getInstance()) || m_stateMachine->isInState(*ChangeMap::getInstance()))
+	if (m_stateMachine->isInState(*BrosTitle::getInstance())  // Màn hình giới thiệu
+		|| m_stateMachine->isInState(*ChangeMap::getInstance())) // Chuyển map
 		return;
 
-	// <cập nhật loại item bigger, nếu mario trong trạng thái to thì bigger -> gun>
+	// Danh sách object trên camera
 	vector<GameObject*> listObjectOnCamera = getListObjectOnCamera();
+
+
+    // < CẬP NHẬT SUPER MUSHROOM, FLOWER GUN. NẾU SUPER, FIRE MARIO THÌ SUPER MUSHROOM -> FLOWER GUN >
 	for each (GameObject* var in listObjectOnCamera)
 	{
+		// là dynamic item
 		if (var->getTypeObject() == TypeObject::Dynamic_Item)
 		{
-			LuckyBox* luckyBox = dynamic_cast<LuckyBox*>(var);
-			if (luckyBox != nullptr && !luckyBox->getItem()->isActive())
+			LuckyBox* item = dynamic_cast<LuckyBox*>(var);
+			if (item != nullptr && !item->getItem()->isActive()) // cập nhật đối với item còn trong luckybox
 			{
-				if (luckyBox->getTypeItem() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+				// Super mushroom
+				if (item->getItem()->getItemType() == LuckyBoxsType::IT_MUSHROOM_BIGGER)
 				{
+					// trạng thái Super mario hoặc Fire mario
 					if (Mario::getInstance()->isBig() || Mario::getInstance()->canShoot())
-						luckyBox->changeItemsType(LuckyBoxsType::IT_GUN);
+						item->getItem()->setItemType(LuckyBoxsType::IT_GUN);
 				}
-				else if (luckyBox->getTypeItem() == LuckyBoxsType::IT_GUN)
+				// Flower gun
+				else if (item->getItem()->getItemType() == LuckyBoxsType::IT_GUN)
 				{
+					// trạng thái Small mario
 					if (!Mario::getInstance()->isBig() && !Mario::getInstance()->canShoot())
-						luckyBox->changeItemsType(LuckyBoxsType::IT_MUSHROOM_BIGGER);
+						item->getItem()->setItemType(LuckyBoxsType::IT_MUSHROOM_BIGGER);
 				}
 			}
 		}
 	}
 	// </>
 
-	// <xét va chạm>
+	// < XÉT VA CHẠM >
 	for each (GameObject* item in listObjectOnCamera)
 	{
-		// xét va chạm cho item, enemy với stand position
+		// Item, Enemy
 		int type = item->getTypeObject();
-		if (type == TypeObject::Moving_Enemy || type == TypeObject::Dynamic_Item)
+		if (type == TypeObject::Moving_Enemy || type == TypeObject::Moving_Item 
+			|| type == TypeObject::Dynamic_Item)
 		{
 			for each (GameObject* temp in listObjectOnCamera)
-				item->isCollision(temp);
+			{
+				if (temp != item) // Không xét va chạm với chính nó
+					item->isCollision(temp);
+			}
+				
+
+			// Với mario
+			item->isCollision(Mario::getInstance());
 		}
+		// Mario
+		else if (type == TypeObject::Dynamic_StandPosition)
+			Mario::getInstance()->isCollision(item);
 
-		// xét va chạm mario với object trong game
-		Mario::getInstance()->isCollision(item);
-
-		// xét va chạm cho đạn
+		// Đạn
 		Mario::getInstance()->getGun()->isCollision(item);
 	}
-	//</>
+	// </>
 
 
-	// <cập nhật tọa độ>
+	// < CẬP NHẬT TỌA ĐỘ >
+	// Item, Enemy
 	for each (GameObject* item in listObjectOnCamera)
 	{
-		if (item->getTypeObject() == TypeObject::Dynamic_Item 
+		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Item
 			|| item->getTypeObject() == TypeObject::Moving_Enemy)
 			item->update();
 	}
-	Mario::getInstance()->update(); // cập nhật cho mario
-	// <Gun>
-	// hủy đạn khi ra khỏi màn hình
-	for each (Bullet* bullet in Mario::getInstance()->getGun()->getBulletShooted())
-	{
-		if (bullet->isActive() && bullet->getPosition().x < Camera::getInstance()->getViewport().x
-			|| bullet->getPosition().x > Camera::getInstance()->getViewport().x + SCREEN_WIDTH)
-			bullet->setTimeToLive(0);
-	}
-	// cập nhật cho súng
+	
+	// Mario
+	Mario::getInstance()->update();
+	
+	// Súng
 	Mario::getInstance()->getGun()->update();
 	// </>
 
 
-	// chỉ cập nhật viewport khi mario khong trong trạng thái auto animation
+	// CẬP NHẬT VIEWPORT
 	if (m_isScrollMap)
-		Camera::getInstance()->update(Mario::getInstance()->getPosition()); // cập nhật lại viewport
+		Camera::getInstance()->update(Mario::getInstance()->getPosition());
 	
 
-	// cập nhật quadtree
+	// CẬP NHẬT QUADTREE
 	Quadtree::getInstance()->update(listObjectOnCamera, Camera::getInstance()->getCamera());
 
-	// cập nhật scoreGame
+	// CẬP NHẬT SCOREGAME
 	ScoreGame::getInstance()->update();
 }
+
 
 void MapObject::updateVelocity()
 {
 	m_stateMachine->update();
-	// nếu đang ở state bros title thì không làm gì thêm
-	if (m_stateMachine->isInState(*BrosTitle::getInstance()) || m_stateMachine->isInState(*ChangeMap::getInstance()))
+	if (m_stateMachine->isInState(*BrosTitle::getInstance()) // Màn hình giới thiệu 
+		|| m_stateMachine->isInState(*ChangeMap::getInstance())) // Chuyển map
 		return;
 
-	// <cập nhật vận tốc>
-	Mario::getInstance()->getGun()->updateVelocity(); // đạn
-	Mario::getInstance()->updateVelocity(); // mario
-	// cập nhật cho object game
+
+	// < CẬP NHẬT VẬN TỐC>
+	// Đạn
+	Mario::getInstance()->getGun()->updateVelocity();
+	// Mario
+	Mario::getInstance()->updateVelocity();
+	// Item, Enemy
 	for each (GameObject* item in getListObjectOnCamera())
 	{
-		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
+		if (item->getTypeObject() == TypeObject::Dynamic_Item || item->getTypeObject() == TypeObject::Moving_Item 
+			|| item->getTypeObject() == TypeObject::Moving_Enemy)
 			item->updateVelocity();
 	}
 	// </>

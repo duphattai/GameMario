@@ -1,6 +1,7 @@
 ﻿#include "LuckyBox.h"
 #include "ReSource.h"
 #include "ItemOwnedState.h"
+#include "Mario.h"
 
 LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, IDMap idMap, int countCoin)
 {
@@ -22,6 +23,7 @@ LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, IDMap idMap, int coun
 
 	//end
 	m_item = new ItemInBox(type);
+	m_item->setTypeObject(Moving_Item);
 
 	m_stateMachine = new StateMachine<LuckyBox>(this);
 	if (itemType == ItemTypes::BrickLuckyBox)
@@ -41,41 +43,54 @@ LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, IDMap idMap, int coun
 LuckyBox::~LuckyBox()
 {
 	delete m_stateMachine;
-	delete m_item;
 }
 
 void LuckyBox::updateVelocity()
 {
 	m_stateMachine->update();
-	m_item->updateVelocity();
 }
 
 void LuckyBox::update()
 {
 	m_position.x += m_velocity.x;
 	m_position.y += m_velocity.y;
-
-	m_item->update();
 }
 
 bool LuckyBox::isCollision(GameObject* gameObject)
 {
-	return m_item->isCollision(gameObject);
+	// mario xét va chạm với luckybox
+	Mario* mario = dynamic_cast<Mario*>(gameObject);
+	if (mario != nullptr)
+	{
+		DIR dir = Collision::getInstance()->isCollision(mario, this);
+		if (dir != DIR::NONE) // xảy ra va chạm
+		{
+			if (mario->getDirCollision() == DIR::NONE)
+				mario->setDirCollision(dir);
+
+			mario->setVelocity(Collision::getInstance()->getVelocity());
+			if (dir == DIR::BOTTOM)
+			{
+				setMakeEffect(true);
+			}
+			else if (dir == DIR::TOP)
+			{
+				if (mario->getFSM() == FSM_Mario::FALL || mario->getFSM() == FSM_Mario::RUN) // fall gặp vật cản
+					mario->setLocation(Location::LOC_ON_GROUND);
+			}
+		}
+
+	}
+
+	return false;
 }
 
 void LuckyBox::draw(LPD3DXSPRITE SpriteHandler)
 {
-	m_item->setWorldPosition(m_worldPosition);
-	m_item->draw(SpriteHandler);
-
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
 	GameObject::draw(SpriteHandler);
 }
 
-void LuckyBox::changeItemsType(LuckyBoxsType type)
-{	
-	m_item->setItemsType(type);
-}
 
 Box LuckyBox::getBouding()
 {

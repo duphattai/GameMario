@@ -1,4 +1,4 @@
-#include "FloatingBar.h"
+﻿#include "FloatingBar.h"
 #include "ReSource.h"
 #include "Mario.h"
 FloatingBar::FloatingBar(FloatingBarMove move)
@@ -7,6 +7,7 @@ FloatingBar::FloatingBar(FloatingBarMove move)
 	m_typeMove = move;
 	m_width = 48;
 	m_height = 7;
+	m_typeObject = Dynamic_Item;
 
 	m_frameList.push_back(Frame(64, 129, 16, 8));
 	m_currentFrame = 0;
@@ -43,6 +44,45 @@ void FloatingBar::updateVelocity()
 	if (!m_isActive) return;
 }
 
+
+bool FloatingBar::isCollision(GameObject* gameObject)
+{
+	Mario* mario = dynamic_cast<Mario*>(gameObject);
+	if (mario != nullptr)
+	{
+		// nếu mario chết thì không xét va chạm
+		if (mario->isDead()) 
+			return false;
+
+		DIR dir = Collision::getInstance()->isCollision(gameObject, this);
+		if (dir != DIR::NONE)
+		{
+			if (mario->getDirCollision() == DIR::NONE)
+				mario->setDirCollision(dir);
+
+			Vector2 gameObjectVelocity = Collision::getInstance()->getVelocity();
+			if (dir == DIR::TOP)
+			{
+				//// thiết lập vận tốc
+				switch (m_typeMove)
+				{
+				case FloatingBarMove::MoveUp:
+					gameObjectVelocity.y += m_velocity.y;
+					break;
+				case FloatingBarMove::MoveLeft: case FloatingBarMove::MoveRight:
+					gameObjectVelocity.x += m_velocity.x;
+					break;
+				}
+
+				if (mario->getFSM() == FSM_Mario::FALL || mario->getFSM() == FSM_Mario::RUN) // fall gặp vật cản
+					mario->setLocation(Location::LOC_ON_GROUND);
+			}
+			mario->setVelocity(gameObjectVelocity);
+		}
+	}
+
+	return false;
+}
 
 void FloatingBar::draw(LPD3DXSPRITE SpriteHandler)
 {

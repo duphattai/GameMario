@@ -38,6 +38,8 @@ public:
 	void					update();
 	void					draw(LPD3DXSPRITE SpriteHandler);
 
+	bool					isCollision(GameObject*);
+
 	void					setIsBreak(bool x){ m_isBreak = x; }
 	bool					isBreak(){ return m_isBreak; }
 

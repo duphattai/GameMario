@@ -1,5 +1,6 @@
 ﻿#include "Gun.h"
 #include "SoundClass.h"
+#include "Camera.h"
 
 Gun::Gun(int countBullet)
 {
@@ -49,12 +50,12 @@ Gun::~Gun()
 
 void Gun::updateVelocity()
 {
-	// cập nhật vận tốc
+	// Cập nhật vận tốc
 	for (std::vector<Bullet*>::iterator temp = m_giveBullet.begin(); temp != m_giveBullet.end(); temp++)
 		(*temp)->updateVelocity();
 
 
-	// cập nhật kho đạn: lấy những viên đạn trạng thái disactive vào kho đạn
+	// Cập nhật kho đạn: lấy những viên đạn trạng thái active = false vào kho đạn
 	for (int i = 0; i < m_giveBullet.size(); i++)
 	{
 		if (!m_giveBullet[i]->isActive())
@@ -64,7 +65,6 @@ void Gun::updateVelocity()
 			i--;
 		}
 	}
-
 }
 
 void Gun::update()
@@ -72,6 +72,15 @@ void Gun::update()
 	for (std::vector<Bullet*>::iterator temp = m_giveBullet.begin(); temp != m_giveBullet.end(); temp++)
 	{
 		(*temp)->update();
+	}
+
+
+	// Hủy đạn khi ra khỏi màn hình
+	for each (Bullet* bullet in getBulletShooted())
+	{
+		if (bullet->isActive() && bullet->getPosition().x < Camera::getInstance()->getViewport().x
+			|| bullet->getPosition().x > Camera::getInstance()->getViewport().x + SCREEN_WIDTH)
+			bullet->setTimeToLive(0);
 	}
 }
 

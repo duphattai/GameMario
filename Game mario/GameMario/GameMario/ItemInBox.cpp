@@ -1,7 +1,7 @@
 ﻿#include "ItemInBox.h"
 #include "ReSource.h"
 #include "ItemOwnedState.h"
-
+#include "Mario.h"
 
 
 // hard code, thiết lập frameList cho từng loại item
@@ -75,7 +75,7 @@ ItemInBox::ItemInBox(LuckyBoxsType type)
 	m_isActive = false; // default
 	m_stateMachine = new StateMachine<ItemInBox>(this);
 	m_sprite = (ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET));
-	setItemsType(type);
+	setItemType(type);
 }
 
 ItemInBox::~ItemInBox()
@@ -83,7 +83,7 @@ ItemInBox::~ItemInBox()
 	delete m_stateMachine;
 }
 
-void ItemInBox::setItemsType(LuckyBoxsType type)
+void ItemInBox::setItemType(LuckyBoxsType type)
 {
 	if (type == LuckyBoxsType::IT_STAR)
 		m_mathematical = &vanTocNemXien;
@@ -107,29 +107,32 @@ void ItemInBox::update()
 		m_position.x += m_velocity.x;
 		m_position.y += m_velocity.y;
 
-		// xứ lý va chạm đối với item star
+		// Xứ lý va chạm đối với item star
 		if (m_type == LuckyBoxsType::IT_STAR)
 		{
 			if (m_dirCollision != DIR::NONE)
 			{
-				m_time = 0;
+				//m_time = 0;
 				if (m_dirCollision == DIR::TOP)
 				{
+					// Góc ném xiên
 					StarItem::getInstance()->alpha = 3.14 / 3;
+					// Vận tốc ban đầu
 					StarItem::getInstance()->v = 6;
 					m_time = 0;
 				}
 				else
 				{
+					// Góc ném xiên
 					StarItem::getInstance()->alpha = 0;
+					// Vận tốc ban đầu
 					StarItem::getInstance()->v = 6;
 					// dựa vào flip để xác định hướng vận tốc
 					if (m_dirCollision == DIR::LEFT)
 						m_flip = SpriteEffect::Flip;
 					else 
 						m_flip = SpriteEffect::None;
-				}
-					
+				}	
 			}
 		}
 	}
@@ -147,13 +150,48 @@ Box ItemInBox::getBouding()
 
 bool ItemInBox::isCollision(GameObject* gameObject)
 {
-	// xét va chạm item di chuyển trên game
+	// Mario
+	Mario* mario = dynamic_cast<Mario*>(gameObject);
+	if (mario != nullptr)
+	{
+		if (m_isActive &&
+			m_status == StatusObject::ALIVE &&
+			m_type != LuckyBoxsType::IT_COIN)
+		{
+			if (Collision::getInstance()->isCollision(mario, this) != DIR::NONE)
+			{
+				mario->setVelocity(Collision::getInstance()->getVelocity());
+				m_status = StatusObject::DEAD;
+
+				// update state for mario
+				if (m_type == LuckyBoxsType::IT_MUSHROOM_BIGGER)
+				{
+					mario->setCanShoot(false);
+					mario->setIsBig(true);
+				}
+				else if (m_type == LuckyBoxsType::IT_STAR)
+					mario->setStar(true);
+				else if (m_type == LuckyBoxsType::IT_GUN)
+				{
+					mario->setCanShoot(true);
+					mario->setIsBig(false);
+				}
+				else if (m_type == LuckyBoxsType::IT_MUSHROOM_UP)
+					mario->setLives(mario->getLives() + 1);
+			}
+		}
+	}
+
+
+
+
+	// item di chuyển trên game
 	int type = gameObject->getTypeObject();
-	if (type == TypeObject::Dynamic_TiledMap // tiled map
-		|| type == TypeObject::Moving_Enemy // enemy  
+	if (type == TypeObject::Dynamic_TiledMap // Tiled map
+		|| type == TypeObject::Moving_Enemy // Enemy  
 		|| !m_isActive // item hiện đang không active
-		|| m_stateMachine->isInState(*ItemInLuckyBoxIdle::getInstance()) // item trong trạng thái move up
-		|| m_type == LuckyBoxsType::IT_COIN || m_type == LuckyBoxsType::IT_GUN) // xét va chạm cho bigger, up, star
+		|| m_stateMachine->isInState(*ItemInLuckyBoxIdle::getInstance()) // Item trong trạng thái move up
+		|| m_type == LuckyBoxsType::IT_COIN || m_type == LuckyBoxsType::IT_GUN) // Super mushroom, 1-Up, Super star
 		return false;
 
 	DIR dir = Collision::getInstance()->isCollision(this, gameObject);
@@ -166,7 +204,7 @@ bool ItemInBox::isCollision(GameObject* gameObject)
 		else if (dir == DIR::RIGHT)
 			m_flip = SpriteEffect::None;
 		
-		// hướng để dùng cho staritem
+		// hướng để dùng cho super star
 		if (m_dirCollision == DIR::NONE)
 			m_dirCollision = dir;
 		return true;

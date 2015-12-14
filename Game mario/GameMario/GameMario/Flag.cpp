@@ -1,6 +1,8 @@
 ﻿#include "Flag.h"
 #include "ReSource.h"
 #include "Camera.h"
+#include "Mario.h"
+#include "MarioOwnedState.h"
 
 Flag::Flag(Vector2 position)
 {
@@ -60,4 +62,26 @@ Box Flag::getBouding()
 {
 	m_box = Box(m_position.x, m_position.y, m_width, m_height);
 	return m_box;
+}
+
+bool Flag::isCollision(GameObject* gameObject)
+{
+	Mario* mario = dynamic_cast<Mario*>(gameObject);
+	if (mario != nullptr)
+	{
+		if (!mario->getStateMachine()->isInState(*AutoAnimation::getInstance()))
+		{
+			if (Collision::getInstance()->isCollision(mario, this) != DIR::NONE)
+			{
+				mario->setVelocity(Collision::getInstance()->getVelocity());
+				m_makeEffect = true;
+				AutoAnimation::getInstance()->m_type = AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle;
+				mario->getStateMachine()->changeState(AutoAnimation::getInstance());
+
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

@@ -1,6 +1,8 @@
 ﻿#include "Coin.h"
 #include "ReSource.h"
 #include "ScoreGame.h"
+#include "Mario.h"
+
 Coin::Coin(IDMap idMap)
 {
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
@@ -45,6 +47,23 @@ void Coin::updateVelocity()
 	}
 }
 
+bool Coin::isCollision(GameObject* gameObject)
+{
+	if (!m_isActive || m_status == StatusObject::DEAD) 
+		return false;
+
+	Mario* mario = dynamic_cast<Mario*>(gameObject);
+	if (mario != nullptr)
+	{
+		if (Collision::getInstance()->isCollision(this, mario) != DIR::NONE)
+		{
+			m_status = StatusObject::DEAD;
+			return true;
+		}
+	}
+
+	return false;
+}
 
 void Coin::draw(LPD3DXSPRITE SpriteHandler)
 {

@@ -203,12 +203,13 @@ void Quadtree::update(vector<GameObject*> list, Box camera)
 {
 	for each (GameObject* item in list)
 	{
-		if (item->getTypeObject() == TypeObject::Moving_Enemy)
+		if (item->getTypeObject() == TypeObject::Moving_Enemy || item->getTypeObject() == TypeObject::Moving_Item)
 		{
 			this->remove(item);
 			this->insert(item);
 		}
-		else if (item->getTypeObject() == TypeObject::Dynamic_Item)
+		// nếu item in luckybox ra khỏi camera thì thiết lập active = false
+		if (item->getTypeObject() == TypeObject::Moving_Item)
 		{
 			LuckyBox* luckybox = dynamic_cast<LuckyBox*>(item);
 			if (luckybox != nullptr && AABB(luckybox->getItem()->getBouding(), camera) == DIR::NONE)

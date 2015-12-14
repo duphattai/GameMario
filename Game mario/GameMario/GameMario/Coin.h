@@ -13,6 +13,8 @@ public:
 	Coin(IDMap);
 	~Coin();
 
+	bool					isCollision(GameObject*);
+
 	void					update();
 	void					updateVelocity();
 	void					draw(LPD3DXSPRITE SpriteHandler);

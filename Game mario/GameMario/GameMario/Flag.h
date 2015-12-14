@@ -18,6 +18,8 @@ public:
 
 	void					setMakeEffect(bool x){ m_makeEffect = x; }
 
+	bool					isCollision(GameObject*);
+
 	void					update();
 	void					updateVelocity();
 	void					draw(LPD3DXSPRITE SpriteHandler);

@@ -36,8 +36,8 @@ public:
 	bool			finishAnimation(){ return m_finishAnimation; }
 	void			setFinishAnimation(bool x){ m_finishAnimation = x; }
 
-	void			setItemsType(LuckyBoxsType type);
-	LuckyBoxsType	getItemsType(){ return m_type; }
+	void			setItemType(LuckyBoxsType type);
+	LuckyBoxsType	getItemType(){ return m_type; }
 
 	int				m_time; // thời gian xác định vận tốc
 	Vector2			(*m_mathematical)(int, float v, float alpha);// con trỏ hàm

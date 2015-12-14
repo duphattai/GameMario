@@ -130,6 +130,7 @@ enum FSM_Mario
 enum TypeObject
 {
 	Moving_Enemy,
+	Moving_Item,
 	Dynamic_Item,
 	Dynamic_TiledMap,
 	Dynamic_StandPosition,

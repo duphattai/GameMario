@@ -40,9 +40,6 @@ public:
 
 	ItemInBox*				getItem(){ return m_item; }
 
-	void					changeItemsType(LuckyBoxsType type);
-	LuckyBoxsType			getTypeItem(){ return m_item->getItemsType(); }
-
 	void					setMakeEffect(bool x){ m_makeEffect = x; }
 	bool					getMakeEffect(){ return m_makeEffect; }
 

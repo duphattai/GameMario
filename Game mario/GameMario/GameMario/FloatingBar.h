@@ -22,6 +22,8 @@ public:
 	FloatingBar(FloatingBarMove);
 	~FloatingBar();
 
+	bool					isCollision(GameObject*);
+
 	void					update();
 	void					updateVelocity();
 	void					draw(LPD3DXSPRITE SpriteHandler);
