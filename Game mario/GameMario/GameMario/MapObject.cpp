@@ -10,7 +10,7 @@
 #include "MarioOwnedState.h"
 #include "Flag.h"
 #include "FloatingBar.h"
-
+#include "Enemy.h"
 
 
 MapObject::MapObject()
@@ -247,10 +247,19 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 				var->draw(spriteHandler);
 			}
 		}
+		// Item in luckyBox
+		for each (GameObject* var in list)
+		{
+			if (var->getTypeObject() == TypeObject::Moving_Item)
+			{
+				var->setWorldPosition(m_worldPosition);
+				var->draw(spriteHandler);
+			}
+		}
 		// Item, Enemy
 		for each (GameObject* var in list)
 		{
-			if (var->getTypeObject() == TypeObject::Dynamic_Item || var->getTypeObject() == TypeObject::Moving_Item 
+			if (var->getTypeObject() == TypeObject::Dynamic_Item
 				|| var->getTypeObject() == TypeObject::Moving_Enemy)
 			{
 				var->setWorldPosition(m_worldPosition);
@@ -408,6 +417,19 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 	{
 		temp = new Flag(Vector2(gameObject.m_X, gameObject.m_Y));
 		temp->setTypeObject(TypeObject::Dynamic_Item);
+	}
+
+	else if (gameObject.m_Id == 14) // TortoiseEnemy
+	{
+		temp = new Enemy(EnemyType::TortoiseEnemy);
+		temp->setTypeObject(TypeObject::Moving_Enemy);
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for TortoiseEnemy
+	}
+	else if (gameObject.m_Id == 10) // TortoiseEnemy
+	{
+		temp = new Enemy(EnemyType::MushroomEnemy);
+		temp->setTypeObject(TypeObject::Moving_Enemy);
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for MushroomEnemy
 	}
 	
 	return temp;

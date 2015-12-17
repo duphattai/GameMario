@@ -106,7 +106,9 @@ void LuckyBoxEffect::execute(LuckyBox* item)
 
 	// Hiêu ứng kết thúc 
 	if (velocity.y < -3)
-		item->getStateMachine()->changeState(IdleLuckyBox::getInstance()); 
+	{
+		item->getStateMachine()->changeState(IdleLuckyBox::getInstance());
+	}
 	else if (velocity.y == 0)
 	{
 		ItemInBox* itemInBox = item->getItem();
@@ -260,7 +262,7 @@ void ItemInLuckyBoxIdle::enter(ItemInBox* item)
 {
 	item->setActive(false);
 	item->setTimeAnimation(5);
-	item->setVelocity(Vector2(0, 5));
+	item->setVelocity(Vector2(0, 4));
 }
 
 void ItemInLuckyBoxIdle::execute(ItemInBox* itemInBox)

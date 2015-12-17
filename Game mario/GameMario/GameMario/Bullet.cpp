@@ -1,7 +1,7 @@
 ﻿#include "Bullet.h"
 #include "ReSource.h"
 #include "BulletOwnedState.h"
-
+#include "Enemy.h"
 Bullet::Bullet()
 {
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
@@ -62,6 +62,7 @@ bool Bullet::isCollision(GameObject* gameObject)
 		m_velocity = Collision::getInstance()->getVelocity();
 		if (gameObject->getTypeObject() == TypeObject::Moving_Enemy)
 		{
+			dynamic_cast<Enemy*>(gameObject)->setAttack(BeAttack::DeathByGun);
 			m_isExplode = true;
 		}
 		else

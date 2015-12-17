@@ -6,7 +6,8 @@ enum IDImage
 	IMG_MARIOSHEET = 0,
 	IMG_TILEMAP,
 	IMG_ITEMSHEET,
-	IMG_MENU
+	IMG_MENU,
+	IMG_ENEMYSHEET
 };
 
 enum SpriteEffect
@@ -250,5 +251,6 @@ enum class IDSounds
 	Sound_Stomp,
 	Sound_Vine,
 	Sound_Warning,
-	Sound_WorldCLear
+	Sound_WorldCLear,
+	Sound_FlagPole
 };

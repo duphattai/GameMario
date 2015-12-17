@@ -3,7 +3,7 @@
 #include "Camera.h"
 #include "Mario.h"
 #include "MarioOwnedState.h"
-
+#include "SoundClass.h"
 Flag::Flag(Vector2 position)
 {
 	// hard code
@@ -73,6 +73,7 @@ bool Flag::isCollision(GameObject* gameObject)
 		{
 			if (Collision::getInstance()->isCollision(mario, this) != DIR::NONE)
 			{
+				SoundClass::getInstance()->playWaveFile(IDSounds::Sound_FlagPole);
 				mario->setVelocity(Collision::getInstance()->getVelocity());
 				m_makeEffect = true;
 				AutoAnimation::getInstance()->m_type = AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle;

@@ -155,8 +155,8 @@ Box Mario::getBouding()
 {
 	GameObject::getBouding();
 	
-	m_box.x += 2;
-	m_box.width -= 4;
+	m_box.x += 3;
+	m_box.width -= 6;
 	m_box.y += 1;
 	m_box.height -= 2;
 	

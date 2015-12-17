@@ -205,7 +205,7 @@ void Jumping::execute(Mario* mario)
 	velocity.y += GRAVITATION;
 	// update velocity
 	keyboard->getState();
-	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0)
+	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0 && mario->getStateMachine()->GetPreviousState() != Falling::getInstance())
 		velocity.y += 2;
 
 	if (keyboard->isKeyDown(DIK_RIGHT))
@@ -317,6 +317,8 @@ AutoAnimation* AutoAnimation::getInstance()
 
 void AutoAnimation::enter(Mario* mario)
 {
+	if (m_type == AutoAnimationType::AutoAnimationMoveDownPipe || m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoPipe)
+		SoundClass::getInstance()->playWaveFile(IDSounds::Sound_Pipe);
 	mario->setFinishAutoAnimation(false);
 }
 

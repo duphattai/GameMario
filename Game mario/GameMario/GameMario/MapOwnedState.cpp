@@ -5,6 +5,7 @@
 #include "MarioOwnedState.h"
 #include "ScoreGame.h"
 #include "GameTime.h"
+#include "SoundClass.h"
 extern CKeyBoard *keyboard;
 
 /////////////////////////////////////////////////// Bros Title

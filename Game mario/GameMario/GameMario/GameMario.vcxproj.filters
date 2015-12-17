@@ -163,6 +163,18 @@
     <Filter Include="Source Files\GameObject\Object\FloatingBar">
       <UniqueIdentifier>{7df29276-6f5a-41c8-a54a-24920ed19ee2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject\Object\Enemy">
+      <UniqueIdentifier>{e38848b8-02c0-4ee6-a915-4770a3050095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Enemy">
+      <UniqueIdentifier>{b36a5bef-0f42-45de-bd65-1d12453febcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\StateMachine\EnemyOwnedState">
+      <UniqueIdentifier>{80f3b18d-e808-42fe-8297-6beaedc92a63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\StateMachine\EnemyOwnedState">
+      <UniqueIdentifier>{7ba29ee5-f41c-4647-9875-906833303650}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -254,6 +266,15 @@
     </ClCompile>
     <ClCompile Include="FloatingBar.cpp">
       <Filter>Source Files\GameObject\Object\FloatingBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GoombaOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="KoopaTroopaOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -352,6 +373,15 @@
     </ClInclude>
     <ClInclude Include="FloatingBar.h">
       <Filter>Header Files\GameObject\Object\FloatingBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\GameObject\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GoombaOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="KoopaTroopaOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

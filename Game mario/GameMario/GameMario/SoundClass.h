@@ -72,4 +72,5 @@ private:
 	IDirectSoundBuffer8* smb_vine;
 	IDirectSoundBuffer8* smb_warning;
 	IDirectSoundBuffer8* smb_world_clear;
+	IDirectSoundBuffer8* smb_flagpole;
 };

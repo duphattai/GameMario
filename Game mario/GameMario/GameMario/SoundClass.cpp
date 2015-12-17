@@ -56,6 +56,7 @@ bool SoundClass::initialize(HWND hwnd)
 	loadWaveFile("Sounds/smb_stomp.wav", &smb_stomp);
 	loadWaveFile("Sounds/smb_vine.wav", &smb_vine);
 	loadWaveFile("Sounds/smb_warning.wav", &smb_warning);
+	loadWaveFile("Sounds/smb_flagpole.wav", &smb_flagpole);
 
 	return true;
 }
@@ -427,6 +428,9 @@ IDirectSoundBuffer8* SoundClass::getSound(IDSounds idSound)
 		break;
 	case IDSounds::Sound_WorldCLear:
 		return smb_world_clear;
+		break;
+	case IDSounds::Sound_FlagPole:
+		return smb_flagpole;
 		break;
 	}
 }

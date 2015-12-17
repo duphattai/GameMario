@@ -7,7 +7,8 @@
 #include "ScoreGame.h"
 #include "MarioOwnedState.h"
 #include "MapOwnedState.h"
-
+#include "KoopaTroopaOwnedState.h"
+#include "GoombaOwnedState.h"
 CKeyBoard *keyboard = NULL;
 MapObject *m_state;
 LPD3DXFONT m_font;
@@ -204,4 +205,13 @@ Game::~Game()
 
 	ScoreGame::getInstance()->release();
 	delete ScoreGame::getInstance();
+
+	delete KoopaTroopaDieByGun::getInstance();
+	delete KoopaTroopaShellMove::getInstance();
+	delete KoopaTroopaMove::getInstance();
+	delete KoopaTroopaShellNotMove::getInstance();
+
+	delete GoombaDieByGun::getInstance();
+	delete GoombaDieByJump::getInstance();
+	delete GoombaMove::getInstance();
 }
