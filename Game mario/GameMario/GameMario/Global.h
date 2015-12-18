@@ -123,9 +123,7 @@ enum FSM_Mario
 	RUN,
 	JUMP,
 	FALL,
-	SIT,
-	DEAD,
-	STAR
+	SIT
 };
 
 enum TypeObject

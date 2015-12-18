@@ -32,15 +32,14 @@ bool KoopaTroopaFly::isCollision(GameObject* gameObject)
 {
 	// xét va chạm với stand position và item
 	// nếu item không active thì không xét 
-	if (!m_isActive || m_status == StatusObject::DEAD)
+	if (!m_isActive || m_status == StatusObject::DEAD
+		|| gameObject->getStatusOBject() == StatusObject::DEAD)
 		return false;
 
 
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
-		if (mario->getFSM() == FSM_Mario::DEAD) return false;
-
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE)
 		{
@@ -64,7 +63,7 @@ bool KoopaTroopaFly::isCollision(GameObject* gameObject)
 				m_beAttack = BeAttack::DeathByJump;
 				mario->getStateMachine()->changeState(Jumping::getInstance());
 			}
-			else
+			else if (!mario->m_effectSmall)
 				mario->setDead(true);
 		}
 	}

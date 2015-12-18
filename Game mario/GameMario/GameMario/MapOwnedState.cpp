@@ -55,7 +55,7 @@ ChangeMap* ChangeMap::getInstance()
 
 void ChangeMap::enter(MapObject* map)
 {
-	m_countTime = 30;
+	m_countTime = 50;
 	map->setColorBackGround(D3DCOLOR_XRGB(0, 0, 0));
 }
 
@@ -63,7 +63,9 @@ void ChangeMap::execute(MapObject* map)
 {
 	if (m_countTime-- < 0)
 	{
-		if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) && AutoAnimation::getInstance()->m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
+		// Chuyển sang map mới nếu mario trang thái auto animation vào lâu đài
+		if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) && 
+			AutoAnimation::getInstance()->m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
 		{
 			Mario::getInstance()->setPosition(0, 0);
 			if (map->getIDMap() == IDMap::MapOne)
@@ -71,10 +73,18 @@ void ChangeMap::execute(MapObject* map)
 			else if (map->getIDMap() == IDMap::MapTwo)
 				map->getStateMachine()->changeState(MapThree::getInstance());
 		}
+		// Mario bị chết
 		else
 		{
 			Mario::getInstance()->initialize();
-			map->getStateMachine()->changeState(map->getStateMachine()->GetPreviousState());
+			if (Mario::getInstance()->getLives() <= 0)
+			{
+				map->getStateMachine()->changeState(BrosTitle::getInstance());
+			}
+			else
+			{
+				map->getStateMachine()->changeState(map->getStateMachine()->GetPreviousState());
+			}
 		}	
 	}
 }
@@ -85,8 +95,16 @@ void ChangeMap::exit(MapObject* map)
 
 void ChangeMap::draw(MapObject* map, LPD3DXSPRITE spriteHandle)
 {
-	string temp = "MARIO x " + to_string(Mario::getInstance()->getLives());
-	map->drawText(wstring(temp.begin(), temp.end()), Vector2(90, 240 - 136));
+	if (Mario::getInstance()->getLives() <= 0)
+	{
+		string temp = "GAME OVER";
+		map->drawText(wstring(temp.begin(), temp.end()), Vector2(90, 240 - 136));
+	}
+	else
+	{
+		string temp = "MARIO x " + to_string(Mario::getInstance()->getLives());
+		map->drawText(wstring(temp.begin(), temp.end()), Vector2(90, 240 - 136));
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -121,11 +139,13 @@ void MapOne::enter(MapObject* map)
 	ScoreGame::getInstance()->setState("1-1");
 
 
+	// Mario xuất hiện vị trí checkpoint
 	if (Mario::getInstance()->getPosition().x > map->getCheckPoint().x)
 	{
 		Mario::getInstance()->setPosition(map->getCheckPoint().x, map->getCheckPoint().y);
 		Camera::getInstance()->setViewPort(map->getCheckPoint().x, Camera::getInstance()->getViewport().y);
 	}
+	// Xuất hiện tọa độ bắt đầu
 	else
 	{
 		Mario::getInstance()->setPosition(m_boxStartMap.x, m_boxStartMap.y);
@@ -135,8 +155,9 @@ void MapOne::enter(MapObject* map)
 
 void MapOne::execute(MapObject* map)
 {
+	// Tọa độ xuống submap
 	if (Mario::getInstance()->getFSM() == FSM_Mario::SIT && 
-		AABB(Mario::getInstance()->getBouding(), m_subMap.boxGoInSubMap) != DIR::NONE) // hard code, tọa độ xuống submap
+		AABB(Mario::getInstance()->getBouding(), m_subMap.boxGoInSubMap) != DIR::NONE) 
 	{
 		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance())) 
 		{
@@ -159,7 +180,8 @@ void MapOne::execute(MapObject* map)
 			}
 		}
 	}
-	else if (AABB(Mario::getInstance()->getBouding(), m_subMap.boxEndSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::RUN) // tọa độ end sub map
+	// Tọa độ kết thúc sub map
+	else if (AABB(Mario::getInstance()->getBouding(), m_subMap.boxEndSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::RUN)
 	{
 		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()))
 		{
@@ -168,7 +190,8 @@ void MapOne::execute(MapObject* map)
 			AutoAnimation::getInstance()->m_endPosition = Vector2(m_subMap.boxEndSubMap.x, m_subMap.boxEndSubMap.y); // tọa độ end auto animation
 			Mario::getInstance()->getStateMachine()->changeState(AutoAnimation::getInstance());
 		}
-		else // trong trạng thái auto animation
+		// trong trạng thái auto animation
+		else 
 		{
 			// kết thúc auto animation, đưa mario trở lại map chính
 			if (Mario::getInstance()->isFinishAutoAnimation()) 
@@ -182,7 +205,7 @@ void MapOne::execute(MapObject* map)
 			}
 		}
 	}
-	// qua màn
+	// Qua map
 	else if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) && AutoAnimation::getInstance()->m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
 	{
 		map->setScrollMap(false);
@@ -193,7 +216,7 @@ void MapOne::execute(MapObject* map)
 		}
 	}
 
-	// không qua màn
+	// Không qua màn
 	if (Mario::getInstance()->getPosition().y  + Mario::getInstance()->getHeight() < 0 // mario ra khỏi màn hình
 		|| ScoreGame::getInstance()->getTimeOfState() <= 0) // hết thời gian
 	{
@@ -242,12 +265,14 @@ void MapTwo::enter(MapObject* map)
 	Camera::getInstance()->initialize(0, VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT, map->getWidth(), map->getHeight());
 	ScoreGame::getInstance()->setState("1-2");
 
+	// Mario xuất hiện vị trí checkpoint
 	if (Mario::getInstance()->getPosition().x > map->getCheckPoint().x)
 	{
 		Mario::getInstance()->setPosition(map->getCheckPoint().x, map->getCheckPoint().y);
 		Camera::getInstance()->setViewPort(map->getCheckPoint().x, Camera::getInstance()->getViewport().y);
 		map->setColorBackGround(D3DCOLOR_XRGB(0, 0, 0));
 	}
+	// Xuất hiện tại tọa độ bắt đầu
 	else
 	{
 		Mario::getInstance()->setPosition(m_boxStartMap.x, m_boxStartMap.y);
@@ -262,7 +287,8 @@ void MapTwo::enter(MapObject* map)
 
 void MapTwo::execute(MapObject* map)
 {
-	if (AABB(Mario::getInstance()->getBouding(), m_subMap.boxGoInSubMap) != DIR::NONE) // auto animation xuống submap
+	// Auto animation xuống submap
+	if (AABB(Mario::getInstance()->getBouding(), m_subMap.boxGoInSubMap) != DIR::NONE) 
 	{
 		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance())) // nếu chưa nằm trang thái auto animation 
 		{
@@ -284,7 +310,8 @@ void MapTwo::execute(MapObject* map)
 			}
 		}
 	}
-	else if (AABB(Mario::getInstance()->getBouding(), m_subMap.boxEndSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::RUN) // tọa độ end sub map
+	// Tọa độ end sub map
+	else if (AABB(Mario::getInstance()->getBouding(), m_subMap.boxEndSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::RUN) 
 	{
 		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()))
 		{
@@ -306,7 +333,7 @@ void MapTwo::execute(MapObject* map)
 		}
 	}
 
-	// vào submap từ submap
+	// Vào submap từ submap
 	else if (AABB(Mario::getInstance()->getBouding(), m_subMapInSubMap.boxGoInSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::SIT) // auto animation xuống submap từ submap
 	{
 		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()))
@@ -328,7 +355,8 @@ void MapTwo::execute(MapObject* map)
 			}
 		}
 	}
-	else if (AABB(Mario::getInstance()->getBouding(), m_subMapInSubMap.boxEndSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::RUN) // tọa độ end sub map trong submap
+	// Tọa độ end sub map trong submap
+	else if (AABB(Mario::getInstance()->getBouding(), m_subMapInSubMap.boxEndSubMap) != DIR::NONE && Mario::getInstance()->getFSM() == FSM_Mario::RUN) 
 	{
 		if (!Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()))
 		{
@@ -350,8 +378,9 @@ void MapTwo::execute(MapObject* map)
 		}
 	}
 
-	// qua màn
-	else if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) && AutoAnimation::getInstance()->m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
+	// Qua màn
+	else if (Mario::getInstance()->getStateMachine()->isInState(*AutoAnimation::getInstance()) && 
+		AutoAnimation::getInstance()->m_type == AutoAnimationType::AutoAnimationMoveOnGroundIntoCastle)
 	{
 		AutoAnimation::getInstance()->m_endPosition = Vector2(m_boxEndMap.x, m_boxEndMap.y);
 		if (Mario::getInstance()->isFinishAutoAnimation())
@@ -360,7 +389,7 @@ void MapTwo::execute(MapObject* map)
 		}
 	}
 
-	// không qua màn
+	// Không qua màn
 	if (Mario::getInstance()->getPosition().y + Mario::getInstance()->getHeight() < 0 // mario ra khỏi màn hình
 		|| ScoreGame::getInstance()->getTimeOfState() <= 0) // hết thời gian
 	{

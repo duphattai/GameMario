@@ -140,7 +140,7 @@ void Mario::update()
 
 void Mario::updateVelocity()
 {
-	if (!m_effectBig && !m_effectFire && !m_effectSmall)
+	if (!m_effectBig && !m_effectFire && !m_effectSmall && !m_isDead)
 		m_stateMachine->update();
 	
 	m_statusStateMachine->update();
@@ -170,7 +170,7 @@ bool Mario::isCollision(GameObject* gameObject)
 		|| gameObject->getStatusOBject() == StatusObject::DEAD // Chết
 		|| !gameObject->isActive() // Chưa active
 		|| m_stateMachine->isInState(*AutoAnimation::getInstance())
-		|| m_FSM_Mario == FSM_Mario::DEAD) 
+		|| m_status == StatusObject::DEAD) 
 		return false;
 
 

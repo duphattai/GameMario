@@ -3,6 +3,7 @@
 #include "KeyBoard.h"
 #include "SoundClass.h"
 #include "Camera.h"
+#include "Global.h"
 extern CKeyBoard *keyboard; // ý nghĩa là keyboard đã được đinh nghĩa ở đâu đó
 
 
@@ -616,8 +617,7 @@ void Dead::enter(Mario* mario)
 {
 	mario->setVelocity(Vector2(0, 5));
 	mario->setCurrentFrame(MarioSheet::MARIO_DIE);
-	mario->setFSM(FSM_Mario::DEAD);
-
+	mario->setStatusObject(StatusObject::DEAD);
 	mario->setIsBig(false);
 	mario->setCanShoot(false);
 
@@ -634,7 +634,7 @@ void Dead::execute(Mario* mario)
 
 void Dead::exit(Mario* mario)
 {
-	mario->setFSM(FSM_Mario::FALL);
+	mario->setStatusObject(StatusObject::ALIVE);
 	mario->setIsBig(false);
 	mario->setCanShoot(false);
 	mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
