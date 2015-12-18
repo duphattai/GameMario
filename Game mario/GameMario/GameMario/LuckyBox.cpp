@@ -2,7 +2,7 @@
 #include "ReSource.h"
 #include "ItemOwnedState.h"
 #include "Mario.h"
-
+#include "Enemy.h"
 LuckyBox::LuckyBox(LuckyBoxsType type, ItemTypes itemType, IDMap idMap, int countCoin)
 {
 	m_countItem = countCoin;
@@ -59,6 +59,7 @@ void LuckyBox::update()
 bool LuckyBox::isCollision(GameObject* gameObject)
 {
 	// mario xét va chạm với luckybox
+	Enemy* enemy = dynamic_cast<Enemy*>(gameObject);
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
@@ -79,7 +80,19 @@ bool LuckyBox::isCollision(GameObject* gameObject)
 					mario->setLocation(Location::LOC_ON_GROUND);
 			}
 		}
+	}
+	else if (enemy != nullptr)
+	{
+		if (enemy->getStatusOBject() == StatusObject::DEAD) return false;
 
+		DIR dir = Collision::getInstance()->isCollision(enemy, this);
+		if (dir == DIR::TOP)
+		{
+			enemy->setVelocity(Collision::getInstance()->getVelocity());
+			if (m_stateMachine->isInState(*LuckyBoxEffect::getInstance())
+				|| m_stateMachine->isInState(*BrickItemEffect::getInstance()))
+				enemy->setAttack(BeAttack::DeathByGun);
+		}
 	}
 
 	return false;

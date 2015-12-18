@@ -226,7 +226,7 @@ static Vector2 vanTocNemXien(int time, float v, float alpha)
 {
 	Vector2 velocity;
 	velocity.x = v * cos(alpha);
-	velocity.y = v * sin(alpha) + GRAVITATION * time / 1.5;
+	velocity.y = v * sin(alpha) + GRAVITATION * time / 1.5f;
 
 	return velocity;
 }

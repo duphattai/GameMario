@@ -11,14 +11,6 @@ enum class BeAttack
 	DeathByGun
 };
 
-enum EnemyType
-{
-	TortoiseEnemy,
-	MushroomEnemy,
-	CloudEnemy,
-	FlowerEnemy,
-
-};
 class Enemy : public GameObject
 {
 protected:
@@ -28,24 +20,18 @@ protected:
 
 	int							m_currentFrame;
 	vector<Frame>				m_frameList;
-
-	EnemyType					m_enemyType;
-
 public:
-
 	void					setCurrentFrame(int frame);
 	int						getCurrentFrame(){ return m_currentFrame; }
-
-	bool					isCollision(GameObject*);
 
 	void					update();
 	void					updateVelocity();
 	void					draw(LPD3DXSPRITE SpriteHandler);
 
+	virtual Box				getBouding();
+
 	int						getSizeFrameList(){ return m_frameList.size(); }
 	void					setFrameList(vector<Frame> list){ m_frameList = list; }
-
-	EnemyType				getType(){ return m_enemyType; }
 
 	BeAttack				getAttack(){ return m_beAttack; }
 	void					setAttack(BeAttack beAttack){ m_beAttack = beAttack; }
@@ -54,6 +40,6 @@ public:
 
 	StateMachine<Enemy>*	getStateMachine(){ return m_stateMachine; }
 
-	Enemy(EnemyType newEnemyType);
+	Enemy();
 	~Enemy();
 };

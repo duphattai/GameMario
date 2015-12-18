@@ -9,6 +9,8 @@
 #include "MapOwnedState.h"
 #include "KoopaTroopaOwnedState.h"
 #include "GoombaOwnedState.h"
+#include "FireFlowerOwnedState.h"
+#include "KoopaTroopaFlyOwnedState.h"
 CKeyBoard *keyboard = NULL;
 MapObject *m_state;
 LPD3DXFONT m_font;
@@ -210,6 +212,10 @@ Game::~Game()
 	delete KoopaTroopaShellMove::getInstance();
 	delete KoopaTroopaMove::getInstance();
 	delete KoopaTroopaShellNotMove::getInstance();
+	delete KoopaTroopaFlyMoveFly::getInstance();
+
+	delete FireFlowerDieByGun::getInstance();
+	delete FireFlowerMove::getInstance();
 
 	delete GoombaDieByGun::getInstance();
 	delete GoombaDieByJump::getInstance();

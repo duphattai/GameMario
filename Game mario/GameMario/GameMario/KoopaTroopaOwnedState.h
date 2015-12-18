@@ -1,12 +1,14 @@
 ﻿#pragma once
 #include "Enemy.h"
-
+#include <vector>
+using namespace std;
 
 class KoopaTroopaMove : public State<Enemy>// bình thường
 {
 	static KoopaTroopaMove*	m_instance;
+	vector<Frame>			m_frameAnimation;
 public:
-	KoopaTroopaMove(){}
+	KoopaTroopaMove();
 	virtual ~KoopaTroopaMove(){}
 
 	static KoopaTroopaMove*		getInstance();
@@ -19,8 +21,9 @@ public:
 class KoopaTroopaShellNotMove : public State<Enemy>// mai rùa ko di chuyển
 {
 	static KoopaTroopaShellNotMove*	m_instance;
+	vector<Frame>					m_frameAnimation;
 public:
-	KoopaTroopaShellNotMove(){}
+	KoopaTroopaShellNotMove();
 	virtual ~KoopaTroopaShellNotMove(){}
 
 	static KoopaTroopaShellNotMove*		getInstance();
@@ -33,8 +36,9 @@ public:
 class KoopaTroopaShellMove : public State<Enemy>// mai rùa di chuyển
 {
 	static KoopaTroopaShellMove*	m_instance;
+	vector<Frame>					m_frameAnimation;
 public:
-	KoopaTroopaShellMove(){}
+	KoopaTroopaShellMove();
 	virtual ~KoopaTroopaShellMove(){}
 
 	static KoopaTroopaShellMove*		getInstance();

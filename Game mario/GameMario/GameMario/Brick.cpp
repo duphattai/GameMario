@@ -2,7 +2,7 @@
 #include "ReSource.h"
 #include "ItemOwnedState.h"
 #include "Mario.h"
-
+#include "Enemy.h"
 Brick::Brick(Vector2 position, IDMap idMap)
 {
 	m_position.x = position.x;
@@ -50,11 +50,12 @@ void Brick::updateVelocity()
 
 bool Brick::isCollision(GameObject* gameObject)
 {
-	if (m_isBreak) return false;
-
+	Enemy* enemy = dynamic_cast<Enemy*>(gameObject);
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
+		if (m_isBreak) return false;
+
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE)
 		{
@@ -78,6 +79,19 @@ bool Brick::isCollision(GameObject* gameObject)
 					mario->setLocation(Location::LOC_ON_GROUND);
 			}
 		}	
+	}
+	else if (enemy != nullptr)
+	{
+		if (enemy->getStatusOBject() == StatusObject::DEAD) return false;
+
+		DIR dir = Collision::getInstance()->isCollision(enemy, this);
+		if (dir == DIR::TOP)
+		{
+			enemy->setVelocity(Collision::getInstance()->getVelocity());
+			if (m_stateMachine->isInState(*BrickEffect::getInstance())
+				|| m_stateMachine->isInState(*BrickBroken::getInstance()))
+				enemy->setAttack(BeAttack::DeathByGun);
+		}
 	}
 
 	return false;

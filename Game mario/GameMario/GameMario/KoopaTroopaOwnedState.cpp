@@ -4,6 +4,12 @@
 
 KoopaTroopaMove* KoopaTroopaMove::m_instance = 0;
 
+KoopaTroopaMove::KoopaTroopaMove()
+{
+	for (int i = 0; i < 2; i++)
+		m_frameAnimation.push_back(Frame(96 + 16 * i, 8, 16, 24));
+}
+
 KoopaTroopaMove* KoopaTroopaMove::getInstance()
 {
 	if (m_instance == NULL)
@@ -16,6 +22,8 @@ KoopaTroopaMove* KoopaTroopaMove::getInstance()
 
 void KoopaTroopaMove::enter(Enemy* enemy)
 {
+	enemy->setAttack(BeAttack::None);
+	enemy->setFrameList(m_frameAnimation);
 	enemy->setVelocity(Vector2(0, 0));
 	enemy->setTimeAnimation(5);
 	enemy->setCurrentFrame(0);
@@ -34,7 +42,7 @@ void KoopaTroopaMove::execute(Enemy* enemy)
 
 	//update animation
 	int current = enemy->getCurrentFrame() + 1;
-	if (current > 1)//cập nhật indext
+	if (current >= enemy->getSizeFrameList())//cập nhật indext
 		current = 0;
 	int time = enemy->getTimeAnimation() - 1;
 	if (time == 0)
@@ -63,6 +71,11 @@ void KoopaTroopaMove::exit(Enemy* enemy)
 //State mai rùa khi mario nhảy lên
 KoopaTroopaShellNotMove* KoopaTroopaShellNotMove::m_instance = 0;
 
+KoopaTroopaShellNotMove::KoopaTroopaShellNotMove()
+{
+	m_frameAnimation.push_back(Frame(161, 17, 14, 12));
+}
+
 KoopaTroopaShellNotMove* KoopaTroopaShellNotMove::getInstance()
 {
 	if (m_instance == NULL)
@@ -75,6 +88,8 @@ KoopaTroopaShellNotMove* KoopaTroopaShellNotMove::getInstance()
 
 void KoopaTroopaShellNotMove::enter(Enemy* enemy)
 {
+	enemy->setFrameList(m_frameAnimation);
+	enemy->setCurrentFrame(0);
 	enemy->setVelocity(Vector2(0, 0));
 	enemy->setAttack(BeAttack::None);
 	enemy->setTimeAnimation(300);
@@ -90,7 +105,10 @@ void KoopaTroopaShellNotMove::execute(Enemy* enemy)
 	enemy->setVelocity(velocity);
 
 	//update animation
-	enemy->setCurrentFrame(2);// index của hình mai rùa 
+	int current = enemy->getCurrentFrame() + 1;
+	if (current >= enemy->getSizeFrameList())//cập nhật indext
+		current = 0;
+	enemy->setCurrentFrame(current);// index của hình mai rùa 
 
 	// update state
 	int time = enemy->getTimeAnimation() - 1;
@@ -159,6 +177,11 @@ void KoopaTroopaDieByGun::exit(Enemy* enemy)
 
 KoopaTroopaShellMove* KoopaTroopaShellMove::m_instance = 0;
 
+KoopaTroopaShellMove::KoopaTroopaShellMove()
+{
+	m_frameAnimation.push_back(Frame(161, 17, 14, 12));
+}
+
 KoopaTroopaShellMove* KoopaTroopaShellMove::getInstance()
 {
 	if (m_instance == NULL)
@@ -172,24 +195,28 @@ KoopaTroopaShellMove* KoopaTroopaShellMove::getInstance()
 void KoopaTroopaShellMove::enter(Enemy* enemy)
 {
 	enemy->setVelocity(Vector2(0, 6));
+	enemy->setFrameList(m_frameAnimation);
+	enemy->setCurrentFrame(0);
 }
 
 void KoopaTroopaShellMove::execute(Enemy* enemy)
 {
 	// update velocity rùa di chuyển index = 0 và 1
 	Vector2 velocity = enemy->getVelocity();
-	velocity = Vector2(4, 2 * GRAVITATION);
+	velocity = Vector2(6, 2 * GRAVITATION);
 	//Update velocity hướng va chạm
 	if (enemy->getFliping() == SpriteEffect::None)
 		velocity.x *= -1;
 	enemy->setVelocity(velocity);
 
 	//update animation
-	enemy->setCurrentFrame(2);// index của hình mai rùa 
+	int current = enemy->getCurrentFrame() + 1;
+	if (current >= enemy->getSizeFrameList())//cập nhật indext
+		current = 0;
+	enemy->setCurrentFrame(current);// index của hình mai rùa 
 
 	if (enemy->getAttack() == BeAttack::DeathByGun)
 	{
-		enemy->setCurrentFrame(2);
 		enemy->setPositionText(enemy->getPosition());
 		enemy->getStateMachine()->changeState(KoopaTroopaDieByGun::getInstance());
 	}

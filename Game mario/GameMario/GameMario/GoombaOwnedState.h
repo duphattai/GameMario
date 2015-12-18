@@ -1,7 +1,6 @@
 #pragma once
 #include "Enemy.h"
 
-
 class GoombaDieByGun : public State<Enemy>
 {
 	static GoombaDieByGun*	m_instance;

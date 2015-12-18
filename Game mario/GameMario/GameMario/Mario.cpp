@@ -91,7 +91,7 @@ void Mario::initialize()
 	m_isBig = false;
 	m_canShoot = false;
 	m_isStar = false;
-
+	m_isDead = false;
 	m_effectBig = false;
 	m_effectFire = false;
 
@@ -169,7 +169,8 @@ bool Mario::isCollision(GameObject* gameObject)
 	if (type == TypeObject::Dynamic_TiledMap   // Tiled map 
 		|| gameObject->getStatusOBject() == StatusObject::DEAD // Chết
 		|| !gameObject->isActive() // Chưa active
-		|| m_stateMachine->isInState(*AutoAnimation::getInstance())) 
+		|| m_stateMachine->isInState(*AutoAnimation::getInstance())
+		|| m_FSM_Mario == FSM_Mario::DEAD) 
 		return false;
 
 

@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Game>
 	<Information>
-		<Description des="ID=0: tiles map&#xD;" />
-		<Description des="ID=14: enemy Koopa Troopa&#xD;" />
-		<Description des="ID=24: Coin&#xD;" />
-		<Description des="ID=10: enemy Goomba&#xD;" />
-		<Description des="ID=21: Super Mushroom in LuckyBox&#xD;" />
-		<Description des="ID=26: Floating Bar&#xD;" />
-		<Description des="ID=17: enemy Koopa Troopa Fly&#xD;" />
-		<Description des="ID=16: enemy boss&#xD;" />
-		<Description des="ID=33: item flag&#xD;" />
-		<Description des="ID=1: where mario can stand&#xD;" />
-		<Description des="" />
+		<Description des="ID=0: tiles map;" />
+		<Description des="ID=14: enemy Koopa Troopa" />
+		<Description des="ID=24: Coin" />
+		<Description des="ID=10: enemy Goomba;" />
+		<Description des="ID=21: Super Mushroom in LuckyBox;" />
+		<Description des="ID=26: Floating Bar;" />
+		<Description des="ID=17: enemy Koopa Troopa Fly;" />
+		<Description des="ID=16: enemy boss;" />
+		<Description des="ID=33: item flag;" />
+		<Description des="ID=1: where mario can stand;" />
 	</Information>
 	<Quadtree mapwidth="2632" minwidth="256">
 		<Node id="3331">

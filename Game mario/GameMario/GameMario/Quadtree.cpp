@@ -1,7 +1,7 @@
 ﻿#include "Quadtree.h"
 #include <string>
 #include "LuckyBox.h"
-
+#include "Enemy.h"
 Quadtree* Quadtree::m_instance = 0;
 
 Quadtree::Quadtree()
@@ -209,13 +209,10 @@ void Quadtree::update(vector<GameObject*> list, Box camera)
 			this->insert(item);
 		}
 		// nếu item in luckybox ra khỏi camera thì thiết lập active = false
-		if (item->getTypeObject() == TypeObject::Moving_Item)
+		if (item->getTypeObject() == TypeObject::Moving_Item || item->getTypeObject() == TypeObject::Moving_Enemy)
 		{
-			LuckyBox* luckybox = dynamic_cast<LuckyBox*>(item);
-			if (luckybox != nullptr && AABB(luckybox->getItem()->getBouding(), camera) == DIR::NONE)
-			{
-				luckybox->getItem()->setActive(false);
-			}
+			if (AABB(item->getBouding(), camera) == DIR::NONE)
+				item->setActive(false);
 		}
 	}
 }

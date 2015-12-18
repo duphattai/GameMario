@@ -10,7 +10,10 @@
 #include "MarioOwnedState.h"
 #include "Flag.h"
 #include "FloatingBar.h"
-#include "Enemy.h"
+#include "Goomba.h"
+#include "KoopaTroopa.h"
+#include "FireFlower.h"
+#include "KoopaTroopaFly.h"
 
 
 MapObject::MapObject()
@@ -237,6 +240,16 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 		m_worldPosition = Camera::getInstance()->getViewport();
 		vector<GameObject*> list = getListObjectOnCamera();
 
+		// Fire Flower
+		for each (GameObject* var in list)
+		{
+			FireFlower* fireFlower = dynamic_cast<FireFlower*>(var);
+			if (fireFlower != nullptr)
+			{
+				var->setWorldPosition(m_worldPosition);
+				var->draw(spriteHandler);
+			}
+		}
 		// Tiled map
 		for each (GameObject* var in list)
 		{
@@ -262,6 +275,8 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 			if (var->getTypeObject() == TypeObject::Dynamic_Item
 				|| var->getTypeObject() == TypeObject::Moving_Enemy)
 			{
+				if (dynamic_cast<FireFlower*>(var) != nullptr) continue;
+
 				var->setWorldPosition(m_worldPosition);
 				var->draw(spriteHandler);
 			}
@@ -419,19 +434,28 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 		temp->setTypeObject(TypeObject::Dynamic_Item);
 	}
 
-	else if (gameObject.m_Id == 14) // TortoiseEnemy
+	else if (gameObject.m_Id == 10) // Goomba
 	{
-		temp = new Enemy(EnemyType::TortoiseEnemy);
-		temp->setTypeObject(TypeObject::Moving_Enemy);
-		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for TortoiseEnemy
-	}
-	else if (gameObject.m_Id == 10) // TortoiseEnemy
-	{
-		temp = new Enemy(EnemyType::MushroomEnemy);
-		temp->setTypeObject(TypeObject::Moving_Enemy);
+		temp = new Goomba();
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for MushroomEnemy
 	}
-	
+	else if (gameObject.m_Id == 14) // KoopaTrooppa
+	{
+		temp = new KoopaTroopa();
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for MushroomEnemy
+	}
+
+	else if (gameObject.m_Id == 12) // FlowerEnemy
+	{
+		temp = new FireFlower();
+		temp->setPosition(gameObject.m_X + 8, gameObject.m_Y); // set position for FlowerEnemy
+	}
+
+	else if (gameObject.m_Id == 17) // KoopaTrooppaFly
+	{
+		temp = new KoopaTroopaFly();
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for FlowerEnemy
+	}
 	return temp;
 }
 
@@ -553,4 +577,4 @@ void MapObject::updateVelocity()
 			item->updateVelocity();
 	}
 	// </>
-}
+ }

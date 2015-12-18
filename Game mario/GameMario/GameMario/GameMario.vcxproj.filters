@@ -267,13 +267,31 @@
     <ClCompile Include="FloatingBar.cpp">
       <Filter>Source Files\GameObject\Object\FloatingBar</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files\GameObject\Object\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="GoombaOwnedState.cpp">
       <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
     </ClCompile>
     <ClCompile Include="KoopaTroopaOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="Goomba.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="KoopaTroopa.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\GameObject\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="FireFlower.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="FireFlowerOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="KoopaTroopaFly.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="KoopaTroopaFlyOwnedState.cpp">
       <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
     </ClCompile>
   </ItemGroup>
@@ -374,13 +392,31 @@
     <ClInclude Include="FloatingBar.h">
       <Filter>Header Files\GameObject\Object\FloatingBar</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files\GameObject\Object\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="GoombaOwnedState.h">
       <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
     </ClInclude>
     <ClInclude Include="KoopaTroopaOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="Goomba.h">
+      <Filter>Header Files\GameObject\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="KoopaTroopa.h">
+      <Filter>Header Files\GameObject\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\GameObject\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="FireFlower.h">
+      <Filter>Header Files\GameObject\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="FireFlowerOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="KoopaTroopaFly.h">
+      <Filter>Header Files\GameObject\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="KoopaTroopaFlyOwnedState.h">
       <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
     </ClInclude>
   </ItemGroup>
