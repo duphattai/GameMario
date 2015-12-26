@@ -85,7 +85,7 @@ DIR Collision::isCollision(GameObject *moveObject, GameObject* dynamicObject)
 		
 	else // xảy ra va chạm
 	{
-		moveObject->setVelocity(Vector2(0, 0));
+		//moveObject->setVelocity(Vector2(0, 0));
 		veclocity_vx = veclocity_vy = 0;
 		if (dir == TOP) // top
 		{

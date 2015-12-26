@@ -153,13 +153,7 @@ void Mario::updateVelocity()
 
 Box Mario::getBouding()
 {
-	GameObject::getBouding();
-	
-	m_box.x += 3;
-	m_box.width -= 6;
-	m_box.y += 1;
-	m_box.height -= 2;
-	
+	GameObject::getBouding();	
 	return m_box;
 }
 
@@ -223,6 +217,6 @@ void Mario::setVelocity(Vector2 velocity)
 void Mario::setCurrentFrame(int frame)
 {
 	m_currentFrame = frame; 
-	m_width = abs(frameList[m_currentFrame].rect.left - frameList[m_currentFrame].rect.right);
-	m_height = abs(frameList[m_currentFrame].rect.top - frameList[m_currentFrame].rect.bottom);
+	m_width = abs(frameList[m_currentFrame].rect.left - frameList[m_currentFrame].rect.right) - 6;
+	m_height = abs(frameList[m_currentFrame].rect.top - frameList[m_currentFrame].rect.bottom) - 2;
 }

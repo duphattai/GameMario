@@ -67,16 +67,12 @@ void Enemy::draw(LPD3DXSPRITE SpriteHandler)
 void Enemy::setCurrentFrame(int frame)
 {
 	m_currentFrame = frame;
-	m_width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left);
-	m_height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top);
+	m_width = abs(m_frameList[m_currentFrame].rect.right - m_frameList[m_currentFrame].rect.left) - 2;
+	m_height = abs(m_frameList[m_currentFrame].rect.bottom - m_frameList[m_currentFrame].rect.top) - 2;
 }
 
 Box Enemy::getBouding()
 {
 	m_box = GameObject::getBouding();
-	m_box.x += 1;
-	m_box.width -= 2;
-	m_box.y += 1;
-	m_box.height -= 2;
 	return m_box;
 }
