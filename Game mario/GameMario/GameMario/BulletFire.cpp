@@ -1,17 +1,16 @@
-﻿#include "Bullet.h"
+﻿#include "BulletFire.h"
 #include "ReSource.h"
-#include "BulletOwnedState.h"
-#include "Enemy.h"
-Bullet::Bullet()
+#include "Mario.h"
+#include "BulletFireOwnedState.h"
+
+BulletFire::BulletFire()
 {
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_ITEMSHEET);
 
-	// hard code, xác định animation cho bullet
+	// hard code, xác định animation cho hammer trong item sheet
 	// <move>
-	m_frameList.push_back(Frame(96, 144, 8, 8));
-	m_frameList.push_back(Frame(104, 144, 8, 8));
-	m_frameList.push_back(Frame(96, 152, 8, 8));
-	m_frameList.push_back(Frame(104, 152, 8, 8));
+	m_frameList.push_back(Frame(100, 128, 24, 8));
+	m_frameList.push_back(Frame(100, 136, 24, 8));
 	// </move>
 	// <explode>
 	m_frameList.push_back(Frame(112, 144, 16, 16));
@@ -19,26 +18,25 @@ Bullet::Bullet()
 	m_frameList.push_back(Frame(112, 176, 16, 16));
 	// </explode>
 
-	m_stateMachine = new StateMachine<Bullet>(this);
-	m_stateMachine->changeState(BulletIdle::getInstance());
+	m_stateMachine = new StateMachine<BulletFire>(this);
+	m_stateMachine->changeState(BulletFireIdle::getInstance());
 
-	time = 0;
 	m_isExplode = false;
 	m_currentFrame = 0;
 }
 
-Bullet::~Bullet()
+BulletFire::~BulletFire()
 {
 	delete m_stateMachine;
 }
 
-void Bullet::updateVelocity()
+void BulletFire::updateVelocity()
 {
 	if (m_isActive)
 		m_stateMachine->update();
 }
 
-void Bullet::update()
+void BulletFire::update()
 {
 	if (!m_isActive) return;
 
@@ -46,54 +44,43 @@ void Bullet::update()
 	m_position.y += m_velocity.y;
 }
 
-void Bullet::draw(LPD3DXSPRITE SpriteHandler)
+void BulletFire::draw(LPD3DXSPRITE SpriteHandler)
 {
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
 	GameObject::draw(SpriteHandler);
 }
 
-bool Bullet::isCollision(GameObject* gameObject)
+bool BulletFire::isCollision(GameObject* gameObject)
 {
-	if (m_stateMachine->isInState(*BulletExplode::getInstance()))
+	if (m_stateMachine->isInState(*BulletFireExplode::getInstance()))
 		return false;
 
 	DIR dir = Collision::getInstance()->isCollision(this, gameObject);
 	if (dir != DIR::NONE) // xảy ra va chạm
 	{
 		m_velocity = Collision::getInstance()->getVelocity();
-		if (gameObject->getTypeObject() == TypeObject::Moving_Enemy)
-		{
-			dynamic_cast<Enemy*>(gameObject)->setAttack(BeAttack::DeathByGun);
-			m_isExplode = true;
-		}
-		else
-		{
-			if (dir == DIR::TOP)
-			{
-				alpha = 3.14 / 6;
-				time = 0;
-			}
-			else
-				m_isExplode = true;
-		}
+		Mario* mario = dynamic_cast<Mario*>(gameObject);
+		if (mario != nullptr)
+			mario->setDead(true);
 
+		m_isExplode = true;
 		return true;
 	}
 
 	return false;
 }
 
-void Bullet::shoot(SpriteEffect flip, Vector2 position, Vector2 worldPosition)
+void BulletFire::shoot(SpriteEffect flip, Vector2 position, Vector2 worldPosition)
 {
 	m_flip = flip;
 	m_position.x = position.x;
 	m_position.y = position.y;
 	m_worldPosition = worldPosition;
-	m_stateMachine->changeState(BulletIdle::getInstance());
+	m_stateMachine->changeState(BulletFireIdle::getInstance());
 	m_isActive = true;
 }
 
-void Bullet::setCurrentFrame(int frame)
+void BulletFire::setCurrentFrame(int frame)
 {
 	m_currentFrame = frame;
 	m_width = abs(m_frameList[m_currentFrame].rect.left - m_frameList[m_currentFrame].rect.right);

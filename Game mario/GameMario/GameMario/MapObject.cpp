@@ -14,7 +14,7 @@
 #include "KoopaTroopa.h"
 #include "FireFlower.h"
 #include "KoopaTroopaFly.h"
-
+#include "Bowser.h"
 
 MapObject::MapObject()
 {
@@ -456,6 +456,14 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 		temp = new KoopaTroopaFly();
 		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for FlowerEnemy
 	}
+
+	else if (gameObject.m_Id == 16) // Boss
+	{
+		temp = new Bowser();
+		temp->setPosition(gameObject.m_X, gameObject.m_Y); // set position for FlowerEnemy
+	}
+
+
 	return temp;
 }
 

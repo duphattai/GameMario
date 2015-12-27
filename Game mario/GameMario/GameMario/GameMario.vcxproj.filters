@@ -175,6 +175,24 @@
     <Filter Include="Source Files\GameObject\StateMachine\EnemyOwnedState">
       <UniqueIdentifier>{7ba29ee5-f41c-4647-9875-906833303650}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObject\Object\Enemy\Boss">
+      <UniqueIdentifier>{59311e2f-ae82-4372-bb20-acaf42936270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Enemy\Boss">
+      <UniqueIdentifier>{0be3d685-f47a-47e2-bd58-1dca03f7e029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Object\Enemy\Boss\Hammer">
+      <UniqueIdentifier>{2775f5e4-74c8-4bb1-b78d-399ee0f8d34f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Enemy\Boss\Hammer">
+      <UniqueIdentifier>{64a61b9e-1f98-4041-bde7-fea77af3b4bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Object\Enemy\Boss\Fire">
+      <UniqueIdentifier>{a459dede-c9e2-41ac-a74f-f81f78464022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject\Object\Enemy\Boss\Fire">
+      <UniqueIdentifier>{30d75bf1-26f8-428b-ab8f-9554a31a4217}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -293,6 +311,30 @@
     </ClCompile>
     <ClCompile Include="KoopaTroopaFlyOwnedState.cpp">
       <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="BowserOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="Bowser.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Hammer.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy\Boss\Hammer</Filter>
+    </ClCompile>
+    <ClCompile Include="HammerOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\BulletOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="ManageHammer.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy\Boss\Hammer</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletFire.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy\Boss\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletFireOwnedState.cpp">
+      <Filter>Source Files\GameObject\StateMachine\BulletOwnedState</Filter>
+    </ClCompile>
+    <ClCompile Include="ManageBulletFire.cpp">
+      <Filter>Source Files\GameObject\Object\Enemy\Boss\Fire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -418,6 +460,30 @@
     </ClInclude>
     <ClInclude Include="KoopaTroopaFlyOwnedState.h">
       <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="BowserOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\EnemyOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="Bowser.h">
+      <Filter>Header Files\GameObject\Object\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Hammer.h">
+      <Filter>Header Files\GameObject\Object\Enemy\Boss\Hammer</Filter>
+    </ClInclude>
+    <ClInclude Include="HammerOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\BulletOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="ManageHammer.h">
+      <Filter>Header Files\GameObject\Object\Enemy\Boss\Hammer</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletFire.h">
+      <Filter>Header Files\GameObject\Object\Enemy\Boss\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletFireOwnedState.h">
+      <Filter>Header Files\GameObject\StateMachine\BulletOwnedState</Filter>
+    </ClInclude>
+    <ClInclude Include="ManageBulletFire.h">
+      <Filter>Header Files\GameObject\Object\Enemy\Boss\Fire</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

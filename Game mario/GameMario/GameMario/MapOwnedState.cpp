@@ -426,7 +426,7 @@ void MapThree::enter(MapObject* map)
 	Camera::getInstance()->initialize(0, VIEW_PORT_Y, SCREEN_WIDTH, SCREEN_HEIGHT, map->getWidth(), map->getHeight());
 	Mario::getInstance()->getStateMachine()->changeState(Falling::getInstance());
 	ScoreGame::getInstance()->setState("1-3");
-
+	
 	map->setScrollMap(true);
 	if (Mario::getInstance()->getPosition().x > map->getCheckPoint().x)
 	{

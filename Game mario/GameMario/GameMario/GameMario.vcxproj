@@ -81,8 +81,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bowser.h" />
+    <ClInclude Include="BowserOwnedState.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletFire.h" />
+    <ClInclude Include="BulletFireOwnedState.h" />
     <ClInclude Include="BulletOwnedState.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Coin.h" />
@@ -98,6 +102,8 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GoombaOwnedState.h" />
     <ClInclude Include="Gun.h" />
+    <ClInclude Include="Hammer.h" />
+    <ClInclude Include="HammerOwnedState.h" />
     <ClInclude Include="ItemInBox.h" />
     <ClInclude Include="ItemOwnedState.h" />
     <ClInclude Include="KeyBoard.h" />
@@ -106,6 +112,8 @@
     <ClInclude Include="KoopaTroopaFlyOwnedState.h" />
     <ClInclude Include="KoopaTroopaOwnedState.h" />
     <ClInclude Include="LuckyBox.h" />
+    <ClInclude Include="ManageBulletFire.h" />
+    <ClInclude Include="ManageHammer.h" />
     <ClInclude Include="MapObject.h" />
     <ClInclude Include="MapOwnedState.h" />
     <ClInclude Include="Mario.h" />
@@ -124,8 +132,12 @@
     <ClInclude Include="Xml\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bowser.cpp" />
+    <ClCompile Include="BowserOwnedState.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletFire.cpp" />
+    <ClCompile Include="BulletFireOwnedState.cpp" />
     <ClCompile Include="BulletOwnedState.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Coin.cpp" />
@@ -140,6 +152,8 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GoombaOwnedState.cpp" />
     <ClCompile Include="Gun.cpp" />
+    <ClCompile Include="Hammer.cpp" />
+    <ClCompile Include="HammerOwnedState.cpp" />
     <ClCompile Include="ItemInBox.cpp" />
     <ClCompile Include="ItemOwnedState.cpp" />
     <ClCompile Include="KeyBoard.cpp" />
@@ -149,6 +163,8 @@
     <ClCompile Include="KoopaTroopaOwnedState.cpp" />
     <ClCompile Include="LuckyBox.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ManageBulletFire.cpp" />
+    <ClCompile Include="ManageHammer.cpp" />
     <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="MapOwnedState.cpp" />
     <ClCompile Include="Mario.cpp" />

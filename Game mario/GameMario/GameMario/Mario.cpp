@@ -75,6 +75,8 @@ Mario::~Mario()
 	delete Standing::getInstance();
 	delete Jumping::getInstance();
 	delete Sitting::getInstance();
+	delete AutoAnimation::getInstance();
+
 
 	delete Star::getInstance();
 	delete Small::getInstance();

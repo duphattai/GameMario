@@ -1,7 +1,7 @@
 ﻿#include "Gun.h"
 #include "SoundClass.h"
 #include "Camera.h"
-
+#include "BulletOwnedState.h"
 Gun::Gun(int countBullet)
 {
 	for (int i = 0; i < countBullet; i++)
@@ -45,6 +45,10 @@ Gun::~Gun()
 			break;
 		if (temp != m_giveBullet.begin()) temp--;
 	}
+
+	delete BulletIdle::getInstance();
+	delete BulletExplode::getInstance();
+	delete BulletMoving::getInstance();
 }
 
 
