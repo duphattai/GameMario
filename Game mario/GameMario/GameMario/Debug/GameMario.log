@@ -1,5 +1,8 @@
-﻿Build started 27-Dec-15 2:14:46 PM.
+﻿Build started 28-Dec-15 9:39:06 PM.
+     1>Project "C:\Users\Tai\Desktop\New folder\Game mario\GameMario\GameMario\GameMario.vcxproj" on node 2 (Clean target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppClean.targets(76,5): warning : The process cannot access the file 'c:\users\tai\desktop\new folder\game mario\gamemario\debug\gamemario.pdb' because it is being used by another process.
+     1>Done Building Project "C:\Users\Tai\Desktop\New folder\Game mario\GameMario\GameMario\GameMario.vcxproj" (Clean target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.12
+Time Elapsed 00:00:00.14

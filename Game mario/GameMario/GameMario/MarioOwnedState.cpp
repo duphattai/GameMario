@@ -206,7 +206,8 @@ void Jumping::execute(Mario* mario)
 	velocity.y += GRAVITATION;
 	// update velocity
 	keyboard->getState();
-	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0 && mario->getStateMachine()->GetPreviousState() != Falling::getInstance())
+	if (keyboard->isKeyDown(DIK_UP) && --m_timeJump > 0 
+		&& mario->getStateMachine()->GetPreviousState() != Falling::getInstance())
 		velocity.y += 2;
 
 	if (keyboard->isKeyDown(DIK_RIGHT))

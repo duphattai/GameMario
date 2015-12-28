@@ -2,15 +2,15 @@
 #include "MapObject.h"
 
 
-class BrosTitle : public State < MapObject >
+class MenuGame : public State < MapObject >
 {
 private:
-	static BrosTitle*	m_instance;
+	static MenuGame*	m_instance;
 public:
-	BrosTitle(){}
-	virtual ~BrosTitle(){}
+	MenuGame(){}
+	virtual ~MenuGame(){}
 
-	static BrosTitle*	getInstance();
+	static MenuGame*	getInstance();
 
 	virtual void		enter(MapObject*);
 	virtual void		execute(MapObject*);

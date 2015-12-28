@@ -170,7 +170,7 @@ bool Mario::isCollision(GameObject* gameObject)
 		return false;
 
 
-	// Enemy, Stand position, Item
+	// Stand position
 	DIR dir = Collision::getInstance()->isCollision(this, gameObject);
 	if (dir != DIR::NONE)
 	{

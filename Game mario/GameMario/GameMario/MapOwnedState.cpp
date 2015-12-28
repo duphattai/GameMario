@@ -9,32 +9,32 @@
 extern CKeyBoard *keyboard;
 
 /////////////////////////////////////////////////// Bros Title
-BrosTitle* BrosTitle::m_instance = 0;
+MenuGame* MenuGame::m_instance = 0;
 
-BrosTitle* BrosTitle::getInstance()
+MenuGame* MenuGame::getInstance()
 {
 	if (!m_instance)
-		m_instance = new BrosTitle();
+		m_instance = new MenuGame();
 
 	return m_instance;
 }
 
-void BrosTitle::enter(MapObject* map)
+void MenuGame::enter(MapObject* map)
 {
 }
 
-void BrosTitle::execute(MapObject* map)
+void MenuGame::execute(MapObject* map)
 {
 	keyboard->getState();
 	if (keyboard->isKeyDown(DIK_SPACE))
 		map->getStateMachine()->changeState(MapOne::getInstance());
 }
 
-void BrosTitle::exit(MapObject* map)
+void MenuGame::exit(MapObject* map)
 {
 }
 
-void BrosTitle::draw(MapObject* map, LPD3DXSPRITE spriteHandle)
+void MenuGame::draw(MapObject* map, LPD3DXSPRITE spriteHandle)
 {
 	ReSource::getInstance()->getSprite(IDImage::IMG_MENU)->setIndex(0);
 	ReSource::getInstance()->getSprite(IDImage::IMG_MENU)->draw(spriteHandle, D3DXVECTOR2(ReSource::getInstance()->getSprite(IDImage::IMG_MENU)->getWidth() / 2, ReSource::getInstance()->getSprite(IDImage::IMG_MENU)->getHeight() / 2), D3DXVECTOR2(1.0f, 1.0f), 0, VIEW_PORT_Y);
@@ -79,11 +79,14 @@ void ChangeMap::execute(MapObject* map)
 			Mario::getInstance()->initialize();
 			if (Mario::getInstance()->getLives() <= 0)
 			{
-				map->getStateMachine()->changeState(BrosTitle::getInstance());
+				map->getStateMachine()->changeState(MenuGame::getInstance());
 			}
 			else
 			{
-				map->getStateMachine()->changeState(map->getStateMachine()->GetPreviousState());
+				if (map->getStateMachine()->GetPreviousState() == MenuGame::getInstance())
+					map->getStateMachine()->changeState(MapOne::getInstance());
+				else
+					map->getStateMachine()->changeState(map->getStateMachine()->GetPreviousState());
 			}
 		}	
 	}

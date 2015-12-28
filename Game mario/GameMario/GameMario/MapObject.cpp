@@ -24,7 +24,7 @@ MapObject::MapObject()
 	m_sprite = ReSource::getInstance()->getSprite(IDImage::IMG_TILEMAP);
 
 	m_stateMachine = new StateMachine<MapObject>(this);
-	m_stateMachine->changeState(BrosTitle::getInstance());
+	m_stateMachine->changeState(MenuGame::getInstance());
 }
 MapObject::~MapObject()
 {
@@ -235,7 +235,7 @@ vector<GameObject*> MapObject::getListObjectOnCamera()
 
 void MapObject::draw(LPD3DXSPRITE spriteHandler)
 {
-	if (!m_stateMachine->isInState(*ChangeMap::getInstance()) && !m_stateMachine->isInState(*BrosTitle::getInstance()))
+	if (!m_stateMachine->isInState(*ChangeMap::getInstance()) && !m_stateMachine->isInState(*MenuGame::getInstance()))
 	{
 		m_worldPosition = Camera::getInstance()->getViewport();
 		vector<GameObject*> list = getListObjectOnCamera();
@@ -470,7 +470,7 @@ GameObject* MapObject::createGameObject(ObjectTittle gameObject)
 
 void MapObject::update()
 {
-	if (m_stateMachine->isInState(*BrosTitle::getInstance())  // Màn hình giới thiệu
+	if (m_stateMachine->isInState(*MenuGame::getInstance())  // Màn hình giới thiệu
 		|| m_stateMachine->isInState(*ChangeMap::getInstance())) // Chuyển map
 		return;
 
@@ -567,7 +567,7 @@ void MapObject::update()
 void MapObject::updateVelocity()
 {
 	m_stateMachine->update();
-	if (m_stateMachine->isInState(*BrosTitle::getInstance()) // Màn hình giới thiệu 
+	if (m_stateMachine->isInState(*MenuGame::getInstance()) // Màn hình giới thiệu 
 		|| m_stateMachine->isInState(*ChangeMap::getInstance())) // Chuyển map
 		return;
 
