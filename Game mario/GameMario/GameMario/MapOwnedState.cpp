@@ -80,6 +80,9 @@ void ChangeMap::execute(MapObject* map)
 			if (Mario::getInstance()->getLives() <= 0)
 			{
 				map->getStateMachine()->changeState(MenuGame::getInstance());
+				Mario::getInstance()->setLives(3);
+				ScoreGame::getInstance()->setScore(0);
+				ScoreGame::getInstance()->setCountOfCoin(0);
 			}
 			else
 			{

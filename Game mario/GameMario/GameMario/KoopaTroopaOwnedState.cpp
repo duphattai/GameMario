@@ -33,7 +33,7 @@ void KoopaTroopaMove::execute(Enemy* enemy)
 {
 	// update velocity rùa di chuyển index = 0 và 1
 	Vector2 velocity = enemy->getVelocity();
-	velocity = Vector2(2, 2 * GRAVITATION);
+	velocity = Vector2(2, 5 * GRAVITATION);
 	//Update velocity hướng va chạm
 	if (enemy->getFliping() == SpriteEffect::None)
 		velocity.x *= -1;
@@ -100,7 +100,7 @@ void KoopaTroopaShellNotMove::execute(Enemy* enemy)
 {
 	// update velocity rùa di chuyển index = 0 và 1
 	Vector2 velocity = enemy->getVelocity();
-	velocity = Vector2(0, 0);
+	velocity = Vector2(0, 5 * GRAVITATION);
 	//Update velocity hướng va chạm
 	enemy->setVelocity(velocity);
 
@@ -203,7 +203,7 @@ void KoopaTroopaShellMove::execute(Enemy* enemy)
 {
 	// update velocity rùa di chuyển index = 0 và 1
 	Vector2 velocity = enemy->getVelocity();
-	velocity = Vector2(6, 2 * GRAVITATION);
+	velocity = Vector2(6, 5 * GRAVITATION);
 	//Update velocity hướng va chạm
 	if (enemy->getFliping() == SpriteEffect::None)
 		velocity.x *= -1;

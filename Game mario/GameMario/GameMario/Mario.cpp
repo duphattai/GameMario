@@ -198,11 +198,11 @@ void Mario::setVelocity(Vector2 velocity)
 	Vector2 minVelocity = m_MinVelocity;
 
 	// Thiết lập max, min cho trường hợp small
-	if (!m_isBig && !m_canShoot)
+	/*if (!m_isBig && !m_canShoot)
 	{
 		maxVelocity.x--;
 		minVelocity.y++;
-	}
+	}*/
 
 	if (m_velocity.x >= maxVelocity.x)
 		m_velocity.x = maxVelocity.x;

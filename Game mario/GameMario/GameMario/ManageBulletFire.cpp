@@ -44,10 +44,7 @@ ManageBulletFire::~ManageBulletFire()
 		if (temp != m_giveBullet.begin()) temp--;
 	}
 
-	// Hủy vùng nhớ
-	delete BulletFireExplode::getInstance();
-	delete BulletFireIdle::getInstance();
-	delete BulletFireMoving::getInstance();
+	
 }
 
 

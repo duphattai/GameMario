@@ -20,13 +20,6 @@ Bowser::~Bowser()
 	delete m_stateMachine;
 	delete m_manageHammer;
 	delete m_manageBulletFire;
-
-	// Hủy vùng nhớ
-	delete BowserMove::getInstance();
-	delete BowserAttackByFire::getInstance();
-	delete BowserAttackByHammer::getInstance();
-	delete BowserJump::getInstance();
-	delete BowserDieByGun::getInstance();
 }
 
 

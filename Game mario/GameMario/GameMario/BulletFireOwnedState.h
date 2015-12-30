@@ -14,6 +14,7 @@ public:
 	virtual void		enter(BulletFire* bullet);
 	virtual void		execute(BulletFire* bullet);
 	virtual void		exit(BulletFire* bullet);
+
 };
 
 class BulletFireMoving : public State<BulletFire>

@@ -44,11 +44,6 @@ ManageHammer::~ManageHammer()
 			break;
 		if (temp != m_giveBullet.begin()) temp--;
 	}
-
-	// Hủy vùng nhớ
-	delete HammerExplode::getInstance();
-	delete HammerIdle::getInstance();
-	delete HammerMoving::getInstance();
 }
 
 

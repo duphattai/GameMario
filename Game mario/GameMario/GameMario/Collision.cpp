@@ -89,19 +89,19 @@ DIR Collision::isCollision(GameObject *moveObject, GameObject* dynamicObject)
 		veclocity_vx = veclocity_vy = 0;
 		if (dir == TOP) // top
 		{
-			moveBox.y = dynamicBox.y + dynamicBox.height + 1;
+			moveBox.y = dynamicBox.y + dynamicBox.height + 2;
 		}
 		else if (dir == DIR::BOTTOM) // bottom
 		{
-			moveBox.y = dynamicBox.y - moveBox.height - 1;
+			moveBox.y = dynamicBox.y - moveBox.height - 2;
 		}
 		else if (dir == DIR::LEFT)  // left
 		{
-			moveBox.x = dynamicBox.x - moveBox.width - 1;
+			moveBox.x = dynamicBox.x - moveBox.width - 2;
 		}
 		else if (dir == DIR::RIGHT)
 		{
-			moveBox.x = dynamicBox.x + dynamicBox.width + 1;
+			moveBox.x = dynamicBox.x + dynamicBox.width + 2;
 		}
 
 		moveObject->setPosition(moveBox.x, moveBox.y);
