@@ -67,9 +67,11 @@ BowserMove* BowserMove::getInstance()
 void BowserMove::enter(Enemy* enemy)
 {
 	enemy->setVelocity(Vector2(0, 0));
-	enemy->setTimeAnimation(5);
+	enemy->setTimeAnimation(3);
 	enemy->setFrameList(m_frameAnimation);
 	enemy->setCurrentFrame(0);
+
+	m_timeFire = 30;
 }
 
 void BowserMove::execute(Enemy* enemy)
@@ -86,6 +88,9 @@ void BowserMove::execute(Enemy* enemy)
 	// Nếu khoảng cách giữa mario và boss < 100 thì boss sẽ tấn công
 	if (abs(enemyPosition.x - marioPosition.x) < 100)
 	{
+		if (m_timeFire-- > 0) return;
+
+		m_timeFire = 30;
 		if (marioPosition.y > enemyPosition.y + enemy->getHeight())
 			enemy->getStateMachine()->changeState(BowserAttackByHammer::getInstance());
 		else
@@ -115,7 +120,7 @@ void BowserMove::execute(Enemy* enemy)
 		
 
 	// Cập nhật van tốc
-	Vector2 velocity = Vector2(1, 5 * GRAVITATION);
+	Vector2 velocity = Vector2(1, 3 * GRAVITATION);
 	if (enemy->getFliping() == SpriteEffect::None)
 		velocity.x *= -1;
 	enemy->setVelocity(velocity);
@@ -129,7 +134,7 @@ void BowserMove::execute(Enemy* enemy)
 	if (time <= 0)
 	{
 		enemy->setCurrentFrame(current);
-		time = 5;
+		time = 3;
 	}
 	enemy->setTimeAnimation(time);
 }
@@ -193,12 +198,7 @@ void BowserAttackByFire::execute(Enemy* enemy)
 	}
 
 	// Cập nhật state
-	if (marioPosition.y > enemyPosition.y + enemy->getHeight())
-	{
-		enemy->getStateMachine()->changeState(BowserAttackByHammer::getInstance());
-		return;
-	}	
-	else if (enemy->getAttack() == BeAttack::DeathByGun)
+	if (enemy->getAttack() == BeAttack::DeathByGun)
 	{
 		enemy->getStateMachine()->changeState(BowserDieByGun::getInstance());
 		return;
@@ -291,12 +291,7 @@ void BowserAttackByHammer::execute(Enemy* enemy)
 
 
 	// Cập nhật state
-	if (marioPosition.y > enemyPosition.y + enemy->getHeight())
-	{
-		enemy->getStateMachine()->changeState(BowserAttackByFire::getInstance());
-		return;
-	}
-	else if (enemy->getAttack() == BeAttack::DeathByGun)
+	if (enemy->getAttack() == BeAttack::DeathByGun)
 	{
 		enemy->getStateMachine()->changeState(BowserDieByGun::getInstance());
 		return;

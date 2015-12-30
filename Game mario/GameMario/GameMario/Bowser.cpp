@@ -17,9 +17,16 @@ Bowser::Bowser()
 
 Bowser::~Bowser()
 {
-	delete m_stateMachine;
 	delete m_manageHammer;
 	delete m_manageBulletFire;
+	delete m_stateMachine;
+
+	// Hủy vùng nhớ
+	BowserMove::getInstance()->release();
+	BowserAttackByFire::getInstance()->release();
+	BowserAttackByHammer::getInstance()->release();
+	BowserJump::getInstance()->release();
+	BowserDieByGun::getInstance()->release();
 }
 
 

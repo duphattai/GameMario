@@ -133,6 +133,8 @@ bool checkExist(ObjectTittle temp, map<int, vector<ObjectTittle>> &treeNode)
 }
 void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 {
+	Quadtree::getInstance()->release(); // xóa các node nếu có
+
 	vector<ObjectTittle> listObjectExist; // chứa danh sách object nằm trên biên
 	map<int, vector<GameObject*>> listGameObject; // chưa danh sách object trong cây (không nằm trên biên)
 
@@ -177,9 +179,7 @@ void MapObject::buildQuadTree(map<int, vector<ObjectTittle>>	quadtreeNode)
 
 	// build tree
 	// build từ những object không nằm trên biên
- 	Quadtree::getInstance()->release(); // xóa các node nếu có
 	Quadtree::getInstance()->buildTree(listGameObject, Box(0, 0, m_width, m_width));
-
 
 	// build object nằm trên biên
 	for each (ObjectTittle var in listObjectExist)

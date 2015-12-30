@@ -83,6 +83,7 @@ void ChangeMap::execute(MapObject* map)
 				Mario::getInstance()->setLives(3);
 				ScoreGame::getInstance()->setScore(0);
 				ScoreGame::getInstance()->setCountOfCoin(0);
+				Mario::getInstance()->setPosition(0,0);
 			}
 			else
 			{

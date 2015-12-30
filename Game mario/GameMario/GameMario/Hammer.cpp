@@ -64,8 +64,8 @@ bool Hammer::isCollision(GameObject* gameObject)
 	{
 		m_velocity = Collision::getInstance()->getVelocity();
 		Mario* mario = dynamic_cast<Mario*>(gameObject);
-		/*if (mario != nullptr)
-			mario->setDead(true);*/
+		if (mario != nullptr)
+			mario->setDead(true);
 
 		m_isExplode = true;
 

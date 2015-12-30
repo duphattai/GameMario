@@ -15,6 +15,7 @@ public:
 	virtual void		enter(Hammer* bullet);
 	virtual void		execute(Hammer* bullet);
 	virtual void		exit(Hammer* bullet);
+	virtual void		release();
 };
 
 class HammerMoving : public State<Hammer>
@@ -29,6 +30,7 @@ public:
 	virtual void		enter(Hammer* enemy);
 	virtual void		execute(Hammer* enemy);
 	virtual void		exit(Hammer* enemy);
+	virtual void		release();
 };
 
 class HammerExplode : public State<Hammer>
@@ -43,4 +45,5 @@ public:
 	virtual void		enter(Hammer* enemy);
 	virtual void		execute(Hammer* enemy);
 	virtual void		exit(Hammer* enemy);
+	virtual void		release();
 };

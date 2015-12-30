@@ -31,6 +31,12 @@ void BulletFireIdle::exit(BulletFire* bullet)
 {
 }
 
+void BulletFireIdle::release()
+{
+	delete m_instance;
+	m_instance = NULL;
+}
+
 /////////////////////
 BulletFireMoving* BulletFireMoving::m_instance = 0;
 
@@ -93,6 +99,12 @@ void BulletFireMoving::exit(BulletFire* bullet)
 {
 }
 
+void BulletFireMoving::release()
+{
+	delete m_instance;
+	m_instance = NULL;
+}
+
 ///////////////////////
 BulletFireExplode* BulletFireExplode::m_instance = 0;
 
@@ -129,4 +141,10 @@ void BulletFireExplode::exit(BulletFire* bullet)
 {
 	bullet->setActive(false);
 	bullet->setCurrentFrame(0);
+}
+
+void BulletFireExplode::release()
+{
+	delete m_instance;
+	m_instance = NULL;
 }

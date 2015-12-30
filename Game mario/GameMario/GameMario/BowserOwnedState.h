@@ -14,12 +14,16 @@ public:
 	virtual void		enter(Enemy* item);
 	virtual void		execute(Enemy* item);
 	virtual void		exit(Enemy* item);
+
+	virtual void		release(){delete m_instance;m_instance = NULL;}
 };
 
 class BowserMove : public State<Enemy>
 {
 	static BowserMove*	m_instance;
 	vector<Frame>		m_frameAnimation;
+
+	int					m_timeFire;
 public:
 	BowserMove();
 	virtual ~BowserMove(){};
@@ -29,6 +33,8 @@ public:
 	virtual void		enter(Enemy* item);
 	virtual void		execute(Enemy* item);
 	virtual void		exit(Enemy* item);
+
+	virtual void		release(){ delete m_instance; m_instance = NULL; }
 };
 
 class BowserAttackByFire : public State<Enemy>
@@ -44,6 +50,8 @@ public:
 	virtual void		enter(Enemy* item);
 	virtual void		execute(Enemy* item);
 	virtual void		exit(Enemy* item);
+
+	virtual void		release(){ delete m_instance; m_instance = NULL; }
 };
 
 class BowserAttackByHammer : public State<Enemy>
@@ -59,6 +67,8 @@ public:
 	virtual void		enter(Enemy* item);
 	virtual void		execute(Enemy* item);
 	virtual void		exit(Enemy* item);
+
+	virtual void		release(){ delete m_instance; m_instance = NULL; }
 };
 
 class BowserJump : public State<Enemy>
@@ -73,4 +83,7 @@ public:
 	virtual void		enter(Enemy* item);
 	virtual void		execute(Enemy* item);
 	virtual void		exit(Enemy* item);
+
+
+	virtual void		release(){ delete m_instance; m_instance = NULL; }
 };

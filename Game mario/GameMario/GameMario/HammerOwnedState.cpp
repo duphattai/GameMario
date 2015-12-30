@@ -30,6 +30,12 @@ void HammerIdle::execute(Hammer* bullet)
 void HammerIdle::exit(Hammer* bullet)
 {
 }
+void HammerIdle::release()
+{
+	delete m_instance;
+	m_instance = NULL;
+}
+
 
 /////////////////////
 
@@ -97,7 +103,11 @@ void HammerMoving::exit(Hammer* bullet)
 {
 }
 
-
+void HammerMoving::release()
+{
+	delete m_instance;
+	m_instance = NULL;
+}
 ///////////////////
 HammerExplode* HammerExplode::m_instance = 0;
 
@@ -134,4 +144,9 @@ void HammerExplode::exit(Hammer* bullet)
 {
 	bullet->setActive(false);
 	bullet->setCurrentFrame(0);
+}
+void HammerExplode::release()
+{
+	delete m_instance;
+	m_instance = NULL;
 }

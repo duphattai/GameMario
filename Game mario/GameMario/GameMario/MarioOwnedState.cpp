@@ -444,17 +444,22 @@ void Small::execute(Mario* mario)
 		// update animation of mario
 		if (mario->getFSM() == FSM_Mario::RUN)
 		{
-			int index = mario->getCurrentFrame() + 1;
-			mario->setTimeAnimation(mario->getTimeAnimation() - 1);
-			if (mario->getTimeAnimation() == 0)
+			int index = mario->getCurrentFrame();
+			if (abs(mario->getVelocity().x) <= 3.0f) // khi v <= 3.0 => thời gian chuyển đỗi mỗi frame là 1s
 			{
-				mario->setTimeAnimation(2);
-				// cap nhật lại index small mario
-				if (index >= MarioSheet::MARIO_CHANGE_DIR || index < MarioSheet::MARIO_RUN)
-					index = MarioSheet::MARIO_RUN;
-
-				mario->setCurrentFrame(index);
+				if (m_timeChangeSprite-- == 0)
+				{
+					index++;
+					m_timeChangeSprite = 1; // set time change
+				}
 			}
+			else index++; // => thời gian chuyển đỗi mỗi frame là 0s
+
+			// cap nhật lại index small mario
+			if (index >= MarioSheet::MARIO_CHANGE_DIR || index < MarioSheet::MARIO_RUN)
+				index = MarioSheet::MARIO_RUN;
+
+			mario->setCurrentFrame(index);
 		}
 		else if (mario->getFSM() == FSM_Mario::STAND || mario->getFSM() == FSM_Mario::SIT)
 			mario->setCurrentFrame(MarioSheet::MARIO_STAND);

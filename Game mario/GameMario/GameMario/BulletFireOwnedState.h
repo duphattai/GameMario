@@ -14,7 +14,7 @@ public:
 	virtual void		enter(BulletFire* bullet);
 	virtual void		execute(BulletFire* bullet);
 	virtual void		exit(BulletFire* bullet);
-
+	virtual void		release();
 };
 
 class BulletFireMoving : public State<BulletFire>
@@ -29,6 +29,7 @@ public:
 	virtual void		enter(BulletFire* enemy);
 	virtual void		execute(BulletFire* enemy);
 	virtual void		exit(BulletFire* enemy);
+	virtual void		release();
 };
 
 class BulletFireExplode : public State<BulletFire>
@@ -43,4 +44,5 @@ public:
 	virtual void		enter(BulletFire* enemy);
 	virtual void		execute(BulletFire* enemy);
 	virtual void		exit(BulletFire* enemy);
+	virtual void		release();
 };

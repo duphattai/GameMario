@@ -194,6 +194,11 @@ bool ItemInBox::isCollision(GameObject* gameObject)
 		|| m_type == LuckyBoxsType::IT_COIN || m_type == LuckyBoxsType::IT_GUN) // Super mushroom, 1-Up, Super star
 		return false;
 
+	ItemInBox* itemInBox = dynamic_cast<ItemInBox*>(gameObject);
+	if (itemInBox != nullptr && itemInBox->getItemType() == LuckyBoxsType::IT_COIN)
+		return false;
+
+
 	DIR dir = Collision::getInstance()->isCollision(this, gameObject);
 	if (dir != DIR::NONE)
 	{

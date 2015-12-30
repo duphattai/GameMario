@@ -11,8 +11,6 @@
 #include "GoombaOwnedState.h"
 #include "FireFlowerOwnedState.h"
 #include "KoopaTroopaFlyOwnedState.h"
-#include "BulletFireOwnedState.h"
-#include "HammerOwnedState.h"
 #include "BowserOwnedState.h"
 
 CKeyBoard *keyboard = NULL;
@@ -224,21 +222,4 @@ Game::~Game()
 	delete GoombaDieByGun::getInstance();
 	delete GoombaDieByJump::getInstance();
 	delete GoombaMove::getInstance();
-
-	// Hủy vùng nhớ
-	delete BulletFireExplode::getInstance();
-	delete BulletFireIdle::getInstance();
-	delete BulletFireMoving::getInstance();
-
-	// Hủy vùng nhớ
-	delete HammerExplode::getInstance();
-	delete HammerIdle::getInstance();
-	delete HammerMoving::getInstance();
-
-	// Hủy vùng nhớ
-	delete BowserMove::getInstance();
-	delete BowserAttackByFire::getInstance();
-	delete BowserAttackByHammer::getInstance();
-	delete BowserJump::getInstance();
-	delete BowserDieByGun::getInstance();
 }
