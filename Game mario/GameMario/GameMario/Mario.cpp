@@ -96,6 +96,7 @@ void Mario::initialize()
 	m_isDead = false;
 	m_effectBig = false;
 	m_effectFire = false;
+	m_unDying = false;
 
 	if (m_stateMachine == NULL)
 		m_stateMachine = new StateMachine<Mario>(this);

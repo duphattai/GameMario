@@ -31,8 +31,8 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 		if (GameTime::getInstance()->getElapsedTime() > (float)1000 / FPS)
 		{
-			GameTime::getInstance()->update();
 			game->gameRun();
+			GameTime::getInstance()->update();
 		}
 	}
 

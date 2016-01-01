@@ -15,6 +15,8 @@
 #include "FireFlower.h"
 #include "KoopaTroopaFly.h"
 #include "Bowser.h"
+#include "GameTime.h"
+
 
 MapObject::MapObject()
 {
@@ -284,6 +286,9 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 	}
 
 	m_stateMachine->GetCurrentState()->draw(this, spriteHandler);
+
+	// vẽ FPS
+	drawText(L"FPS: " + to_wstring(GameTime::getInstance()->getElapsedTime()), Vector2(0, 0));
 }
 
 

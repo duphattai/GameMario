@@ -427,6 +427,7 @@ void Small::execute(Mario* mario)
 {
 	if (mario->m_effectSmall)
 	{
+		mario->m_unDying = true;
 		if (m_currentIndex == m_frameAnimation.size())
 		{	
 			mario->m_effectSmall = false;
@@ -466,9 +467,13 @@ void Small::execute(Mario* mario)
 		else if (mario->getFSM() == FSM_Mario::JUMP || mario->getFSM() == FSM_Mario::FALL)
 			mario->setCurrentFrame(MarioSheet::MARIO_JUMP);
 
-		// update mờ ảnh sau khi thực hiện smaller
+		// Hiệu ứng mờ ảnh sau khi thực hiện smaller
 		if (--m_countTime > 0)
 		{
+			// Trong trạng thái này thì không chết
+			mario->setDead(false);
+
+			// Thiết lập kênh màu alpha
 			D3DXCOLOR colorAlpha = mario->getAlphaColor();
 			colorAlpha *= 255;
 			static int temp = -25;
@@ -479,14 +484,17 @@ void Small::execute(Mario* mario)
 			mario->setAlphaColor(colorAlpha);
 		}
 		else
+		{
 			mario->setAlphaColor(D3DCOLOR_ARGB(255, 255, 255, 255));
-
+			mario->m_unDying = false;
+		}
+			
 
 		if (mario->isBig())
 		{
 			mario->getStatusStateMachine()->changeState(Big::getInstance());
 		}
-		else if (mario->isDead()) // không gọi lại
+		else if (mario->isDead() && !mario->m_unDying) // Chuyển sang trạng thái chết
 		{
 			SoundClass::getInstance()->playWaveFile(IDSounds::Sound_MarioDie);
 			mario->getStatusStateMachine()->changeState(Dead::getInstance());
@@ -499,6 +507,7 @@ void Small::execute(Mario* mario)
 void Small::exit(Mario* mario)
 {
 	m_frameAnimation.clear();
+	mario->setAlphaColor(D3DCOLOR_ARGB(255, 255, 255, 255));
 }
 
 /////////////////////////////////////////////////////////////////////////////////

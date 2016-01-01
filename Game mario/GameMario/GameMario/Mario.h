@@ -17,7 +17,6 @@ private:
 	bool		m_canShoot; // Trạng thái fire
 	bool		m_isStar;
 
-	bool		m_isBoost;
 	bool		m_finishAutoAnimation;
 
 	bool		m_isDead;
@@ -34,6 +33,12 @@ private:
 	static Mario* m_instance;
 	Mario();
 public:
+	bool		m_effectBig;
+	bool		m_effectSmall;
+	bool		m_effectFire;
+	bool		m_unDying;
+
+
 	~Mario();
 	static Mario* getInstance();
 
@@ -46,9 +51,7 @@ public:
 	StateMachine<Mario>*	getStateMachine(){ return m_stateMachine; }
 	StateMachine<Mario>*	getStatusStateMachine(){ return m_statusStateMachine; }
 
-	bool		m_effectBig;
-	bool		m_effectSmall;
-	bool		m_effectFire;
+
 
 	Box			getBouding();
 
@@ -62,8 +65,6 @@ public:
 
 	void		setStar(bool ability = false){ m_isStar = ability; }
 	bool		isStar(){ return m_isStar; }
-
-	bool		isBoost(){ return m_isBoost; }
 
 	void		setDead(bool x){ m_isDead = x; }
 	bool		isDead(){ return m_isDead; }

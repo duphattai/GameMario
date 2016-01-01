@@ -43,15 +43,19 @@ bool Goomba::isCollision(GameObject* gameObject)
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
+		if (mario->m_unDying) return false;
+
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE)
 		{
-			mario->setVelocity(Collision::getInstance()->getVelocity());
 			if (mario->getStatusStateMachine()->isInState(*Star::getInstance()))
 			{
 				m_beAttack = BeAttack::DeathByGun;
+				return true;
 			}
-			else if (dir == DIR::TOP && mario->getFSM() == FSM_Mario::FALL)
+
+			mario->setVelocity(Collision::getInstance()->getVelocity());
+			if (dir == DIR::TOP && mario->getFSM() == FSM_Mario::FALL)
 			{
 				m_beAttack = BeAttack::DeathByJump;
 				mario->getStateMachine()->changeState(Jumping::getInstance());

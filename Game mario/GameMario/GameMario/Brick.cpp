@@ -50,11 +50,13 @@ void Brick::updateVelocity()
 
 bool Brick::isCollision(GameObject* gameObject)
 {
+	if (m_isBreak) return false;
+
 	Enemy* enemy = dynamic_cast<Enemy*>(gameObject);
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
-		if (m_isBreak) return false;
+		if (mario->isDead()) return false;
 
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE)

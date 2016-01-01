@@ -31,17 +31,21 @@ bool KoopaTroopa::isCollision(GameObject* gameObject)
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
+		if (mario->m_unDying) return false;
+
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE)
 		{
-			mario->setVelocity(Collision::getInstance()->getVelocity());
 			// Nếu mario ở trang thái star
 			if (mario->getStatusStateMachine()->isInState(*Star::getInstance()))
 			{
 				m_beAttack = BeAttack::DeathByGun;
+				return true;
 			}
+
+			mario->setVelocity(Collision::getInstance()->getVelocity());			
 			// Nếu enemy ở trạng thái shell not move
-			else if (m_stateMachine->isInState(*KoopaTroopaShellNotMove::getInstance()))
+			if (m_stateMachine->isInState(*KoopaTroopaShellNotMove::getInstance()))
 			{
 				m_beAttack = BeAttack::DeathByJump;
 				if (dir == DIR::RIGHT)
@@ -54,11 +58,8 @@ bool KoopaTroopa::isCollision(GameObject* gameObject)
 				m_beAttack = BeAttack::DeathByJump;
 				mario->getStateMachine()->changeState(Jumping::getInstance());
 			}
-			else
-			{
-				if (!mario->m_effectSmall)
+			else if (!mario->m_effectSmall)
 					mario->setDead(true);
-			}
 		}
 	}
 	else

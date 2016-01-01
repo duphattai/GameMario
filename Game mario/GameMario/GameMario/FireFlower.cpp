@@ -38,18 +38,19 @@ bool FireFlower::isCollision(GameObject* gameObject)
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
+		if (mario->m_unDying) return false;
+
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE)
 		{
-			mario->setVelocity(Collision::getInstance()->getVelocity());
 			if (mario->getStatusStateMachine()->isInState(*Star::getInstance()))
 			{
 				m_beAttack = BeAttack::DeathByGun;
 			}
-			else
+			else if (!mario->m_effectSmall)
 			{ 
-				if (!mario->m_effectSmall)
-					mario->setDead(true);
+				mario->setVelocity(Collision::getInstance()->getVelocity());
+				mario->setDead(true);
 			}
 		}
 	}

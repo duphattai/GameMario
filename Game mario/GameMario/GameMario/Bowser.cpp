@@ -45,6 +45,8 @@ bool Bowser::isCollision(GameObject* gameObject)
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
+		if (mario->m_unDying) return false;
+
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE)
 		{

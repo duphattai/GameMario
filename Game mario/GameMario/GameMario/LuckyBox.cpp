@@ -63,6 +63,8 @@ bool LuckyBox::isCollision(GameObject* gameObject)
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
 	if (mario != nullptr)
 	{
+		if (mario->isDead()) return false;
+
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
 		if (dir != DIR::NONE) // xảy ra va chạm
 		{
