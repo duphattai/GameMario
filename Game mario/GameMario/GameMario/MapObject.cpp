@@ -288,7 +288,7 @@ void MapObject::draw(LPD3DXSPRITE spriteHandler)
 	m_stateMachine->GetCurrentState()->draw(this, spriteHandler);
 
 	// vẽ FPS
-	drawText(L"FPS: " + to_wstring(GameTime::getInstance()->getElapsedTime()), Vector2(0, 0));
+	drawText(L"FPS: " + to_wstring(1000 / GameTime::getInstance()->getElapsedTime()), Vector2(0, 0));
 }
 
 
