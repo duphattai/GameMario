@@ -1,6 +1,8 @@
 ﻿#include "ManageBulletFire.h"
 #include "Camera.h"
 #include "BulletFireOwnedState.h"
+
+//khoi tao dan
 ManageBulletFire::ManageBulletFire(int countBullet)
 {
 	for (int i = 0; i < countBullet; i++)
@@ -9,7 +11,7 @@ ManageBulletFire::ManageBulletFire(int countBullet)
 		m_gun.push_back(temp);
 	}
 }
-
+// ban dan
 void ManageBulletFire::shoot(int x, int y, float vpx, float vpy, SpriteEffect flip)
 {
 	for (std::vector<BulletFire*>::iterator temp = m_gun.begin(); temp != m_gun.end(); temp++)

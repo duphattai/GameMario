@@ -36,12 +36,12 @@ bool FireFlower::isCollision(GameObject* gameObject)
 
 
 	Mario* mario = dynamic_cast<Mario*>(gameObject);
-	if (mario != nullptr)
+	if (mario != nullptr)//nếu là mario
 	{
 		if (mario->m_unDying) return false;
 
 		DIR dir = Collision::getInstance()->isCollision(mario, this);
-		if (dir != DIR::NONE)
+		if (dir != DIR::NONE)// nếu xảy ra va chạm
 		{
 			if (mario->getStatusStateMachine()->isInState(*Star::getInstance()))
 			{

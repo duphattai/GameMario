@@ -35,7 +35,7 @@ void BulletFire::updateVelocity()
 	if (m_isActive)
 		m_stateMachine->update();
 }
-
+// cap nhat toa do
 void BulletFire::update()
 {
 	if (!m_isActive) return;
@@ -69,7 +69,7 @@ bool BulletFire::isCollision(GameObject* gameObject)
 
 	return false;
 }
-
+// bắn đạn
 void BulletFire::shoot(SpriteEffect flip, Vector2 position, Vector2 worldPosition)
 {
 	m_flip = flip;
@@ -79,7 +79,7 @@ void BulletFire::shoot(SpriteEffect flip, Vector2 position, Vector2 worldPositio
 	m_stateMachine->changeState(BulletFireIdle::getInstance());
 	m_isActive = true;
 }
-
+// thiet lap frame hien tai
 void BulletFire::setCurrentFrame(int frame)
 {
 	m_currentFrame = frame;

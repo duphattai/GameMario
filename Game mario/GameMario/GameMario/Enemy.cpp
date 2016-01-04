@@ -39,12 +39,12 @@ void Enemy::draw(LPD3DXSPRITE SpriteHandler)
 	m_sprite->setRect(m_frameList[m_currentFrame].rect);
 	if (m_isActive)
 	{
-		if (m_flip == SpriteEffect::Flip)
+		if (m_flip == SpriteEffect::Flip)//lật hình
 			m_scale = D3DXVECTOR2(-1.0f, 1.0f);
 		else
 			m_scale = D3DXVECTOR2(1.0f, 1.0f);
 
-		if (m_beAttack == BeAttack::DeathByGun)
+		if (m_beAttack == BeAttack::DeathByGun)//enemy bị trúng đạn
 			m_scale.y = -1.0f;
 
 		m_sprite->draw(SpriteHandler, D3DXVECTOR2(m_position.x + m_sprite->getWidth() / 2, m_position.y + m_sprite->getHeight() / 2), m_scale, m_worldPosition.x, m_worldPosition.y, m_alpha);

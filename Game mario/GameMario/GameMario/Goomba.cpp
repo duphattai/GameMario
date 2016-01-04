@@ -67,7 +67,7 @@ bool Goomba::isCollision(GameObject* gameObject)
 			}	
 		}
 	}
-	else
+	else// khi đối tượng ko phải là mario
 	{
 		int type = gameObject->getTypeObject();
 		if (type == TypeObject::Dynamic_Item || type == TypeObject::Dynamic_StandPosition || type == TypeObject::Moving_Enemy)
@@ -77,7 +77,7 @@ bool Goomba::isCollision(GameObject* gameObject)
 			{
 				m_velocity = Collision::getInstance()->getVelocity();
 				KoopaTroopa* koopaTroopa = dynamic_cast<KoopaTroopa*>(gameObject);
-				if (koopaTroopa != nullptr)
+				if (koopaTroopa != nullptr)//
 				{
 					if (koopaTroopa->getStateMachine()->isInState(*KoopaTroopaShellMove::getInstance()))
 						m_beAttack = BeAttack::DeathByGun;
